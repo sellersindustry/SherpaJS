@@ -1,5 +1,5 @@
 
 
-export function GET() {
-    return new Response("Hello, World!", { status: 200 });
+export function GET(request:Request) {
+    return new Response(request.url, { status: 200 });
 }
