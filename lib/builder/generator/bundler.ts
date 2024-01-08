@@ -19,12 +19,7 @@ export async function Bundle(endpoints:Endpoint[], output:string) {
     fs.writeFileSync(Utility.File.JoinPath(output, "config.json"), JSON.stringify(
         {
             "version": 3,
-            "routes": endpoints.map((endpoint) => {
-                return {
-                    "src": "/" + endpoint.route.map((route) => route.isDynamic ? `(?<${route.name}>.*)` : route.name).join("/"),
-                    "dest": "/" + endpoint.route.map((route) => route.isDynamic ? `[${route.name}]` : route.name).join("/") + "?" + endpoint.route.filter((route) => route.isDynamic).map((route) => route.name + "=$" + route.name).join("&"),
-                }
-            })
+            "routes": dynamicRoutes(endpoints)
         }
     ));
 }
@@ -78,5 +73,22 @@ function getEdgeHandlerCode(endpoint:Endpoint) {
             return new Response("Unsupported method \\"" + request.method + "\\".", { status: 405 });
         }
     `.split("\n").map(o => o.startsWith("        ") ? o.replace("        ", "") : o).join("\n");
+}
+
+
+function dynamicRoutes(endpoints:Endpoint[]):{ src:string, dest:string }[] {
+    return endpoints.filter((endpoint) => {
+        return endpoint.route.filter((route) => route.isDynamic).length > 0;
+    }).map((endpoint) => {
+        let routes  = endpoint.route;
+        let dynamic = routes.filter((route) => route.isDynamic);
+        let source  = "/" + routes.map(r => r.isDynamic ? `(?<${r.name}>.*)` : r.name).join("/");
+        let dest    = "/" + routes.map(r => r.isDynamic ? `[${r.name}]` : r.name).join("/");
+        let query   = dynamic.map((r) => r.name + "=$" + r.name).join("&");
+        return {
+            src: source,
+            dest: dest + "?" + query
+        }
+    });
 }
 
