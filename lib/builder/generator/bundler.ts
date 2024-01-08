@@ -34,7 +34,7 @@ export async function Bundle(endpoints:Endpoint[], output:string) {
 
 
 async function bundleEndpoint(endpoint:Endpoint, output:string) {
-    let route    = endpoint.route.map((route) => route.name).join("/");
+    let route    = endpoint.route.map((route) => route.isDynamic ? `[${route.name}]` : route.name).join("/");
     let location = Utility.File.JoinPath(output, "functions", route, "/index.func");
     try {
         let buffer = fs.readFileSync(endpoint.filepath);
