@@ -74,7 +74,7 @@ function getEdgeHandlerCode(endpoint:Endpoint) {
         import { ${varibles.join(", ")} } from "./endpoint";
 
         export default async function index(request, event) {
-            switch (request.methdod) {
+            switch (request.method) {
                 ${varibles.map((variable) => {
                     return `case "${variable}": return ${variable}(request);`;
                 }).join("\n")}
