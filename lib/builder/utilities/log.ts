@@ -24,7 +24,7 @@ export class Log {
 
 
     public static Error(message:Message) {
-        this.Print(message);
+        this.Print({ ...message, level: Level.ERROR });
         this.Exit();
     }
 
