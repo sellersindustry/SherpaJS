@@ -29,7 +29,17 @@ export async function Bundle(endpoints:Endpoint[], output:string) {
     for (let endpoint of endpoints) {
         await bundleEndpoint(endpoint, output);
     }
-    fs.writeFileSync(Utility.File.JoinPath(output, "config.json"), "{ \"version\": 3 }");
+    fs.writeFileSync(Utility.File.JoinPath(output, "config.json"), JSON.stringify(
+        {
+            "version": 3,
+            "routes": [
+                {
+                  "src": "/test/(.*)",
+                  "dest": "/test/[test]?test=$1",
+                }
+            ]
+        }
+    ));
 }
 
 
