@@ -19,12 +19,12 @@ export async function Bundle(endpoints:Endpoint[], output:string) {
     fs.writeFileSync(Utility.File.JoinPath(output, "config.json"), JSON.stringify(
         {
             "version": 3,
-            "routes": [
-                {
-                    "src": "/test/(.*)",
-                    "dest": "/test/[test]?SQ--test=$1"
+            "routes": endpoints.map((endpoint) => {
+                return {
+                    "src": "/" + endpoint.route.map((route) => route.isDynamic ? `(?<${route.name}>.*)` : route.name).join("/"),
+                    "dest": "/" + endpoint.route.map((route) => route.isDynamic ? `[${route.name}]` : route.name).join("/") + "?" + endpoint.route.filter((route) => route.isDynamic).map((route) => route.name + "=$" + route.name).join("&"),
                 }
-            ]
+            })
         }
     ));
 }
