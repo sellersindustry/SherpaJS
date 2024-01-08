@@ -21,8 +21,11 @@ export async function Bundle(endpoints:Endpoint[], output:string) {
             "version": 3,
             "routes": [
                 {
-                  "src": "/test/(.*)",
-                  "dest": "/test/[test]?test=$1",
+                    "src": "/test/(.*)",
+                    "dest": "/test/[test]?test=$1",
+                    "headers": {
+                        "dynamic-query-test": "$1"
+                    }
                 }
             ]
         }
