@@ -3,7 +3,7 @@ import { Utility } from "../utilities";
 import { Project as TSMorphProject } from "ts-morph";
 
 
-export function Endpoints(path:string):Endpoint[] {
+export function GetEndpoints(path:string):Endpoint[] {
     if (!Utility.File.Exists(path))
         Utility.Log.Error({ message: `Endpoint path does not exist. Unable to generate endpoints.`, path: path });
     let endpoints = Utility.File.Walk(path).map(filepath => {

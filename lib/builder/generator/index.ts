@@ -1,7 +1,10 @@
-import { Endpoints } from "./endpoints";
-
+import { GetConfigModule } from "./config-module";
+import { GetEndpoints } from "./endpoints";
+import { Bundler } from "./bundler";
 
 export const Generator = {
-    Endpoints
+    GetConfigModule,
+    GetEndpoints,
+    Bundler
 };
 

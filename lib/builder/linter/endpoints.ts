@@ -1,4 +1,5 @@
 import { Endpoint, Level, Message, VALID_EXPORTS } from "../models";
+import { Utility } from "../utilities";
 
 
 const VALID_FILE_TYPES = ["JS", "CJS", "TS"];
@@ -37,14 +38,23 @@ function filename(endpoint:Endpoint):Message[] {
 
 
 function routes(endpoint:Endpoint):Message[] {
+    let fullRoute = endpoint.route.map(r => r.orginal).join("/");
     for (let subroute of endpoint.route) {
-        if (subroute.isDynamic) continue;
-        if (subroute.name == subroute.orginal) continue;
-        return [{
-            level: Level.WARN,
-            message: `Routes should be lowercase \"${endpoint.route.map(r => r.orginal).join("/")}\".`,
-            path: endpoint.filepath
-        }];
+        if (!Utility.Validate.AlphaNumericDash(subroute.name)) {
+            return [{
+                level: Level.ERROR,
+                message: `Routes should only contain letters, numbers, and `
+                    + `dashes. The following route is invalid: \"${fullRoute}\".`,
+                path: endpoint.filepath
+            }];
+        }
+        if (subroute.orginal.toLowerCase() != subroute.orginal) {
+            return [{
+                level: Level.WARN,
+                message: `Routes should be lowercase \"${fullRoute}\".`,
+                path: endpoint.filepath
+            }];
+        }
     }
     return [];
 }
