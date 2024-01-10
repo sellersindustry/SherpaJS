@@ -1,5 +1,5 @@
 import { BuildOptions, build as ESBuild } from "esbuild";
-import { Endpoint, VALID_EXPORTS } from "../models";
+import { Endpoint, Module, VALID_EXPORTS } from "../models";
 import fs from "fs";
 import { Utility } from "../utilities";
 
@@ -18,16 +18,17 @@ const ESBUILD_TARGET = {
 };
 
 
-export async function Bundler(endpoints:Endpoint[], configPath:string, output:string) {
-    for (let endpoint of endpoints) {
-        await build(endpoint, configPath, output);
+export async function Bundler(module:Module, output:string) {
+    for (let endpoint of module.endpoints) {
+        await build(endpoint, module.config.path, output);
     }
     fs.writeFileSync(Utility.File.JoinPath(output, "config.json"), JSON.stringify(
         {
             "version": 3,
-            "routes": dynamicRoutes(endpoints)
+            "routes": dynamicRoutes(module.endpoints)
         }
     ));
+    // return ModuleMiddleware
 }
 
 

@@ -1,8 +1,8 @@
-import { ConfigModuleModel } from "./config-module";
-import { VALID_EXPORTS, Endpoint, Route } from "./structure";
+import { ConfigModule } from "./config-module";
+import { Module, Endpoint, Route, VALID_EXPORTS } from "./structure";
 import { Level, Message } from "./log";
 
 
 export { VALID_EXPORTS, Level };
-export type { ConfigModuleModel, Endpoint, Route, Message };
+export type { Module, ConfigModule, Endpoint, Route, Message };
 

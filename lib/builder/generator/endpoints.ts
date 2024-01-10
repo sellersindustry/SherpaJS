@@ -3,9 +3,12 @@ import { Utility } from "../utilities";
 import { Project as TSMorphProject } from "ts-morph";
 
 
-export function GetEndpoints(path:string):Endpoint[] {
+export function GetEndpoints(path:string, subroute:string[]):Endpoint[] {
     if (!Utility.File.Exists(path))
-        Utility.Log.Error({ message: `Endpoint path does not exist. Unable to generate endpoints.`, path: path });
+        Utility.Log.Error({
+            message: "Directory does not exist. Unable to generate endpoints.",
+            path: path
+        });
     let endpoints = Utility.File.Walk(path).map(filepath => {
         filepath = Utility.File.JoinPath(path, filepath);
         return {
@@ -13,7 +16,7 @@ export function GetEndpoints(path:string):Endpoint[] {
             filetype: Utility.File.GetExtension(filepath),
             filepath: filepath,
             exports: getExportedVariables(filepath),
-            route: getRoute(filepath, path)
+            route: [...getSubroute(subroute), ...getRoute(filepath, path)]
         };
     }).filter(endpoint => !endpoint.filename.includes(".map"));
     return endpoints;
@@ -28,6 +31,18 @@ function getExportedVariables(filepath:string):string[] {
     } catch {
         Utility.Log.Error({ message: `Unable to extract exported variables.`, path: filepath });
     }
+}
+
+
+function getSubroute(subroute:string[]):Route[] {
+    return subroute.map((name) => {
+        return {
+            name: name.toLowerCase(),
+            orginal: name,
+            isDynamic: false,
+            isSubroute: true
+        }
+    });
 }
 
 

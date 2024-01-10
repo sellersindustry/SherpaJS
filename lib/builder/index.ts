@@ -1,38 +1,34 @@
 import { Generator } from "./generator";
 import { Linter } from "./linter";
-import { ConfigModuleModel, Endpoint, Route } from "./models";
+import { Endpoint, Module } from "./models";
 import { Utility } from "./utilities";
 
 
 const PATH_ENDPOINTS = "/routes";
 
 
-
 export class SherpaJS {
 
 
     //! Loop for each module
-    public static async BuildModule(path:string, output:string, subroute:string[] = []) {
+    public static async BuildModule(path:string, output:string, subroute:string[]) {
         let module = await this.LintModule(path, subroute);
-        Generator.Bundler(module.endpoints, module.mconfig.path, output); //! returns reroutes for dynamic routes for vercel build confit
+        Generator.Bundler(module, output); //! returns ModuleMiddleware to generate vercel config
     }
 
 
-    public static async LintModule(
-        path:string, subroute:string[] = []
-    ):Promise<{
-        endpoints:Endpoint[], mconfig:{ config:ConfigModuleModel, path:string }
-    }> {
-        let mconfig = await Generator.GetConfigModule(path);
-        Utility.Log.Output(Linter.ConfigModule(mconfig.config));
-        let endpoints = this.getEndpoints(path); //! add additional subroutes on here
+    public static async LintModule(path:string, subroute:string[]):Promise<Module> {
+        let config = await Generator.GetConfigModule(path);
+        Utility.Log.Output(Linter.ConfigModule(config.instance));
+        let endpoints = this.getEndpoints(path, subroute);
         Utility.Log.Output(Linter.Endpoints(endpoints));
-        return { mconfig, endpoints };
+        return { endpoints, config, subroute };
     }
 
 
-    private static getEndpoints(path:string):Endpoint[] {
-        return Generator.GetEndpoints(Utility.File.JoinPath(path, PATH_ENDPOINTS));
+    private static getEndpoints(path:string, subroute:string[]):Endpoint[] {
+        let endpointDir = Utility.File.JoinPath(path, PATH_ENDPOINTS);
+        return Generator.GetEndpoints(endpointDir, subroute);
     };
 
 

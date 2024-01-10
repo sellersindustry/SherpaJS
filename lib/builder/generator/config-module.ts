@@ -1,5 +1,5 @@
 import { build } from "esbuild";
-import { ConfigModuleModel } from "../models";
+import { ConfigModule } from "../models";
 import { Utility } from "../utilities";
 import vm from "vm";
 
@@ -8,15 +8,15 @@ const CONFIG_FILE_NAME  = "sherpa.module";
 const CONFIG_FILE_TYPES = ["JS", "CJS", "TS"];
 
 
-export async function GetConfigModule(path:string):Promise<{ config:ConfigModuleModel, path:string }> {
+export async function GetConfigModule(path:string):Promise<{ instance:ConfigModule, path:string }> {
     let filepath = getFile(path);
     if (!filepath)
         Utility.Log.Error({
-            message: `Module config file could not be found.`,
+            message: "Module config file could not be found.",
             path: path
         });
     return {
-        config: await loadDefaultExport(filepath) as ConfigModuleModel,
+        instance: await loadDefaultExport(filepath) as ConfigModule,
         path: filepath
     };
 }

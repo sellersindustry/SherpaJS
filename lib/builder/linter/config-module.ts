@@ -1,7 +1,7 @@
-import { ConfigModuleModel, Message } from "../models";
+import { ConfigModule, Message } from "../models";
 
 
-export function Linter(config:ConfigModuleModel):Message[] {
+export function Linter(config:ConfigModule):Message[] {
     
     return [];
 }
