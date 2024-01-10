@@ -1,7 +1,13 @@
 import { SherpaJS } from "./lib/builder";
 
 
-SherpaJS.BuildModule("./example-module", "./.vercel/output");
+SherpaJS.Build("./example-module", "./.vercel/output", {
+    bundler: {
+        esbuild: {
+            minify: false
+        }
+    }
+});
 // (async () => {
 //     console.log(await Bundler("./example-module"));
 // })();

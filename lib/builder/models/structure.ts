@@ -14,11 +14,6 @@ export type Module = {
 }
 
 
-// export type ModuleMiddleware = {
-//     dynamicRedirects:string[];
-// }
-
-
 export type Endpoint = {
     filename:string;
     filetype:string;
