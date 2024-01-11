@@ -1,12 +1,11 @@
-import { DeveloperParamaters } from "./developer"
-import { Endpoint, Module } from "./structure"
+import { BuildOptions } from "./options";
+import { Endpoint, Module, Server } from "./structure"
 
 
-export type EndpointBundleParamaters = {
-    endpoint:Endpoint,
-    module:Module,
-    server:any,
-    output:string,
-    dev?:DeveloperParamaters
+export type BundleParamaters = {
+    endpoint:Endpoint;
+    module:Module;
+    server:Server;
+    options:BuildOptions
 }
 

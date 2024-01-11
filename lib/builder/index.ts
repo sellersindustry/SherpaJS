@@ -1,6 +1,6 @@
 import { Generator } from "./generator";
 import { Linter } from "./linter";
-import { DeveloperParamaters as DevParams, Endpoint, Module } from "./models";
+import { BuildOptions, Endpoint, Module } from "./models";
 import { Utility } from "./utilities";
 
 
@@ -10,13 +10,16 @@ const PATH_ENDPOINTS = "/routes";
 export class SherpaJS {
 
 
-    public static async Build(input:string, output:string, devParm?:DevParams) {
+    public static async Build(options:BuildOptions) {
         // let server = await this.LintServer(input);
         // Generator.Bundler(server, output, devParm);
 
         //! Development
-        let module = await this.LintModule(input, []);
-        Generator.Bundler(module, output, devParm);
+        let module = await this.LintModule(options.input + "/example-module", []);
+        Generator.Bundler({
+            modules: [module],
+            config: undefined
+        }, options);
         //! Development
     }
 

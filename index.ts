@@ -1,10 +1,14 @@
 import { SherpaJS } from "./lib/builder";
 
 
-SherpaJS.Build("./example-module", "./.vercel/output", {
-    bundler: {
-        esbuild: {
-            minify: false
+SherpaJS.Build({
+    input: process.cwd(),
+    output: process.cwd(),
+    developer: {
+        bundler: {
+            esbuild: {
+                minify: false
+            }
         }
     }
 });

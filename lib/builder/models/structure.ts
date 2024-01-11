@@ -4,6 +4,15 @@ import { ConfigModule } from "./config-module";
 export const VALID_EXPORTS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
 
+export type Server = {
+    modules:Module[];
+    config:{
+        // instance:ConfigModule;
+        // path:string;
+    }
+}
+
+
 export type Module = {
     endpoints:Endpoint[];
     subroute:string[];
