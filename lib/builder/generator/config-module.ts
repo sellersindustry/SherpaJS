@@ -1,7 +1,5 @@
-import { build } from "esbuild";
 import { ConfigModule } from "../models";
 import { Utility } from "../utilities";
-import vm from "vm";
 
 
 const CONFIG_FILE_NAME  = "sherpa.module";
@@ -9,7 +7,11 @@ const CONFIG_FILE_TYPES = ["JS", "CJS", "TS"];
 
 
 export async function GetConfigModule(path:string):Promise<{ instance:ConfigModule, path:string }> {
-    let filepath = getFile(path);
+    let filepath = Utility.File.GetFileVaribleExtensions(
+        path,
+        CONFIG_FILE_NAME,
+        CONFIG_FILE_TYPES
+    );
     if (!filepath)
         Utility.Log.Error({
             message: "Module config file could not be found.",
@@ -22,34 +24,9 @@ export async function GetConfigModule(path:string):Promise<{ instance:ConfigModu
 }
 
 
-function getFile(path:string):string|undefined {
-    for (let type of CONFIG_FILE_TYPES) {
-        let filename = CONFIG_FILE_NAME + "." + type.toLowerCase();
-        let filepath = Utility.File.JoinPath(path, filename);
-        if (Utility.File.Exists(filepath)) {
-            return filepath;
-        }
-    }
-    return undefined;
-}
-
-
 async function loadDefaultExport(file:string):Promise<any> {  
     try {
-        let result = await build({
-            entryPoints: [file],
-            bundle: true,
-            format: "cjs",
-            target: "es2020",
-            platform: 'node',
-            write: false,
-            metafile: true,
-        });
-
-        let code    = result.outputFiles[0].text;
-        let context = vm.createContext({ module: { exports: {} }});
-        vm.runInContext(code, context);
-        return context.module.exports.default;
+        return Utility.Loader.GetDefaultExport(file);
     } catch (e) {
         Utility.Log.Error({
             message: "Module Config failed to load.",

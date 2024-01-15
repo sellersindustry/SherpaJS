@@ -1,6 +1,6 @@
 import { Generator } from "./generator";
 import { Linter } from "./linter";
-import { BuildOptions, Endpoint, Module } from "./models";
+import { BuildOptions, ConfigServerApp, Endpoint, Module, Server } from "./models";
 import { Utility } from "./utilities";
 
 
@@ -11,24 +11,19 @@ export class SherpaJS {
 
 
     public static async Build(options:BuildOptions) {
-        // let server = await this.LintServer(input);
-        // Generator.Bundler(server, output, devParm);
-
-        //! Development
-        let module = await this.LintModule(options.input + "/example-module", []);
-        Generator.Bundler({
-            modules: [module],
-            config: undefined
-        }, options);
-        //! Development
+        Generator.Bundler(await this.LintServer(options.input), options);
     }
 
 
-    // public static async LintServer(input:string):Promise<Server> {
-        // for (let module of server.module) {
-        //    let module = await this.LintModule(input, subroute);
-        // }
-    // }
+    public static async LintServer(input:string):Promise<Server> {
+        let config = await Generator.GetConfigServer(input);
+        Utility.Log.Output(Linter.ConfigServer(config.instance));
+        let modules = [];
+        for (let module of this.getModules(config.instance.app)) {
+            modules.push(await this.LintModule(module.path, module.subroute));
+        }
+        return { config, modules };
+    }
 
 
     public static async LintModule(input:string, subroute:string[]=[]):Promise<Module> {
@@ -45,6 +40,16 @@ export class SherpaJS {
         return Generator.GetEndpoints(endpointDir, subroute);
     };
 
+
+    private static getModules(apps:ConfigServerApp, subroute:string[] = []):{ path:string, subroute:string[] }[] {
+        if (!apps) return [];
+        if (!apps["module"]) return Object.keys(apps).map((key) => {
+            let route = key.startsWith("/") ? key.replace("/", "") : key;
+            return this.getModules(apps[key], [...subroute, route]);
+        }).flat();
+        return [{ path: apps["module"], subroute: subroute }];
+    }
+    
 
 }
 

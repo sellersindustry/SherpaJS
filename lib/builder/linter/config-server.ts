@@ -1,5 +1,6 @@
 import Ajv from "ajv";
 import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigServerApp, Level, Message } from "../models";
+import { Utility } from "../utilities";
 
 
 export function Linter(config:ConfigServer):Message[] {
@@ -37,16 +38,37 @@ function validateApp(app:ConfigServerApp):Message[] {
 
 
 function validateAppModule(app:ConfigServerApp):Message[] {
-    let keys = Object.keys(app);
-    //! validate module path exists
-    //! ensure no extra keys
     return [];
 }
 
 
 function validateAppList(app:ConfigServerApp):Message[] {
-    let keys = Object.keys(app);
-    //! validate each key starts with slash and is validate name
-    //! ensure no duplicates
-    return keys.map(key => validateApp(app[key])).flat();
+    let keys     = Object.keys(app);
+    let messages = [];
+    keys.map((key) => {
+        if (!key.startsWith("/")) {
+            messages.push({
+                level: Level.ERROR,
+                message: `Server Config Error: App routes must begin with "/".`,
+                path: key
+            });
+        }
+        key = key.replace("/", "");
+        if (!Utility.Validate.AlphaNumericDash(key)) {
+            messages.push({
+                level: Level.ERROR,
+                message: `Server Config Error: App routes should only contain `
+                    + `letters, numbers, and `
+                    + `dashes. The following route is invalid: \"${key}\".`
+            });
+        }
+        if (key.toLowerCase() != key) {
+            messages.push({
+                level: Level.ERROR,
+                message: `Server Config Error: App routes should be `
+                    + `lowercase "${key}".`,
+            });
+        }
+    })
+    return [...messages, ...keys.map(key => validateApp(app[key])).flat()];
 }

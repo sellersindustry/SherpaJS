@@ -52,5 +52,17 @@ export class UtilityFile {
     }
 
 
+    public static GetFileVaribleExtensions(path:string, name:string, extensions:string[]):string|undefined {
+        for (let type of extensions) {
+            let filename = name + "." + type.toLowerCase();
+            let filepath = this.JoinPath(path, filename);
+            if (this.Exists(filepath)) {
+                return filepath;
+            }
+        }
+        return undefined;
+    }
+
+
 }
 
