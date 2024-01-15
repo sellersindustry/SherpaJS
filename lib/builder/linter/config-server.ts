@@ -25,6 +25,13 @@ function schema(config:ConfigServer, path:string):Message[] {
 
 function app(config:ConfigServer, path:string):Message[] {
     if (config.app == undefined) return [];
+    if (config.app["/sherpa"]) {
+        return [{
+            level: Level.ERROR,
+            message: `Server Config Error: App route "/sherpa" is not allowed.`,
+            path: path
+        }];
+    }
     return validateApp(config.app, path);
 }
 
@@ -38,6 +45,17 @@ function validateApp(app:ConfigServerApp, path:string):Message[] {
 
 
 function validateAppModule(app:ConfigServerApp, path:string):Message[] {
+    let keys = Object.keys(app);
+    for (let key of keys) {
+        if (!["module", "properties"].includes(key)) {
+            return [{
+                level: Level.ERROR,
+                message: `Server Config Error: App routes should only contain `
+                    + `\"module\" and \"properties\".`,
+                path: path
+            }];
+        }
+    }
     return [];
 }
 

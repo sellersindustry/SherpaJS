@@ -1,4 +1,5 @@
 import { ConfigModule } from "./config-module";
+import { ConfigServer } from "./config-server";
 
 
 export const VALID_EXPORTS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
@@ -7,8 +8,8 @@ export const VALID_EXPORTS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 export type Server = {
     modules:Module[];
     config:{
-        // instance:ConfigModule;
-        // path:string;
+        instance:ConfigServer;
+        path:string;
     }
 }
 

@@ -1,6 +1,7 @@
 import { BuildOptions as ESBuildOptions, build as ESBuild } from "esbuild";
-import { BuildOptions, BundleParamaters as BundleParams, Endpoint, Module, Server, VALID_EXPORTS } from "../models";
+import { BuildOptions, BundleParamaters as BundleParams, Endpoint, Server, VALID_EXPORTS } from "../models";
 import fs from "fs";
+import { remove } from "fs-extra";
 import { Utility } from "../utilities";
 
 
@@ -19,14 +20,13 @@ const DEFAULT_ESBUILD_TARGET = {
 
 
 export async function Bundler(server:Server, options:BuildOptions) {
-    //! clear output folder
+    await cleanBuildDirectory(options);
     await buildAllEndpoints(server, options);
     await buildServer(server, options);
 }
 
 
 async function buildAllEndpoints(server:Server, options:BuildOptions) {
-    //! Wait for all
     for (let module of server.modules) {
         for (let endpoint of module.endpoints) {
             await buildEndpoint({ endpoint, module, server, options });
@@ -53,8 +53,12 @@ async function buildEndpointHandler(ep:BundleParams) {
             ...DEFAULT_ESBUILD_TARGET as Partial<ESBuildOptions>,
             ...ep?.options?.developer?.bundler?.esbuild as Partial<ESBuildOptions>,
         });
-    } catch {
-        //! Throw Error
+    } catch (error) {
+        Utility.Log.Error({
+            message: "Failed to build endpoint.",
+            content: error.message,
+            path: ep.endpoint.filepath,
+        });
     }
 }
 
@@ -63,6 +67,8 @@ function getEndpointHandlerCode(ep:BundleParams) {
     let varibles = ep.endpoint.exports.filter(o => VALID_EXPORTS.includes(o));
     return [
         `import { ${varibles.join(", ")} } from "./index.ts";`,
+        `import config from "${ep.server.config.path}";`,
+        `console.log(config);`,
         `export default async function index(request, event) {`,
             `\tswitch (request.method) {`,
                 `${varibles.map((v) => `\t\tcase "${v}": return ${v}(request);`).join("\n")}`,
@@ -121,6 +127,19 @@ function getEndpointOutput(ep:BundleParams, ...path:string[]):string {
         "/index.func",
         ...path
     );
+}
+
+
+async function cleanBuildDirectory(options:BuildOptions) {
+    let path = getOutput(options);
+    try {
+        await remove(path);
+    } catch (error) {
+        Utility.Log.Error({
+            message: "Failed to clean build directory.",
+            path: path
+        });
+    }
 }
 
 
