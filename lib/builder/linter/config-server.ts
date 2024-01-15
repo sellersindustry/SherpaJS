@@ -3,19 +3,19 @@ import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigServerApp, Level, Message } f
 import { Utility } from "../utilities";
 
 
-export function Linter(config:ConfigServer):Message[] {
-    return [...schema(config), ...app(config)];
+export function Linter(config:ConfigServer, path:string):Message[] {
+    return [...schema(config, path), ...app(config, path)];
 }
 
 
-function schema(config:ConfigServer):Message[] {
+function schema(config:ConfigServer, path:string):Message[] {
     let validator = (new Ajv()).compile(CONFIG_SERVER_SCHEMA);
     if (!validator(config)) {
         return validator.errors.map((error) => {
             return {
                 level: Level.ERROR,
                 message: "Server Config Error: " + error.message,
-                path: error.instancePath
+                path: path + " - " + error.instancePath
             };
         });
     }
@@ -23,26 +23,26 @@ function schema(config:ConfigServer):Message[] {
 }
 
 
-function app(config:ConfigServer):Message[] {
+function app(config:ConfigServer, path:string):Message[] {
     if (config.app == undefined) return [];
-    return validateApp(config.app);
+    return validateApp(config.app, path);
 }
 
 
-function validateApp(app:ConfigServerApp):Message[] {
+function validateApp(app:ConfigServerApp, path:string):Message[] {
     let keys = Object.keys(app);
     if (keys.includes("module"))
-        return validateAppModule(app);
-    return validateAppList(app);
+        return validateAppModule(app, path);
+    return validateAppList(app, path);
 }
 
 
-function validateAppModule(app:ConfigServerApp):Message[] {
+function validateAppModule(app:ConfigServerApp, path:string):Message[] {
     return [];
 }
 
 
-function validateAppList(app:ConfigServerApp):Message[] {
+function validateAppList(app:ConfigServerApp, path:string):Message[] {
     let keys     = Object.keys(app);
     let messages = [];
     keys.map((key) => {
@@ -50,7 +50,7 @@ function validateAppList(app:ConfigServerApp):Message[] {
             messages.push({
                 level: Level.ERROR,
                 message: `Server Config Error: App routes must begin with "/".`,
-                path: key
+                path: path + " - " + key
             });
         }
         key = key.replace("/", "");
@@ -59,7 +59,8 @@ function validateAppList(app:ConfigServerApp):Message[] {
                 level: Level.ERROR,
                 message: `Server Config Error: App routes should only contain `
                     + `letters, numbers, and `
-                    + `dashes. The following route is invalid: \"${key}\".`
+                    + `dashes. The following route is invalid: \"${key}\".`,
+                path: path + " - " + key
             });
         }
         if (key.toLowerCase() != key) {
@@ -67,8 +68,9 @@ function validateAppList(app:ConfigServerApp):Message[] {
                 level: Level.ERROR,
                 message: `Server Config Error: App routes should be `
                     + `lowercase "${key}".`,
+                path: path + " - " + key
             });
         }
     })
-    return [...messages, ...keys.map(key => validateApp(app[key])).flat()];
+    return [...messages, ...keys.map(key => validateApp(app[key], path)).flat()];
 }

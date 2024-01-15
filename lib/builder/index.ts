@@ -17,7 +17,7 @@ export class SherpaJS {
 
     public static async LintServer(input:string):Promise<Server> {
         let config = await Generator.GetConfigServer(input);
-        Utility.Log.Output(Linter.ConfigServer(config.instance));
+        Utility.Log.Output(Linter.ConfigServer(config.instance, config.path));
         let modules = [];
         for (let module of this.getModules(config.instance.app)) {
             modules.push(await this.LintModule(module.path, module.subroute));
@@ -28,7 +28,7 @@ export class SherpaJS {
 
     public static async LintModule(input:string, subroute:string[]=[]):Promise<Module> {
         let config = await Generator.GetConfigModule(input);
-        Utility.Log.Output(Linter.ConfigModule(config.instance));
+        Utility.Log.Output(Linter.ConfigModule(config.instance, config.path));
         let endpoints = this.getEndpoints(input, subroute);
         Utility.Log.Output(Linter.Endpoints(endpoints));
         return { endpoints, config, subroute };
