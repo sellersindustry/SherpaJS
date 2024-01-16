@@ -1,6 +1,6 @@
 import { Generator } from "./generator";
 import { Linter } from "./linter";
-import { BuildOptions, ConfigServerApp, Endpoint, Module, Server } from "./models";
+import { BuildOptions, ConfigAppProperties, Endpoint, Module, Server } from "./models";
 import { Utility } from "./utilities";
 
 
@@ -41,7 +41,7 @@ export class SherpaJS {
     };
 
 
-    private static getModules(apps:ConfigServerApp, subroute:string[] = []):{ path:string, subroute:string[] }[] {
+    private static getModules(apps:ConfigAppProperties, subroute:string[] = []):{ path:string, subroute:string[] }[] {
         if (!apps) return [];
         if (!apps["module"]) return Object.keys(apps).map((key) => {
             let route = key.startsWith("/") ? key.replace("/", "") : key;

@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigServerApp, Level, Message } from "../models";
+import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties, Level, Message } from "../models";
 import { Utility } from "../utilities";
 
 
@@ -36,7 +36,7 @@ function app(config:ConfigServer, path:string):Message[] {
 }
 
 
-function validateApp(app:ConfigServerApp, path:string):Message[] {
+function validateApp(app:ConfigAppProperties, path:string):Message[] {
     let keys = Object.keys(app);
     if (keys.includes("module"))
         return validateAppModule(app, path);
@@ -44,7 +44,7 @@ function validateApp(app:ConfigServerApp, path:string):Message[] {
 }
 
 
-function validateAppModule(app:ConfigServerApp, path:string):Message[] {
+function validateAppModule(app:ConfigAppProperties, path:string):Message[] {
     let keys = Object.keys(app);
     for (let key of keys) {
         if (!["module", "properties"].includes(key)) {
@@ -60,7 +60,7 @@ function validateAppModule(app:ConfigServerApp, path:string):Message[] {
 }
 
 
-function validateAppList(app:ConfigServerApp, path:string):Message[] {
+function validateAppList(app:ConfigAppProperties, path:string):Message[] {
     let keys     = Object.keys(app);
     let messages = [];
     keys.map((key) => {

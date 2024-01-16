@@ -1,4 +1,4 @@
-import { ConfigServer, ConfigServerApp } from "../models";
+import { ConfigServer, ConfigAppProperties } from "../models";
 import { Utility } from "../utilities";
 
 
@@ -45,7 +45,7 @@ function resolveModulePath(config:ConfigServer, path:string):ConfigServer {
 }
 
 
-function _resolveModulePath(route:ConfigServerApp, path:string):ConfigServerApp {
+function _resolveModulePath(route:ConfigAppProperties, path:string):ConfigAppProperties {
     if (route["module"]) {
         let reg = Utility.File.JoinPath(path, route["module"]);
         let npm = Utility.File.JoinPath(path, "node_modules", route["module"]);

@@ -1,15 +1,15 @@
 import { Schema } from "ajv";
 
 
-export type ConfigServerApp = {
+export type ConfigAppProperties = {
     module:string;
     properties?:any;
-} | { [key:`/${string}`]:ConfigServerApp };
+} | { [key:`/${string}`]:ConfigAppProperties };
 
 
 export type ConfigServer = {
     version:1;    
-    app:ConfigServerApp;
+    app:ConfigAppProperties;
 }
 
 

@@ -3,6 +3,7 @@ import { BuildOptions, BundleParamaters as BundleParams, Endpoint, Server, VALID
 import fs from "fs";
 import { remove } from "fs-extra";
 import { Utility } from "../utilities";
+import { SherpaSDK } from "../../sdk";
 
 
 const VERCEL_FUNCTION_CONFIG = {
@@ -68,10 +69,12 @@ function getEndpointHandlerCode(ep:BundleParams) {
     return [
         `import { ${varibles.join(", ")} } from "./index.ts";`,
         `import config from "${ep.server.config.path}";`,
-        `console.log(config);`,
-        `export default async function index(request, event) {`,
+        `import { SherpaSDK } from "${Utility.File.JoinPath(__dirname, "../../sdk/index.ts")}";`,
+        `export default async function index(_request, event) {`,
+            `let request = SherpaSDK.ProcessRequest(_request);`,
+            `let sherpa  = new SherpaSDK(config, ${JSON.stringify(ep.endpoint)});`,
             `\tswitch (request.method) {`,
-                `${varibles.map((v) => `\t\tcase "${v}": return ${v}(request);`).join("\n")}`,
+                `${varibles.map((v) => `\t\tcase "${v}": return ${v}(request, sherpa);`).join("\n")}`,
             `\t}`,
             `\treturn new Response("Unsupported method \\"" + request.method + "\\".", { status: 405 });`,
         `}`
