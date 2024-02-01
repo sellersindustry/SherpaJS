@@ -4,6 +4,7 @@ import { Utility } from "../builder/utilities";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
 import { SherpaJS } from "../builder";
+import { BundlerType } from "../builder/models/options";
 let program = new Command();
 
 
@@ -18,8 +19,8 @@ program.command("build")
     .option("-i, --input <path>", "path to server or module, defaults to current directory")
     .option("--dev", "enable development mode, do not minify output")
     .addOption(new Option("-b, --bundler <type>", "bundler to package server with")
-        .choices(["vercel", "expressjs"])
-        .default("expressjs"))
+        .choices(Object.values(BundlerType))
+        .default(BundlerType.Vercel))
     .action((options) => {
         let path = options.input ? options.input : process.cwd();
         if (!fs.existsSync(path)) {

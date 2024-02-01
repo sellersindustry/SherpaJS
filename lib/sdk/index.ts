@@ -1,4 +1,5 @@
 import { ConfigAppProperties, ConfigServer, Endpoint } from "../builder/models";
+import { BundlerType } from "../builder/models/options";
 import { SherpaRequest } from "./request";
 
 
@@ -45,8 +46,8 @@ export class SherpaSDK {
     }
 
 
-    static ProcessRequest(request:Request, type:"vercel"):SherpaRequest {
-        if (type === "vercel") {
+    static ProcessRequest(request:Request, type:BundlerType):SherpaRequest {
+        if (type === BundlerType.Vercel) {
             return SherpaSDK.processRequestVercel(request);
         } else {
             throw new Error("Not implemented");

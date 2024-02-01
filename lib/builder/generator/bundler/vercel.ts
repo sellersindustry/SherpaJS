@@ -3,6 +3,7 @@ import { BuildOptions as ESBuildOptions, build as ESBuild } from "esbuild";
 import { Endpoint, VALID_EXPORTS } from "../../models";
 import { Utility } from "../../utilities";
 import { Bundler } from "./abstract";
+import { BundlerType } from "../../models/options";
 
 
 const VERCEL_FUNCTION_CONFIG = {
@@ -79,7 +80,7 @@ export class BundlerVercel extends Bundler {
             `import config from "${this.server.config.path}";`,
             `import { SherpaSDK } from "${Utility.File.JoinPath(__dirname, "../../../sdk/index")}";`,
             `export default async function index(_request, event) {`,
-                `let request = SherpaSDK.ProcessRequest(_request, "VERCEL");`,
+                `let request = SherpaSDK.ProcessRequest(_request, "${BundlerType.Vercel.toString()}");`,
                 `let sherpa  = new SherpaSDK(config, ${JSON.stringify(endpoint)});`,
                 `\tswitch (request.method) {`,
                     `${varibles.map((v) => `\t\tcase "${v}": return ${v}(request, sherpa);`).join("\n")}`,
