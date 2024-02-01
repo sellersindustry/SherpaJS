@@ -40,7 +40,7 @@ export class SherpaSDK {
     private static initProperties(server:ConfigServer, moduleID:string[]):ConfigAppProperties {
         let obj = server.app;
         moduleID.forEach((id) => {
-            obj = obj[id];
+            obj = obj["/" + id];
         });
         return obj;
     }
