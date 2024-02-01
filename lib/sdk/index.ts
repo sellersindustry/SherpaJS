@@ -45,7 +45,17 @@ export class SherpaSDK {
     }
 
 
-    static ProcessRequest(request:Request):SherpaRequest {
+    static ProcessRequest(request:Request, type:"vercel"):SherpaRequest {
+        if (type === "vercel") {
+            return SherpaSDK.processRequestVercel(request);
+        } else {
+            throw new Error("Not implemented");
+        }
+
+    }
+
+
+    private static processRequestVercel(request:Request):SherpaRequest {
         let params   = new URLSearchParams(request.url);
         let _request = request as SherpaRequest;
         _request["query"]  = {};

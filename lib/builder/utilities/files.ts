@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { remove } from "fs-extra";
 
 
 export class UtilityFile {
@@ -61,6 +62,19 @@ export class UtilityFile {
             }
         }
         return undefined;
+    }
+
+
+    public static async Remove(path:string) {
+        await remove(path);
+    }
+
+
+    public static GetVersion():string {
+        let path = __dirname + "/../../../package.json";
+        let file = fs.readFileSync(path, "utf8")
+        let data = JSON.parse(file);
+        return data.version;
     }
 
 

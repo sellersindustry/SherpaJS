@@ -2,7 +2,6 @@ import { CONFIG_MODULE_SCHEMA, ConfigModule } from "./config-module";
 import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties } from "./config-server";
 import { Module, Endpoint, Route, VALID_EXPORTS, Server } from "./structure";
 import { Level, Message } from "./log";
-import { BundleParamaters } from "./bundle";
 import { BuildOptions } from "./options";
 
 
@@ -21,7 +20,6 @@ export type {
     ConfigAppProperties,
     Endpoint,
     Route,
-    Message,
-    BundleParamaters
+    Message
 };
 

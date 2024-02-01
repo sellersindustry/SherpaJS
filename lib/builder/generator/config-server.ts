@@ -7,21 +7,27 @@ const CONFIG_FILE_TYPES = ["JS", "CJS", "TS"];
 
 
 export async function GetConfigServer(path:string):Promise<{ instance:ConfigServer, path:string }> {
-    let filepath = Utility.File.GetFileVaribleExtensions(
-        path,
-        CONFIG_FILE_NAME,
-        CONFIG_FILE_TYPES
-    );
-    if (!filepath)
+    let filepath = GetConfigServerFilepath(path);
+    if (!filepath) {
         Utility.Log.Error({
             message: "Server config file could not be found.",
             path: path
         });
+    }
     let config = await loadDefaultExport(filepath) as ConfigServer;
     return {
         instance: resolveModulePath(config, path),
         path: filepath
     };
+}
+
+
+export function GetConfigServerFilepath(path:string):string|undefined {
+    return Utility.File.GetFileVaribleExtensions(
+        path,
+        CONFIG_FILE_NAME,
+        CONFIG_FILE_TYPES
+    );
 }
 
 

@@ -1,4 +1,5 @@
 import { Generator } from "./generator";
+import { NewBundler } from "./generator/bundler";
 import { Linter } from "./linter";
 import { BuildOptions, ConfigAppProperties, Endpoint, Module, Server } from "./models";
 import { Utility } from "./utilities";
@@ -11,7 +12,10 @@ export class SherpaJS {
 
 
     public static async Build(options:BuildOptions) {
-        Generator.Bundler(await this.LintServer(options.input), options);
+        let server  = await this.LintServer(options.input);
+        let bundler = NewBundler(server, options);
+        await bundler.Clean();
+        await bundler.Build();
     }
 
 

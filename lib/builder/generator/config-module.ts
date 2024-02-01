@@ -7,11 +7,7 @@ const CONFIG_FILE_TYPES = ["JS", "CJS", "TS"];
 
 
 export async function GetConfigModule(path:string):Promise<{ instance:ConfigModule, path:string }> {
-    let filepath = Utility.File.GetFileVaribleExtensions(
-        path,
-        CONFIG_FILE_NAME,
-        CONFIG_FILE_TYPES
-    );
+    let filepath = GetConfigModuleFilepath(path);
     if (!filepath)
         Utility.Log.Error({
             message: "Module config file could not be found.",
@@ -21,6 +17,15 @@ export async function GetConfigModule(path:string):Promise<{ instance:ConfigModu
         instance: await loadDefaultExport(filepath) as ConfigModule,
         path: filepath
     };
+}
+
+
+export function GetConfigModuleFilepath(path:string):string|undefined {
+    return Utility.File.GetFileVaribleExtensions(
+        path,
+        CONFIG_FILE_NAME,
+        CONFIG_FILE_TYPES
+    );
 }
 
 
