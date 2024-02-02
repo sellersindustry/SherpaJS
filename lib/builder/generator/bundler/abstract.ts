@@ -28,7 +28,7 @@ export abstract class Bundler {
                 path: this.GetPath()
             });
         }
-    };
+    }
 
     
 }

@@ -1,3 +1,4 @@
+import { SourceCode } from "../sourcecode";
 import { Logger } from "../logger";
 import { ConfigModule } from "../models";
 import { Utility } from "../utilities";
@@ -30,9 +31,9 @@ export function GetConfigModuleFilepath(path:string):string|undefined {
 }
 
 
-async function loadDefaultExport(file:string):Promise<any> {  
+async function loadDefaultExport(file:string):Promise<unknown> {  
     try {
-        return Utility.Loader.GetDefaultExport(file);
+        return SourceCode.GetDefaultExport(file);
     } catch (e) {
         Logger.RaiseError({
             message: "Module Config failed to load.",

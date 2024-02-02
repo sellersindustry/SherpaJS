@@ -1,23 +1,15 @@
 import fs from "fs";
-import { BuildOptions as ESBuildOptions, build as ESBuild } from "esbuild";
 import { Endpoint, VALID_EXPORTS } from "../../models";
 import { Utility } from "../../utilities";
 import { Bundler } from "./abstract";
 import { BundlerType } from "../../models/build";
 import { Logger } from "../../logger";
+import { SourceCode } from "../../sourcecode";
 
 
 const VERCEL_FUNCTION_CONFIG = {
     "runtime": "edge",
     "entrypoint": "index.js"
-};
-const DEFAULT_ESBUILD_TARGET = {
-    target: "es2020",
-    format: "esm",
-    bundle: true,
-    allowOverwrite: true,
-    treeShaking: true,
-    minify: true,
 };
 
 
@@ -58,15 +50,11 @@ export class BundlerVercel extends Bundler {
 
 
     async buildEndpointHandler(endpoint:Endpoint) {
-        await ESBuild({
-            stdin: {
-                contents: this.getEndpointHandlerCode(endpoint),
-                resolveDir: Utility.File.GetDirectory(endpoint.filepath),
-                loader: "ts",
-            },
-            outfile: this.getEndpointPath(endpoint, "index.js"),
-            ...DEFAULT_ESBUILD_TARGET as Partial<ESBuildOptions>,
-            ...this.build?.developer?.bundler?.esbuild as Partial<ESBuildOptions>,
+        await SourceCode.Build({
+            buffer:  this.getEndpointHandlerCode(endpoint),
+            output:  this.getEndpointPath(endpoint, "index.js"),
+            resolve: Utility.File.GetDirectory(endpoint.filepath),
+            options: this.build?.developer?.bundler?.esbuild
         });
     }
 

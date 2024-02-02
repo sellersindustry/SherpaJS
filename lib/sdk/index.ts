@@ -72,7 +72,7 @@ export class SherpaSDK {
     }
 
 
-};
+}
 
 
 export type { SherpaRequest };

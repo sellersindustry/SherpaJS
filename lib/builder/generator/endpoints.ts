@@ -1,7 +1,7 @@
 import { Logger } from "../logger";
 import { Endpoint, Route } from "../models";
+import { SourceCode } from "../sourcecode";
 import { Utility } from "../utilities";
-import { Project as TSMorphProject } from "ts-morph";
 
 
 export function GetEndpoints(path:string, subroute:string[]):Endpoint[] {
@@ -26,9 +26,7 @@ export function GetEndpoints(path:string, subroute:string[]):Endpoint[] {
 
 function getExportedVariables(filepath:string):string[] {
     try {
-        let project    = new TSMorphProject();
-        let sourceFile = project.addSourceFileAtPath(filepath);
-        return Array.from(sourceFile.getExportedDeclarations().keys());
+        return SourceCode.GetExportedVariableNames(filepath);
     } catch {
         Logger.RaiseError({
             message: `Unable to extract exported variables.`,
