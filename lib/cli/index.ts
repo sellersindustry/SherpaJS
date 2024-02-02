@@ -1,17 +1,17 @@
 import fs from "fs";
 import { Command, Option } from "commander";
-import { Utility } from "../builder/utilities";
+import { GetVersion } from "./version";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
 import { SherpaJS } from "../builder";
-import { BundlerType } from "../builder/models/options";
+import { BundlerType } from "../builder/models/build";
 let program = new Command();
 
 
 program
     .name("SherpaJS")
     .description("CLI for SherpaJS - Modular Microservices Framework")
-    .version(Utility.File.GetVersion());
+    .version(GetVersion());
 
 
 program.command("build")

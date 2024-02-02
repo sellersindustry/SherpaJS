@@ -1,6 +1,6 @@
+import { Logger } from "../../logger";
 import { BuildOptions, Server } from "../../models";
-import { BundlerType } from "../../models/options";
-import { Utility } from "../../utilities";
+import { BundlerType } from "../../models/build";
 import { Bundler } from "./abstract";
 import { BundlerVercel } from "./vercel";
 
@@ -12,7 +12,7 @@ export function NewBundler(server:Server, options:BuildOptions):Bundler {
     } else if (options.bundler === BundlerType.ExpressJS) {
         return null;
     } else {
-        Utility.Log.Error({ message: "Invalid bundler." });
+        Logger.RaiseError({ message: "Invalid bundler." });
     }
 }
 

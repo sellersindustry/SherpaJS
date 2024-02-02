@@ -1,18 +1,19 @@
 import Ajv from "ajv";
-import { CONFIG_MODULE_SCHEMA, ConfigModule, Level, Message } from "../models";
+import { CONFIG_MODULE_SCHEMA, ConfigModule } from "../models";
+import { Log, LogLevel } from "../logger";
 
 
-export function Linter(config:ConfigModule, path:string):Message[] {
+export function Linter(config:ConfigModule, path:string):Log[] {
     return schema(config, path);
 }
 
 
-function schema(config:ConfigModule, path:string):Message[] {
+function schema(config:ConfigModule, path:string):Log[] {
     let validator = (new Ajv()).compile(CONFIG_MODULE_SCHEMA);
     if (!validator(config)) {
         return validator.errors.map((error) => {
             return {
-                level: Level.ERROR,
+                level: LogLevel.ERROR,
                 message: "Module Config Error: " + error.message,
                 path: path + " - " + error.instancePath
             };

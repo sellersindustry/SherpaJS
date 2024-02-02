@@ -1,6 +1,6 @@
 
 
-export enum Level {
+export enum LogLevel {
     ERROR,
     WARN,
     INFO,
@@ -8,8 +8,8 @@ export enum Level {
 };
 
 
-export type Message = {
-    level?:Level;
+export type Log = {
+    level?:LogLevel;
     message:string;
     content?:string;
     path?:string;

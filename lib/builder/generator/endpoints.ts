@@ -1,3 +1,4 @@
+import { Logger } from "../logger";
 import { Endpoint, Route } from "../models";
 import { Utility } from "../utilities";
 import { Project as TSMorphProject } from "ts-morph";
@@ -5,7 +6,7 @@ import { Project as TSMorphProject } from "ts-morph";
 
 export function GetEndpoints(path:string, subroute:string[]):Endpoint[] {
     if (!Utility.File.Exists(path))
-        Utility.Log.Error({
+        Logger.RaiseError({
             message: "Directory does not exist. Unable to generate endpoints.",
             path: path
         });
@@ -29,7 +30,10 @@ function getExportedVariables(filepath:string):string[] {
         let sourceFile = project.addSourceFileAtPath(filepath);
         return Array.from(sourceFile.getExportedDeclarations().keys());
     } catch {
-        Utility.Log.Error({ message: `Unable to extract exported variables.`, path: filepath });
+        Logger.RaiseError({
+            message: `Unable to extract exported variables.`,
+            path: filepath
+        });
     }
 }
 

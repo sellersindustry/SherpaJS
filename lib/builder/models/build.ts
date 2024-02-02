@@ -11,6 +11,7 @@ export type BuildOptions = {
     input:string;
     output:string;
     bundler:BundlerType;
+    port?:number;
     developer?:{
         bundler?:{
             esbuild?:Partial<ESBuildOptions>;

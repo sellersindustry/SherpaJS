@@ -1,20 +1,20 @@
-import { Level, Message } from "../models";
+import { Log, LogLevel } from "./model";
 
 
-export class Log {
+export class Logger {
 
 
-    public static Output(messages:Message[], exitOnError:boolean = true) {
+    public static Output(messages:Log[], exitOnError:boolean = true) {
         for (let message of messages)
             this.Print(message);
         if (!exitOnError) return;
-        if (messages.filter(m => m.level == Level.ERROR).length > 0)
+        if (messages.filter(m => m.level == LogLevel.ERROR).length > 0)
             this.Exit();
     }
 
 
-    public static Print(log:Message) {
-        let levelLabel = Level[log.level != undefined ? log.level : Level.INFO];
+    public static Print(log:Log) {
+        let levelLabel = LogLevel[log.level != undefined ? log.level : LogLevel.INFO];
         console.log(`[${levelLabel}] ${log.message}`);
         if (log.content)
             console.log(`\t ${log.content}`);
@@ -23,8 +23,8 @@ export class Log {
     }
 
 
-    public static Error(message:Message) {
-        this.Print({ ...message, level: Level.ERROR });
+    public static RaiseError(log:Log) {
+        this.Print({ ...log, level: LogLevel.ERROR });
         this.Exit();
     }
 
@@ -37,3 +37,6 @@ export class Log {
 
 }
 
+
+export type { Log };
+export { LogLevel };

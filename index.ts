@@ -1,5 +1,5 @@
 import { SherpaJS } from "./lib/builder";
-import { BundlerType } from "./lib/builder/models/options";
+import { BundlerType } from "./lib/builder/models/build";
 
 
 (async () => {

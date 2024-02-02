@@ -1,3 +1,4 @@
+import { Logger } from "../logger";
 import { ConfigModule } from "../models";
 import { Utility } from "../utilities";
 
@@ -9,7 +10,7 @@ const CONFIG_FILE_TYPES = ["JS", "CJS", "TS"];
 export async function GetConfigModule(path:string):Promise<{ instance:ConfigModule, path:string }> {
     let filepath = GetConfigModuleFilepath(path);
     if (!filepath)
-        Utility.Log.Error({
+        Logger.RaiseError({
             message: "Module config file could not be found.",
             path: path
         });
@@ -33,7 +34,7 @@ async function loadDefaultExport(file:string):Promise<any> {
     try {
         return Utility.Loader.GetDefaultExport(file);
     } catch (e) {
-        Utility.Log.Error({
+        Logger.RaiseError({
             message: "Module Config failed to load.",
             content: "Ensure there is a default export.",
             path: file

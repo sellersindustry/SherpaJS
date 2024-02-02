@@ -1,5 +1,6 @@
 import { Schema } from "ajv";
 
+
 export type ConfigModule = {
     version:1;
     name:string;

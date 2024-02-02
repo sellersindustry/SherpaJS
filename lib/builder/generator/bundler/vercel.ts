@@ -3,7 +3,8 @@ import { BuildOptions as ESBuildOptions, build as ESBuild } from "esbuild";
 import { Endpoint, VALID_EXPORTS } from "../../models";
 import { Utility } from "../../utilities";
 import { Bundler } from "./abstract";
-import { BundlerType } from "../../models/options";
+import { BundlerType } from "../../models/build";
+import { Logger } from "../../logger";
 
 
 const VERCEL_FUNCTION_CONFIG = {
@@ -23,21 +24,18 @@ const DEFAULT_ESBUILD_TARGET = {
 export class BundlerVercel extends Bundler {
 
 
+    GetPath(...path:string[]):string {
+        return Utility.File.JoinPath(
+            this.build.output,
+            ".vercel" + (path.length == 0 ? "" : "/output"),
+            ...path
+        );
+    }
+
+    
     async Build() {
         await this.buildEndpoints();
         await this.buildServerConfig();
-    }
-
-
-    async Clean() {
-        try {
-            await Utility.File.Remove(this.getPath());
-        } catch (error) {
-            Utility.Log.Error({
-                message: "Failed to clean build directory.",
-                path: this.getPath()
-            });
-        }
     }
 
 
@@ -48,7 +46,7 @@ export class BundlerVercel extends Bundler {
                     await this.buildEndpointHandler(endpoint);
                     await this.buildEndpointConfig(endpoint);
                 } catch (error) {
-                    Utility.Log.Error({
+                    Logger.RaiseError({
                         message: "Failed to build endpoint.",
                         content: error.message,
                         path: endpoint.filepath,
@@ -73,17 +71,17 @@ export class BundlerVercel extends Bundler {
     }
 
 
-    private getEndpointHandlerCode(endpoint:Endpoint) {
+    private getEndpointHandlerCode(endpoint:Endpoint):string {
         let varibles = endpoint.exports.filter(o => VALID_EXPORTS.includes(o));
         return [
             `import { ${varibles.join(", ")} } from "./index";`,
             `import config from "${this.server.config.path}";`,
             `import { SherpaSDK } from "${Utility.File.JoinPath(__dirname, "../../../sdk/index")}";`,
             `export default async function index(_request, event) {`,
-                `let request = SherpaSDK.ProcessRequest(_request, "${BundlerType.Vercel.toString()}");`,
-                `let sherpa  = new SherpaSDK(config, ${JSON.stringify(endpoint)});`,
+                `\tlet request = SherpaSDK.ProcessRequest(_request, "${BundlerType.Vercel.toString()}");`,
+                `\tlet sherpa  = new SherpaSDK(config, ${JSON.stringify(endpoint)});`,
                 `\tswitch (request.method) {`,
-                    `${varibles.map((v) => `\t\tcase "${v}": return ${v}(request, sherpa);`).join("\n")}`,
+                    `\t\t${varibles.map((v) => `\t\tcase "${v}": return ${v}(request, sherpa);`).join("\n")}`,
                 `\t}`,
                 `\treturn new Response("Unsupported method \\"" + request.method + "\\".", { status: 405 });`,
             `}`
@@ -101,7 +99,7 @@ export class BundlerVercel extends Bundler {
 
     private async buildServerConfig() {
         let minify  = this.build.developer.bundler.esbuild.minify;
-        fs.writeFileSync(this.getPath("/config.json"), JSON.stringify({
+        fs.writeFileSync(this.GetPath("/config.json"), JSON.stringify({
             "version": 3,
             "routes": this.getDynamicReroutes(),
         }, null, minify == false ? 4 : 0));
@@ -127,19 +125,10 @@ export class BundlerVercel extends Bundler {
 
 
     private getEndpointPath(endpoint:Endpoint, ...path:string[]):string {
-        return this.getPath(
+        return this.GetPath(
             "functions",
             endpoint.route.map(r => r.isDynamic ? `[${r.name}]` : r.name).join("/"),
             "/index.func",
-            ...path
-        );
-    }
-    
-
-    private getPath(...path:string[]):string {
-        return Utility.File.JoinPath(
-            this.build.output,
-            ".vercel" + (path.length == 0 ? "" : "/output"),
             ...path
         );
     }

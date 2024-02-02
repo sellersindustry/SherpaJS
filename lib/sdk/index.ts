@@ -1,5 +1,5 @@
 import { ConfigAppProperties, ConfigServer, Endpoint } from "../builder/models";
-import { BundlerType } from "../builder/models/options";
+import { BundlerType } from "../builder/models/build";
 import { SherpaRequest } from "./request";
 
 
