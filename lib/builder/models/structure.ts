@@ -2,7 +2,8 @@ import { ConfigModule } from "./config-module";
 import { ConfigServer } from "./config-server";
 
 
-export const VALID_EXPORTS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+export const REQUEST_METHODS = [ "GET", "POST", "PUT", "PATCH", "DELETE" ];
+export const VALID_EXPORTS   = [ ...REQUEST_METHODS ];
 
 
 export type Server = {

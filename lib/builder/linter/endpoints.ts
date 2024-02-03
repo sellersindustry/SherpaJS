@@ -45,14 +45,14 @@ function routes(endpoint:Endpoint):Log[] {
             return [{
                 level: LogLevel.ERROR,
                 message: `Routes should only contain letters, numbers, and `
-                    + `dashes. The following route is invalid: \"${fullRoute}\".`,
+                    + `dashes. The following route is invalid: "${fullRoute}".`,
                 path: endpoint.filepath
             }];
         }
         if (subroute.orginal.toLowerCase() != subroute.orginal) {
             return [{
                 level: LogLevel.WARN,
-                message: `Routes should be lowercase \"${fullRoute}\".`,
+                message: `Routes should be lowercase "${fullRoute}".`,
                 path: endpoint.filepath
             }];
         }
@@ -67,7 +67,7 @@ function exported(endpoint:Endpoint):Log[] {
         if (!VALID_EXPORTS.includes(variable)) {
             messages.push({
                 level: LogLevel.WARN,
-                message: `Invalid Export. \"${variable}\" will be ignored. `
+                message: `Invalid Export. "${variable}" will be ignored. `
                     + "Must be " + VALID_EXPORTS.join(", ") + ".",
                 path: endpoint.filepath
             });

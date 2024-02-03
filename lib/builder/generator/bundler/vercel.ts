@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Endpoint, VALID_EXPORTS } from "../../models";
+import { Endpoint } from "../../models";
 import { Utility } from "../../utilities";
 import { Bundler } from "./abstract";
 import { BundlerType } from "../../models/build";
@@ -60,18 +60,13 @@ export class BundlerVercel extends Bundler {
 
 
     private getEndpointHandlerCode(endpoint:Endpoint):string {
-        let varibles = endpoint.exports.filter(o => VALID_EXPORTS.includes(o));
         return [
-            `import { ${varibles.join(", ")} } from "./index";`,
+            `import { Handler } from "${Utility.File.JoinPath(__dirname, "../handler/index")}";`,
             `import config from "${this.server.config.path}";`,
-            `import { SherpaSDK } from "${Utility.File.JoinPath(__dirname, "../../../sdk/index")}";`,
-            `export default async function index(_request, event) {`,
-                `\tlet request = SherpaSDK.ProcessRequest(_request, "${BundlerType.Vercel.toString()}");`,
-                `\tlet sherpa  = new SherpaSDK(config, ${JSON.stringify(endpoint)});`,
-                `\tswitch (request.method) {`,
-                    `\t\t${varibles.map((v) => `\t\tcase "${v}": return ${v}(request, sherpa);`).join("\n")}`,
-                `\t}`,
-                `\treturn new Response("Unsupported method \\"" + request.method + "\\".", { status: 405 });`,
+            `import * as functions from "./index";`,
+            `export default async function index(request, event) {`,
+                `\tlet endpoint = ${JSON.stringify(endpoint)}`,
+                `\treturn Handler(request, functions, endpoint, config, "${BundlerType.Vercel.toString()}")`,
             `}`
         ].join("\n");
     }
