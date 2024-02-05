@@ -3,9 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/index.js",
-	"bin": {
-		"sherpa": "dist/lib/cli/index.js"
-	},
+	"bin": "dist/lib/cli/index.js",
 	"scripts": {
 		"build": "tsc --build tsconfig.json",
 		"lint": "eslint . --ext .ts",
