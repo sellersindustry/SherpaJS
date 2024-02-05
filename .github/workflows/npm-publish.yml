@@ -17,12 +17,15 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm test
-
+      
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{github.event.release.tag_name}}
       - uses: actions/setup-node@v3
         with:
           node-version: 16
