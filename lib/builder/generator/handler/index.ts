@@ -13,9 +13,13 @@ export function Handler(
 ):Response {
     let method = request.method.toUpperCase();
     if (REQUEST_METHODS.includes(method) && functions[method]) {
-        let sherpaRequest = prepareRequest(request, type);
-        let sherpaSDK     = new SherpaSDK(config, endpoint);
-        return functions[method](sherpaRequest, sherpaSDK);
+        try {
+            let sherpaRequest = prepareRequest(request, type);
+            let sherpaSDK     = new SherpaSDK(config, endpoint);
+            return functions[method](sherpaRequest, sherpaSDK);
+        } catch (error) {
+            return new Response(`SherpaJS: ${error.message}`, { status: 405 });
+        }
     } else {
         return new Response(`Unsupported method "${request.method}".`, { status: 405 });
     }
@@ -53,9 +57,9 @@ export async function ExpressJSResponse(sherpa:Response, express:ExpressResponse
     let type = sherpa.headers.get("content-type");
     express.status(sherpa.status);
     express.set(Object.fromEntries(sherpa.headers.entries()));
-    if (type.includes("text/")) {
+    if (type && type.includes("text/")) {
         express.send(await sherpa.text());
-    } else if (type.includes("application/json")) {
+    } else if (type && type.includes("application/json")) {
         express.send(await sherpa.json());
     } else {
         express.status(500).send("Error: SherpaJS ExpressJS only currently support JSON and Text, please contact support.");
