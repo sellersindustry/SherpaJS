@@ -52,7 +52,7 @@ function validateAppModule(app:ConfigAppProperties, path:string):Log[] {
             return [{
                 level: LogLevel.ERROR,
                 message: `Server Config Error: App routes should only contain `
-                    + `\"module\" and \"properties\".`,
+                    + `"module" and "properties".`,
                 path: path
             }];
         }
@@ -78,7 +78,7 @@ function validateAppList(app:ConfigAppProperties, path:string):Log[] {
                 level: LogLevel.ERROR,
                 message: `Server Config Error: App routes should only contain `
                     + `letters, numbers, and `
-                    + `dashes. The following route is invalid: \"${key}\".`,
+                    + `dashes. The following route is invalid: "${key}".`,
                 path: path + " - " + key
             });
         }

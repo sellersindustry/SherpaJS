@@ -3,11 +3,11 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/index.js",
+	"bin": {
+		"sherpa": "dist/lib/cli/index.js"
+	},
 	"scripts": {
-		"start": "tsc && node dist/index.js",
-		"build": "tsc index.ts ./lib/cli/index.ts",
-		"build:main": "tsc . ./lib/cli/index",
-		"build:cli": "tsc ",
+		"build": "tsc --build tsconfig.json",
 		"lint": "eslint . --ext .ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -19,7 +19,7 @@
 		"eslint": "^8.56.0",
 		"typescript": "^5.3.3"
 	},
-	"author": "",
+	"author": "Sellers Industries",
 	"license": "ISC",
 	"dependencies": {
 		"ajv": "^8.12.0",

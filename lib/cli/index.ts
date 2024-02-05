@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Command, Option } from "commander";
+import { Command, Option, program } from "commander";
 import { GetVersion } from "./version";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
@@ -9,8 +9,7 @@ import { NewBundler } from "../builder/generator/bundler";
 let CLI = new Command();
 
 
-CLI
-    .name("SherpaJS")
+CLI.name("SherpaJS")
     .description("CLI for SherpaJS - Modular Microservices Framework")
     .version(GetVersion());
 
@@ -102,5 +101,5 @@ CLI.command("lint")
     });
 
 
-export default CLI;
+program.parse(process.argv);
 

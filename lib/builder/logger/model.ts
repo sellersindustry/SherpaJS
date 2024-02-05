@@ -5,7 +5,7 @@ export enum LogLevel {
     WARN,
     INFO,
     DEBUG
-};
+}
 
 
 export type Log = {

@@ -5,10 +5,15 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "dist"
+        "outDir": "dist",
+        "declaration": true
     },
     "exclude": [
         "node_modules",
 		"archive"
+    ],
+    "files": [
+        "./index.ts",
+        "./lib/cli/index.ts"
     ]
 }
