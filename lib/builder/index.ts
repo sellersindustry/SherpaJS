@@ -43,7 +43,7 @@ export class SherpaJS {
     private static getEndpoints(input:string, subroute:string[]):Endpoint[] {
         let endpointDir = Utility.File.JoinPath(input, PATH_ENDPOINTS);
         return Generator.GetEndpoints(endpointDir, subroute);
-    };
+    }
 
 
     private static getModules(apps:ConfigAppProperties, subroute:string[] = []):{ path:string, subroute:string[] }[] {

@@ -1,3 +1,5 @@
+import { SherpaSDK } from "../../lib/sdk";
+
 export function GET() {
-    return new Response("Hello World", { status: 200 });
+    return SherpaSDK.Response({ "foo": 200 });
 }

@@ -1,4 +1,5 @@
+import { SherpaSDK } from "../../../../lib/sdk";
 
 export function GET(request:Request) {
-    return new Response(request.url, { status: 200 });
+    return SherpaSDK.Response(request.url, { status: 200 });
 }

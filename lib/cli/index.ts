@@ -5,16 +5,17 @@ import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
 import { SherpaJS } from "../builder";
 import { BundlerType } from "../builder/models/build";
-let program = new Command();
+import { NewBundler } from "../builder/generator/bundler";
+let CLI = new Command();
 
 
-program
+CLI
     .name("SherpaJS")
     .description("CLI for SherpaJS - Modular Microservices Framework")
     .version(GetVersion());
 
 
-program.command("build")
+CLI.command("build")
     .description("Build SherpaJS Server")
     .option("-i, --input <path>", "path to server or module, defaults to current directory")
     .option("--dev", "enable development mode, do not minify output")
@@ -31,7 +32,6 @@ program.command("build")
             console.log(`No server found in "${path}"`);
             return;
         }
-        console.log(options.dev)
         SherpaJS.Build({
             input: path,
             bundler: options.bundler,
@@ -47,17 +47,39 @@ program.command("build")
     });
 
 
-//! FIXME
-program.command("clean")
-//! FIXME
+CLI.command("clean")
+    .description("Remove build directories")
+    .option("-i, --input <path>", "path to server or module, defaults to current directory")
+    .action((options) => {
+        let path = options.input ? options.input : process.cwd();
+        Object.values(BundlerType).forEach((bundler) => {
+            NewBundler(null, {
+                bundler: bundler,
+                input: path,
+                output: path
+            }).Clean();
+        });
+    });
 
 
-//! FIXME
-program.command("start")
-//! FIXME
+CLI.command("start")
+    .option("-i, --input <path>", "path to server or module, defaults to current directory")
+    .option("-p, --port <number>", "port number of server, defaults to 3000")
+    .action((options) => {
+        let path = options.input ? options.input : process.cwd();
+        let port = options.port ? parseInt(options.port) : 3000;
+        SherpaJS.Build({
+            input: path,
+            bundler: BundlerType.ExpressJS,
+            output: process.cwd(),
+            port: port
+        });
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require(`${process.cwd()}/.sherpa/index.js`);
+    });
 
 
-program.command("lint")
+CLI.command("lint")
     .description("Lint a server or module")
     .option("-i, --input <path>", "path to server or module, defaults to current directory")
     .action((options) => {
@@ -80,5 +102,5 @@ program.command("lint")
     });
 
 
-program.parse();
+export default CLI;
 

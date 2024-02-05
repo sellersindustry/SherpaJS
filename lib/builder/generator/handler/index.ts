@@ -1,3 +1,4 @@
+import { response as ExpressResponse } from "express";
 import { SherpaRequest, SherpaSDK } from "../../../sdk";
 import { ConfigServer, Endpoint, REQUEST_METHODS } from "../../models";
 import { BundlerType } from "../../models/build";
@@ -24,10 +25,11 @@ export function Handler(
 function prepareRequest(request:Request, type:BundlerType):SherpaRequest {
     if (type === BundlerType.Vercel) {
         return prepareRequestVercel(request);
+    } else if (type === BundlerType.ExpressJS) {
+        return request as SherpaRequest;
     } else {
         throw new Error("Not implemented");
     }
-
 }
 
 
@@ -44,5 +46,19 @@ function prepareRequestVercel(request:Request):SherpaRequest {
         }
     });
     return _request;
+}
+
+
+export async function ExpressJSResponse(sherpa:Response, express:ExpressResponse) {
+    let type = sherpa.headers.get("content-type");
+    express.status(sherpa.status);
+    express.set(Object.fromEntries(sherpa.headers.entries()));
+    if (type.includes("text/")) {
+        express.send(await sherpa.text());
+    } else if (type.includes("application/json")) {
+        express.send(await sherpa.json());
+    } else {
+        express.status(500).send("Error: SherpaJS ExpressJS only currently support JSON and Text, please contact support.");
+    }
 }
 

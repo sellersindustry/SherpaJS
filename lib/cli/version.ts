@@ -1,10 +1,11 @@
-import { readFileSync} from "fs";
+import { readFileSync } from "fs";
+import path from "path";
 
 
 export function GetVersion():string {
-    let path = __dirname + "/../../../package.json";
-    let file = readFileSync(path, "utf8")
-    let data = JSON.parse(file);
+    let file = path.join(__dirname, "../../package.json");
+    let buff = readFileSync(file, "utf8")
+    let data = JSON.parse(buff);
     return data.version;
 }
 

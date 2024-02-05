@@ -1,5 +1,6 @@
 import { ConfigAppProperties, ConfigServer, Endpoint } from "../builder/models";
 import { SherpaRequest } from "./request";
+import NewResponse from "./response";
 
 
 export class SherpaSDK {
@@ -42,6 +43,11 @@ export class SherpaSDK {
             obj = obj["/" + id];
         });
         return obj;
+    }
+
+
+    static Response(body?:unknown, options?:ResponseInit):Response {
+        return NewResponse(body, options);
     }
 
 

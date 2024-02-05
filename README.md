@@ -1,8 +1,5 @@
 ## TODO
 - Attempt to remove utilites folder...
-- ExpressJS Builder
-- Update ExpressJS Dynamic Parse URL Params SDK
-- CLI (Clean/Serve)
 - Exports (CLI, Sherpa Builder, Sherpa SDK, Request, Enum for Bundler Type)
 
 
