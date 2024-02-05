@@ -1,7 +1,7 @@
 ## TODO
 - Attempt to remove utilites folder...
-- Exports (CLI, Sherpa Builder, Sherpa SDK, Request, Enum for Bundler Type)
 - Headers + Footers
+- Documentation
 
 
 ## Future Features
