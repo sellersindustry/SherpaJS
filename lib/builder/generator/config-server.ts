@@ -58,9 +58,9 @@ function _resolveModulePath(route:ConfigAppProperties, path:string):ConfigAppPro
         let reg = Utility.File.JoinPath(path, route["module"]);
         let npm = Utility.File.JoinPath(path, "node_modules", route["module"]);
         if (Utility.File.Exists(reg)) {
-            route["module"] = reg;
-        } else if (npm) {
-            route["module"] = npm;
+            route["filepath"] = reg;
+        } else if (Utility.File.Exists(npm)) {
+            route["filepath"] = npm;
         } else {
             Logger.RaiseError({
                 message: `Module Server failed to load. Unable to find Sherpa `

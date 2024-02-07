@@ -15,7 +15,8 @@ function schema(config:ConfigModule, path:string):Log[] {
             return {
                 level: LogLevel.ERROR,
                 message: "Module Config Error: " + error.message,
-                path: path + " - " + error.instancePath
+                path: path,
+                propertyRoute: error.instancePath.split("/").slice(1)
             };
         });
     }

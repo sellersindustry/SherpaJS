@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Command, Option, program } from "commander";
+import { Command, Option } from "commander";
 import { GetVersion } from "./version";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
@@ -101,5 +101,5 @@ CLI.command("lint")
     });
 
 
-program.parse(process.argv);
+CLI.parse();
 

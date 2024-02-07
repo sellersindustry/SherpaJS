@@ -3,6 +3,7 @@ import { Schema } from "ajv";
 
 export type ConfigAppProperties = {
     module:string;
+    filepath?:string;
     properties?:unknown;
 } | { [key:`/${string}`]:ConfigAppProperties };
 

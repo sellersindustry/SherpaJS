@@ -6,11 +6,12 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "declaration": true
+        "declaration": true,
     },
     "exclude": [
         "node_modules",
-		"archive"
+		"archive",
+        "./test.ts"
     ],
     "files": [
         "./index.ts",

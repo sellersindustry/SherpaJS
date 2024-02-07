@@ -1,5 +1,7 @@
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions } from "esbuild";
+import { TypeScriptValidation } from "./ts-validation";
+import ts from "typescript";
 import vm from "vm";
 
 
@@ -49,6 +51,11 @@ export class SourceCode {
             },
             outfile: props.output,
         });
+    }
+
+
+    static TypeScriptValidation(buffer:string):readonly ts.Diagnostic[] {
+        return TypeScriptValidation(buffer);
     }
 
 

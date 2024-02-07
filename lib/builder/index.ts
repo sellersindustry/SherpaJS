@@ -22,7 +22,7 @@ export class SherpaJS {
 
     public static async LintServer(input:string):Promise<Server> {
         let config = await Generator.GetConfigServer(input);
-        Logger.Output(Linter.ConfigServer(config.instance, config.path));
+        Logger.Format(Linter.ConfigServer(config.instance, config.path));
         let modules = [];
         for (let module of this.getModules(config.instance.app)) {
             modules.push(await this.LintModule(module.path, module.subroute));
@@ -33,9 +33,9 @@ export class SherpaJS {
 
     public static async LintModule(input:string, subroute:string[]=[]):Promise<Module> {
         let config = await Generator.GetConfigModule(input);
-        Logger.Output(Linter.ConfigModule(config.instance, config.path));
+        Logger.Format(Linter.ConfigModule(config.instance, config.path));
         let endpoints = this.getEndpoints(input, subroute);
-        Logger.Output(Linter.Endpoints(endpoints));
+        Logger.Format(Linter.Endpoints(endpoints));
         return { endpoints, config, subroute };
     }
 
@@ -48,11 +48,11 @@ export class SherpaJS {
 
     private static getModules(apps:ConfigAppProperties, subroute:string[] = []):{ path:string, subroute:string[] }[] {
         if (!apps) return [];
-        if (!apps["module"]) return Object.keys(apps).map((key) => {
+        if (!apps["filepath"]) return Object.keys(apps).map((key) => {
             let route = key.startsWith("/") ? key.replace("/", "") : key;
             return this.getModules(apps[key], [...subroute, route]);
         }).flat();
-        return [{ path: apps["module"], subroute: subroute }];
+        return [{ path: apps["filepath"], subroute: subroute }];
     }
     
 
