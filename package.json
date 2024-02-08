@@ -9,6 +9,7 @@
 	},
 	"scripts": {
 		"build": "tsc --build tsconfig.json",
+		"prepare": "npm run build",
 		"lint": "eslint . --ext .ts",
 		"cli": "node dist/lib/cli/index.js",
 		"test": "echo \"no test specified\""
