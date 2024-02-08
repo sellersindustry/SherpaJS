@@ -32,7 +32,7 @@ function filename(endpoint:Endpoint):Log[] {
     if (endpoint.filename == "index") return [];
     return [{
         level: LogLevel.ERROR,
-        message: "Invalid File Name. Must be \"index\".",
+        message: "Invalid File Name. File must be named \"index\".",
         path: endpoint.filepath
     }];
 }

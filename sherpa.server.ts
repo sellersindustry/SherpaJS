@@ -3,7 +3,10 @@ export default {
     app: {
         "/foo": {
             "/nice": {
-                module: "./example-module"
+                module: "./example-module",
+                properties: {
+                    food: "nice"
+                }
             },
         }
     }

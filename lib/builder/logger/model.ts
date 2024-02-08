@@ -13,5 +13,7 @@ export type Log = {
     message:string;
     content?:string;
     path?:string;
+    lineNumber?:number;
+    propertyRoute?:string[];
 };
 

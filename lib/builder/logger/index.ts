@@ -1,10 +1,11 @@
+import { cyan, dim, magenta, red, yellow } from "colorette"
 import { Log, LogLevel } from "./model";
 
 
 export class Logger {
 
 
-    public static Output(messages:Log[], exitOnError:boolean = true) {
+    public static Format(messages:Log[], exitOnError:boolean = true) {
         for (let message of messages)
             this.Print(message);
         if (!exitOnError) return;
@@ -14,12 +15,32 @@ export class Logger {
 
 
     public static Print(log:Log) {
-        let levelLabel = LogLevel[log.level != undefined ? log.level : LogLevel.INFO];
-        console.log(`[${levelLabel}] ${log.message}`);
+        console.log(`${this.printStatus(log)} ${log.message}`);
         if (log.content)
-            console.log(`\t ${log.content}`);
+            console.log(`\t${log.content}`);
         if (log.path)
-            console.log(`\t Path: ${log.path}`);
+            console.log(this.printPath(log));
+    }
+
+
+    private static printStatus(log:Log):string {
+        let levelLabel = LogLevel[log.level != undefined ? log.level : LogLevel.INFO];
+        if (log.level == LogLevel.ERROR) {
+            return red(`[${levelLabel}]`);
+        } else if (log.level == LogLevel.WARN) {
+            return yellow(`[${levelLabel}]`);
+        } else if (log.level == LogLevel.DEBUG) {
+            return magenta(`[${levelLabel}]`);
+        } else {
+            return cyan(`[${levelLabel}]`);
+        }
+    }
+
+    private static printPath(log:Log):string {
+        if (!log.path) return;
+        let route = log.propertyRoute ? log.propertyRoute.join(".") + " " : "";
+        let file  = log.path + (log.lineNumber ? ":" + log.lineNumber : "");
+        return dim(`\tat ${route}(${file})`);
     }
 
 
