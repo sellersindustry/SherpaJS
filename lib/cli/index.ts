@@ -3,7 +3,7 @@ import fs from "fs";
 import { Command, Option } from "commander";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
-import { SherpaJS } from "../builder";
+import { Builder } from "../builder";
 import { BundlerType } from "../builder/models/build";
 import { NewBundler } from "../builder/generator/bundler";
 import { LogLevel, Logger } from "../builder/logger";
@@ -38,7 +38,7 @@ CLI.command("build")
             }]);
             return;
         }
-        SherpaJS.Build({
+        Builder.Build({
             input: path,
             bundler: options.bundler,
             output: process.cwd(),
@@ -75,7 +75,7 @@ CLI.command("start")
     .action((options) => {
         let path = options.input ? options.input : process.cwd();
         let port = options.port ? parseInt(options.port) : 3000;
-        SherpaJS.Build({
+        Builder.Build({
             input: path,
             bundler: BundlerType.ExpressJS,
             output: process.cwd(),
@@ -108,9 +108,9 @@ CLI.command("lint")
             return;
         }
         if (server) {
-            SherpaJS.LintServer(path);
+            Builder.LintServer(path);
         } else {
-            SherpaJS.LintModule(path);
+            Builder.LintModule(path);
         }
     });
 

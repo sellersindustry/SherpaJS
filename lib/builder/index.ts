@@ -9,7 +9,7 @@ import { Utility } from "./utilities";
 const PATH_ENDPOINTS = "/routes";
 
 
-export class SherpaJS {
+export class Builder {
 
 
     public static async Build(options:BuildOptions) {

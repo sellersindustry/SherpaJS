@@ -1,10 +1,10 @@
 import { response as ExpressResponse } from "express";
-import { SherpaRequest, SherpaSDK } from "../../../sdk";
+import { SherpaRequest, Environment } from "../../../environment";
 import { ConfigServer, Endpoint, REQUEST_METHODS } from "../../models";
 import { BundlerType } from "../../models/build";
 
 
-type MethodFunctions = { [key:string]:(request:SherpaRequest, sherpa:SherpaSDK) => Response };
+type MethodFunctions = { [key:string]:(request:SherpaRequest, environment:Environment) => Response };
 
 
 export function Handler(
@@ -15,8 +15,8 @@ export function Handler(
     if (REQUEST_METHODS.includes(method) && functions[method]) {
         try {
             let sherpaRequest = prepareRequest(request, type);
-            let sherpaSDK     = new SherpaSDK(config, endpoint);
-            return functions[method](sherpaRequest, sherpaSDK);
+            let environment   = new Environment(config, endpoint);
+            return functions[method](sherpaRequest, environment);
         } catch (error) {
             return new Response(`SherpaJS: ${error.message}`, { status: 405 });
         }
