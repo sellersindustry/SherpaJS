@@ -10,8 +10,8 @@ import { LogLevel, Logger } from "../builder/logger";
 let CLI = new Command();
 
 
-CLI.name("SherpaJS")
-    .description("CLI for SherpaJS - Modular Microservices Framework")
+CLI.name("sherpa")
+    .description("Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.")
     .version(process.env.npm_package_version);
 
 
@@ -69,6 +69,7 @@ CLI.command("clean")
 
 
 CLI.command("start")
+    .description("Build and start local SherpaJS Server")
     .option("-i, --input <path>", "path to server or module, defaults to current directory")
     .option("-p, --port <number>", "port number of server, defaults to 3000")
     .action((options) => {
