@@ -10,8 +10,8 @@ import { LogLevel, Logger } from "../builder/logger";
 let CLI = new Command();
 
 
-CLI.name("SherpaJS")
-    .description("CLI for SherpaJS - Modular Microservices Framework")
+CLI.name("sherpa")
+    .description("Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.")
     .version(process.env.npm_package_version);
 
 

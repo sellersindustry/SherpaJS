@@ -2,7 +2,7 @@
 	"name": "sherpa-core",
 	"author": "Sellers Industries",
 	"version": "0.0.0",
-	"description": "",
+	"description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
 	"main": "dist/index.js",
 	"bin": {
 		"sherpa": "./dist/lib/cli/index.js"
