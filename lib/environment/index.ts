@@ -3,7 +3,7 @@ import { SherpaRequest } from "./request";
 import NewResponse from "./response";
 
 
-export class SherpaSDK {
+export class Environment {
     
     private moduleID:string[];
     private server:ConfigServer;
@@ -12,8 +12,8 @@ export class SherpaSDK {
 
     constructor (server:ConfigServer, endpoint:Endpoint) {
         this.server     = server;
-        this.moduleID   = SherpaSDK.initModuleID(endpoint);
-        this.properties = SherpaSDK.initProperties(server, this.moduleID);
+        this.moduleID   = Environment.initModuleID(endpoint);
+        this.properties = Environment.initProperties(server, this.moduleID);
     }
 
 

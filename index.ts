@@ -1,13 +1,17 @@
+import { Builder } from "./lib/builder";
 import { ConfigModule, ConfigServer, BundlerType } from "./lib/builder/models";
-import { SherpaSDK } from "./lib/sdk/index";
-import { SherpaRequest } from "./lib/sdk/request";
+import { Environment } from "./lib/environment/index";
+import { SherpaRequest } from "./lib/environment/request";
 
-const NewModule = (config:ConfigModule) => config
-const NewServer = (config:ConfigServer) => config
+const NewModule = (config:ConfigModule) => config;
+const NewServer = (config:ConfigServer) => config;
+const Response  = Environment.Response;
 
 export {
-    SherpaSDK,
     BundlerType as Bundler,
+    Builder,
+    Environment,
+    Response,
     NewModule,
     NewServer
 };
