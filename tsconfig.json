@@ -10,8 +10,6 @@
     },
     "exclude": [
         "node_modules",
-		"archive",
-        "./test.ts"
     ],
     "files": [
         "./index.ts",
