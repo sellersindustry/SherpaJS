@@ -1,3 +1,6 @@
+![NPM Version](https://img.shields.io/npm/v/sherpa-core)
+[![Node.js Package](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml)
+
 ## TODO
 - add init for server and module
 - Headers + Footers
