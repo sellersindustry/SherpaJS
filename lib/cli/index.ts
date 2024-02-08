@@ -69,6 +69,7 @@ CLI.command("clean")
 
 
 CLI.command("start")
+    .description("Build and start local SherpaJS Server")
     .option("-i, --input <path>", "path to server or module, defaults to current directory")
     .option("-p, --port <number>", "port number of server, defaults to 3000")
     .action((options) => {
