@@ -1,17 +1,18 @@
+#!/usr/bin/env node
 import fs from "fs";
 import { Command, Option } from "commander";
-import { GetVersion } from "./version";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
 import { SherpaJS } from "../builder";
 import { BundlerType } from "../builder/models/build";
 import { NewBundler } from "../builder/generator/bundler";
+import { LogLevel, Logger } from "../builder/logger";
 let CLI = new Command();
 
 
 CLI.name("SherpaJS")
     .description("CLI for SherpaJS - Modular Microservices Framework")
-    .version(GetVersion());
+    .version(process.env.npm_package_version);
 
 
 CLI.command("build")
@@ -24,11 +25,17 @@ CLI.command("build")
     .action((options) => {
         let path = options.input ? options.input : process.cwd();
         if (!fs.existsSync(path)) {
-            console.log(`Input "${path}" is not a valid path.`);
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `Input "${path}" is not a valid path.`
+            }]);
             return;
         }
         if (!GetConfigServerFilepath(path)) {
-            console.log(`No server found in "${path}"`);
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `No SherpaJS Server config found in "${path}".`
+            }]);
             return;
         }
         SherpaJS.Build({
@@ -84,13 +91,19 @@ CLI.command("lint")
     .action((options) => {
         let path = options.input ? options.input : process.cwd();
         if (!fs.existsSync(path)) {
-            console.log(`Input "${path}" is not a valid path.`);
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `Input "${path}" is not a valid path.`
+            }]);
             return;
         }
         let server = GetConfigServerFilepath(path);
         let module = GetConfigModuleFilepath(path);
         if (!server && !module) {
-            console.log(`No server or module found in "${path}"`);
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `No SherpaJS Server or Module config found in "${path}".`
+            }]);
             return;
         }
         if (server) {
