@@ -178,20 +178,25 @@ class ConfigServerLinter {
     
     private getCodeConfig() {
         let buffer = fs.readFileSync(this.filepath, "utf8");
-        return buffer.replace(/export\s+default/, "let SHERPA_CONFIG:ConfigServer = ")
-            + "\nconsole.log(SHERPA_CONFIG);";
+        if (buffer.match(/export\s+default\s+NewServer\s?\(/)) {
+            buffer = buffer.replace(/export\s+default\s+NewServer\s?\(/, "let SHERPA_CONFIG:ConfigServer = _NewServer(");
+        } else if (buffer.match(/export\s+const/)) {
+            buffer = buffer.replace(/export\s+const/, "let SHERPA_CONFIG:ConfigServer = ");
+        }
+        return buffer + "\nconsole.log(SHERPA_CONFIG);";
     }
     
     
     private getCodeType(app:ConfigAppProperties, moduleConfigPath:string):string {
         if (!app["module"]) return "";
-        let otherModules = _getAllModules(app).filter(m => m != app["module"]);
+        let otherModules = getAllModules(app).filter(m => m != app["module"]);
         let buffer = [
             `import { SHERPA_PROPERTIES as MODULE_PROPERTIES } from "${moduleConfigPath.replaceAll("\\", "/").replace(".ts", "")}";`,
             `type ConfigAppProperties = { module: "${otherModules.join("\" | \"")}"; properties?:unknown; }`,
             `\t| { module: "${app["module"]}"; properties?:MODULE_PROPERTIES; }`,
             `\t| { [key:\`/\${string}\`]:ConfigAppProperties }`,
-            `type ConfigServer = { version:number; app:ConfigAppProperties; }`
+            `type ConfigServer = { version:number; app:ConfigAppProperties; }`,
+            `const _NewServer = (config:ConfigServer):ConfigServer => { return config; };`
         ];
         return buffer.join("\n");
     }
@@ -213,11 +218,11 @@ class ConfigServerLinter {
 }
 
 
-function _getAllModules(app:ConfigAppProperties):string[] {
+function getAllModules(app:ConfigAppProperties):string[] {
     if (app["module"]) {
         return [app["module"]];
     }
-    return Object.keys(app).map(key => _getAllModules(app[key])).flat();
+    return Object.keys(app).map(key => getAllModules(app[key])).flat();
 }
 
 
