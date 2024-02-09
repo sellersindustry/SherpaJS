@@ -27,7 +27,7 @@ export class Environment {
     }
 
 
-    GetAppProperties():ConfigAppProperties {
+    GetProperties():ConfigAppProperties {
         return this.properties;
     }
 

@@ -36,6 +36,7 @@ export class Logger {
         }
     }
 
+    
     private static printPath(log:Log):string {
         if (!log.path) return;
         let route = log.propertyRoute ? log.propertyRoute.join(".") + " " : "";

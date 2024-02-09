@@ -7,7 +7,7 @@ export default NewServer({
             "/nice": {
                 module: "./example-module",
                 properties: {
-                    food: "nice"
+                    food: "2"
                 }
             },
         }

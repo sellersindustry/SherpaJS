@@ -140,13 +140,17 @@ sherpa lint [options]
 
 
 ### TODO
+- Verify exports of module config
+- Remove ExpressJS Support - https://www.npmjs.com/package/http-server-simple
 - add init for server and module
+    - https://www.npmjs.com/package/create-from-git
 - Headers + Footers
 - Documentation
 
 
 ### Future Features
 - Attempt to remove utilites folder...
+- Make Better Error Page
 - Custom Error 404 Pages...
     - [Adding to Vercel](https://vercel.com/guides/custom-404-page)
     - [Adding to ExpressJS](https://stackoverflow.com/questions/6528876/how-to-redirect-404-errors-to-a-page-in-expressjs/)
