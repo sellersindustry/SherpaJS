@@ -144,10 +144,14 @@ sherpa lint [options]
     - https://www.npmjs.com/package/create-from-git
 - Headers + Footers
 - Documentation
+- remove example-module from here
 
 
 ### Future Features
 - Attempt to remove utilites folder...
+- Fix start so it doesn't have to build on start
+- Make dev server auto reload
+- Migrate from ExpressJS to something smaller
 - Make Better Error Page
 - Custom Error 404 Pages...
     - [Adding to Vercel](https://vercel.com/guides/custom-404-page)
