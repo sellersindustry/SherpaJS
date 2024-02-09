@@ -1,19 +1,21 @@
-import { ConfigAppProperties, ConfigServer, Endpoint } from "../builder/models";
+import { ConfigAppProperties, ConfigModule, ConfigServer, Endpoint } from "../builder/models";
 import { SherpaRequest } from "./request";
 import NewResponse from "./response";
 
 
 export class Environment {
     
-    private moduleID:string[];
+    private appID:string;
     private server:ConfigServer;
+    private module: ConfigModule;
     private properties:ConfigAppProperties;
 
 
-    constructor (server:ConfigServer, endpoint:Endpoint) {
+    constructor (server:ConfigServer, module:ConfigModule, endpoint:Endpoint) {
         this.server     = server;
-        this.moduleID   = Environment.initModuleID(endpoint);
-        this.properties = Environment.initProperties(server, this.moduleID);
+        this.module     = module;
+        this.appID      = Environment.initAppID(endpoint);
+        this.properties = Environment.initProperties(server, endpoint);
     }
 
 
@@ -22,8 +24,13 @@ export class Environment {
     }
 
 
+    GetModuleConfig():ConfigModule {
+        return this.module;
+    }
+
+
     GetModuleID():string {
-        return this.moduleID.join(".");
+        return this.appID;
     }
 
 
@@ -32,17 +39,24 @@ export class Environment {
     }
 
 
-    private static initModuleID(endpoint:Endpoint):string[] {
-        return endpoint.route.filter((r) => r.isSubroute).map((r) => r.name);
+    private static initAppID(endpoint:Endpoint):string {
+        let subroute = Environment.getSubroute(endpoint);
+        return subroute.length == 0 ? "." : subroute.join(".");
     }
 
 
-    private static initProperties(server:ConfigServer, moduleID:string[]):ConfigAppProperties {
+    private static initProperties(server:ConfigServer, endpoint:Endpoint):ConfigAppProperties {
+        let subroute = Environment.getSubroute(endpoint);
         let obj = server.app;
-        moduleID.forEach((id) => {
+        subroute.forEach((id) => {
             obj = obj["/" + id];
         });
-        return obj;
+        return obj["properties"];
+    }
+
+
+    private static getSubroute(endpoint:Endpoint):string[] {
+        return endpoint.route.filter((r) => r.isSubroute).map((r) => r.name);
     }
 
 

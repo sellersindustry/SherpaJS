@@ -72,10 +72,10 @@ CLI.command("start")
     .description("Build and start local SherpaJS Server")
     .option("-i, --input <path>", "path to server or module, defaults to current directory")
     .option("-p, --port <number>", "port number of server, defaults to 3000")
-    .action((options) => {
+    .action(async (options) => {
         let path = options.input ? options.input : process.cwd();
         let port = options.port ? parseInt(options.port) : 3000;
-        Builder.Build({
+        await Builder.Build({
             input: path,
             bundler: BundlerType.ExpressJS,
             output: process.cwd(),

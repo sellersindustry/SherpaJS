@@ -1,6 +1,6 @@
 import { response as ExpressResponse } from "express";
 import { SherpaRequest, Environment } from "../../../environment";
-import { ConfigServer, Endpoint, REQUEST_METHODS } from "../../models";
+import { ConfigModule, ConfigServer, Endpoint, REQUEST_METHODS } from "../../models";
 import { BundlerType } from "../../models/build";
 
 
@@ -9,13 +9,14 @@ type MethodFunctions = { [key:string]:(request:SherpaRequest, environment:Enviro
 
 export function Handler(
     request:Request, functions:MethodFunctions, 
-    endpoint:Endpoint, config:ConfigServer, type:BundlerType
+    endpoint:Endpoint, module:ConfigModule, server:ConfigServer,
+    type:BundlerType
 ):Response {
     let method = request.method.toUpperCase();
     if (REQUEST_METHODS.includes(method) && functions[method]) {
         try {
             let sherpaRequest = prepareRequest(request, type);
-            let environment   = new Environment(config, endpoint);
+            let environment   = new Environment(server, module, endpoint);
             return functions[method](sherpaRequest, environment);
         } catch (error) {
             return new Response(`SherpaJS: ${error.message}`, { status: 405 });

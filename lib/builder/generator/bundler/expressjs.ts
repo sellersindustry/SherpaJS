@@ -1,4 +1,4 @@
-import { Endpoint } from "../../models";
+import { Endpoint, Module } from "../../models";
 import { BundlerType } from "../../models/build";
 import { SourceCode } from "../../sourcecode";
 import { Utility } from "../../utilities";
@@ -40,7 +40,7 @@ export class BundlerExpressJS extends Bundler {
             ...this.server.modules.map((module, mIndex) => {
                 return module.endpoints.map((endpoint, eIndex) => {
                     let index = mIndex * module.endpoints.length + eIndex;
-                    return this.getEndpointHandlerCode(endpoint, index);
+                    return this.getEndpointHandlerCode(module, endpoint, index);
                 });
             }).flat(),
             `app.listen(${port}, () => {`,
@@ -50,13 +50,14 @@ export class BundlerExpressJS extends Bundler {
     }
 
 
-    private getEndpointHandlerCode(endpoint:Endpoint, id:number):string {
+    private getEndpointHandlerCode(module:Module, endpoint:Endpoint, id:number):string {
         let route = endpoint.route.map((r) => r.isDynamic ? `:${r.name}` : r.name).join("/");
         return [
             `import * as functions_${id} from "${endpoint.filepath}";`,
+            `import configModule_${id} from "${module.config.path}";`,
             `app.all("/${route}", async (request, resolve) => {`,
                 `\tlet endpoint = ${JSON.stringify(endpoint)}`,
-                `\tlet response = Handler(request, functions_${id}, endpoint, config, "${BundlerType.ExpressJS.toString()}");`,
+                `\tlet response = Handler(request, functions_${id}, endpoint, configModule_${id}, config, "${BundlerType.ExpressJS.toString()}");`,
                 `\tawait ExpressJSResponse(response, resolve);`,
             `});`,
         ].join("\n");

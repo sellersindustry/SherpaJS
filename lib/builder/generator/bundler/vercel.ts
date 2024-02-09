@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Endpoint } from "../../models";
+import { Endpoint, Module } from "../../models";
 import { Utility } from "../../utilities";
 import { Bundler } from "./abstract";
 import { BundlerType } from "../../models/build";
@@ -35,7 +35,7 @@ export class BundlerVercel extends Bundler {
         for (let module of this.server.modules) {
             for (let endpoint of module.endpoints) {
                 try {
-                    await this.buildEndpointHandler(endpoint);
+                    await this.buildEndpointHandler(module, endpoint);
                     await this.buildEndpointConfig(endpoint);
                 } catch (error) {
                     Logger.RaiseError({
@@ -49,9 +49,9 @@ export class BundlerVercel extends Bundler {
     }
 
 
-    async buildEndpointHandler(endpoint:Endpoint) {
+    async buildEndpointHandler(module:Module, endpoint:Endpoint) {
         await SourceCode.Build({
-            buffer:  this.getEndpointHandlerCode(endpoint),
+            buffer:  this.getEndpointHandlerCode(module, endpoint),
             output:  this.getEndpointPath(endpoint, "index.js"),
             resolve: Utility.File.GetDirectory(endpoint.filepath),
             options: this.build?.developer?.bundler?.esbuild
@@ -59,14 +59,15 @@ export class BundlerVercel extends Bundler {
     }
 
 
-    private getEndpointHandlerCode(endpoint:Endpoint):string {
+    private getEndpointHandlerCode(module:Module, endpoint:Endpoint):string {
         return [
             `import { Handler } from "${Utility.File.JoinPath(__dirname, "../handler/index")}";`,
-            `import config from "${this.server.config.path}";`,
+            `import configServer from "${this.server.config.path}";`,
+            `import configModule from "${module.config.path}";`,
             `import * as functions from "./index";`,
             `export default async function index(request, event) {`,
                 `\tlet endpoint = ${JSON.stringify(endpoint)}`,
-                `\treturn Handler(request, functions, endpoint, config, "${BundlerType.Vercel.toString()}")`,
+                `\treturn Handler(request, functions, endpoint, configModule, configServer, "${BundlerType.Vercel.toString()}")`,
             `}`
         ].join("\n");
     }
