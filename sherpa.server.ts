@@ -1,4 +1,6 @@
-export default {
+import { NewServer } from "./dist/index";
+
+export default NewServer({
     version: 1,
     app: {
         "/foo": {
@@ -10,4 +12,4 @@ export default {
             },
         }
     }
-}
+});

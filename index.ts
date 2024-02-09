@@ -1,4 +1,3 @@
-import { Builder } from "./lib/builder";
 import { ConfigModule, ConfigServer, BundlerType } from "./lib/builder/models";
 import { Environment } from "./lib/environment/index";
 import { SherpaRequest } from "./lib/environment/request";
@@ -9,7 +8,6 @@ const Response  = Environment.Response;
 
 export {
     BundlerType as Bundler,
-    Builder,
     Environment,
     Response,
     NewModule,

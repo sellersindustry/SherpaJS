@@ -1,6 +1,8 @@
-export default {
+import { NewModule } from "../index";
+
+export default NewModule({
     version: 1,
-    name: "example",
-};
+    name: "example-module",
+});
 
 export type SHERPA_PROPERTIES = { food: string };

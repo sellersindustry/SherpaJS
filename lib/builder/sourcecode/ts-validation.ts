@@ -1,4 +1,3 @@
-import path from "path";
 import ts from "typescript";
 
 
@@ -26,7 +25,7 @@ function getProgram(host:ts.CompilerHost):ts.Program {
 
 
 function getHost(buffer:string):ts.CompilerHost {
-    let defaultLibPath = path.dirname(require.resolve("typescript")) + "/lib/lib.d.ts";
+    let defaultLibPath = "../../../../node_modules/typescript/lib/lib.d.ts";
     return {
         getSourceFile: (filename) => {
             if (filename === BUFFER_FILE_NAME) {

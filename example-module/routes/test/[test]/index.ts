@@ -1,5 +1,5 @@
-import { SherpaSDK } from "../../../../lib/sdk";
+import { Response } from "../../../../index";
 
 export function GET(request:Request) {
-    return SherpaSDK.Response(request.url, { status: 200 });
+    return Response(request.url, { status: 200 });
 }

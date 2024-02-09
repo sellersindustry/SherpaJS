@@ -213,72 +213,6 @@ class ConfigServerLinter {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function validateTypes(config:ConfigServer, path:string):Log[] {
-    
-// }
-
-
-// let broskie:ConfigServer = {
-//     version:1,
-//     app:{
-//         "/test": {
-//             "/nice": {
-//                 "module": "test0",
-//                 "properties": {
-//                     "foo": "bar",
-//                 }
-//             }
-//         }
-//     }
-// }
-// console.log(broskie);
-
-
-// function validateTypesStructure(config:ConfigServer):string {
-//     let modules = _getAllModulesPaths(config.app);
-//     let buffer = [
-//         ...modules.map((module, index) => {
-//             if (!module.hasPropertiesType) return "";
-//             return `import { SHERPA_PROPERTIES as MODULE_PROPERTIES_${index} } from "${module.path}";`;
-//         }),
-//         `type ConfigAppProperties = `,
-//         modules.map((module, index) => {
-//             if (!module.hasPropertiesType) {
-//                 return `\t{ module: "${module.namespace}"; properties?:unknown; }`;
-//             }
-//             return `\t{ module: "${module.namespace}"; properties?:MODULE_PROPERTIES_${index}; }`;
-//         }).join(" | \n"),
-//         `| { [key:\`/\${string}\`]:ConfigAppProperties };`,
-//         `type ConfigServer = { version:number; app:ConfigAppProperties; }`
-//     ];
-//     return buffer.join("\n");
-// }
-
-
 function _getAllModules(app:ConfigAppProperties):string[] {
     if (app["module"]) {
         return [app["module"]];
@@ -291,10 +225,4 @@ function hasPropertiesType(filepath:string):boolean {
     if (!fs.existsSync(filepath)) return false;
     return SourceCode.GetExportedVariableNames(filepath).includes("SHERPA_PROPERTIES");
 }
-
-
-
-// function resolveModules() {
-    
-// }
 
