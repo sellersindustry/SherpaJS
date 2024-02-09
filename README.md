@@ -140,8 +140,6 @@ sherpa lint [options]
 
 
 ### TODO
-- Verify exports of module config
-- Remove ExpressJS Support - https://www.npmjs.com/package/http-server-simple
 - add init for server and module
     - https://www.npmjs.com/package/create-from-git
 - Headers + Footers
