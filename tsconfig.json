@@ -3,17 +3,20 @@
         "target": "es2022",
         "module": "commonjs",
         "esModuleInterop": true,
-        "platform": "node",
-        "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
         "declaration": true,
     },
     "exclude": [
         "node_modules",
+        "./dist",
+        "./sherpa",
+        "./vercel",
+        "./example-module"
     ],
     "files": [
         "./index.ts",
-        "./lib/cli/index.ts"
+        "./lib/cli/index.ts",
+        "./lib/builder/generator/handler/index.ts"
     ]
 }

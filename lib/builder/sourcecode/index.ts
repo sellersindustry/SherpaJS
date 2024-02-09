@@ -6,8 +6,9 @@ import vm from "vm";
 
 
 export const DEFAULT_ESBUILD_TARGET:Partial<BuildOptions> = {
-    target: "es2020",
-    format: "esm",
+    format: "cjs",
+    target: "es2022",
+    platform: "node",
     bundle: true,
     allowOverwrite: true,
     treeShaking: true,
@@ -25,16 +26,15 @@ export class SourceCode {
     }
 
 
-    static async GetDefaultExport(file:string):Promise<unknown> {  
+    static async GetDefaultExport(file:string):Promise<unknown> {
         let result = await build({
             ...DEFAULT_ESBUILD_TARGET,
             entryPoints: [file],
-            write: false,
-            format: "cjs",
+            write: false
         });
 
         let code    = result.outputFiles[0].text;
-        let context = vm.createContext({ module: { exports: {} }});
+        let context = vm.createContext({ module: { exports: {} } });
         vm.runInContext(code, context);
         return context.module.exports.default;
     }
