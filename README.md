@@ -7,7 +7,7 @@
 > [!IMPORTANT]
 > This project is in early development, so it is possible for you to run into issues. If you run into any issues please just create a new issue and link your code. Feel free to debug or update the code!
 > 
-> - If you have an issue, [let us know](https://github.com/sellersindustry/SherpaJS/issues). Could help us build a better linter.
+> - If you have an issue, [let us know](https://github.com/sellersindustry/SherpaJS/issues), even if you fix it. It could help us build a better linter.
 > - If the documentation is confusing some place, [ask](https://github.com/sellersindustry/SherpaJS/issues). Also feel free to make a pull request with the updates.
 > - Have a suggested change or feature? [Submit a Ticket](https://github.com/sellersindustry/SherpaJS/issues)
 > - Need a module that isn't built? Please help us build the SherpaJS Community and built it following our [build guide](#create-a-module), then [submit your module to the community](https://github.com/sellersindustry/SherpaJS/issues).
@@ -29,8 +29,8 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and reusab
     - [Endpoints](#endpoints)
  - [Servers](#servers)
     - [Create a Server](#creating-a-server)
-    - [Deploy a Server](#deploy-a-server)
     - [Configuration](#server-configuration)
+    - [Deploy a Server](#deploy-a-server)
  - [Development & Contributing](#development)
 
 
@@ -143,7 +143,8 @@ sherpa lint [options]
 
 
 ### Init Command
-> [!WARNING] FIXME FIXME
+> [!WARNING]
+> FIXME FIXME
 
 
 <br>
@@ -160,7 +161,8 @@ Modules are self-contained units of functional endpoints. They can do various ta
 ### Create a Module
 A new module can be created relatively easily in just a couple of minutes. Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
 
-> [!TIP] Use the `sherpa init module` ([commands](#init-command)) to create a new module in an empty directory.
+> [!TIP]
+> Use the `sherpa init module` ([commands](#init-command)) to create a new module in an empty directory.
 
 #### Step 1
 Setup a new NodeJS project with `npm init`.
@@ -188,7 +190,8 @@ export type SHERPA_PROPERTIES = {
 }
 ```
 
-> [!NOTE] you can make a new module in your server repository, the module just _needs its directory inside_ the server. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`.
+> [!NOTE]
+> you can make a new module in your server repository, the module just _needs its directory inside_ the server. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`.
 
 #### Step 4
 To create [routes](#routes) and [endpoints](#endpoints) for a new module in SherpaJS, you'll define a new `/route` directory the module. Each path inside the route directory will correspond to it's relative endpoint. Endpoint logic is implemented in TypeScript file named `index.ts` within these route directories.
@@ -203,7 +206,8 @@ export function GET(request:Request, env:Environment) {
 }
 ```
 
-> [!TIP] Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
+> [!TIP]
+> Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
 
 #### Step 5
 Verify your module with the `sherpa lint` [command](#lint-command).
@@ -229,7 +233,8 @@ export default NewServer({
 #### Step 7
 Share your module with the world and get it listed as a [SherpaJS Community module](#community-modules) by [submitting a new issue](https://github.com/sellersindustry/SherpaJS/issues/new/choose).
 
-> [!IMPORTANT] Ensure your module...
+> [!IMPORTANT]
+> Ensure your module...
 > - Is deployed as an NPM package
 > - Contains the documentation on how to set it up, like what properties are required.
 > - Link to the SherpaJS documentation, so people understand how to set it up.
@@ -368,7 +373,8 @@ Servers are a collection of [modules](#modules) mounted at specific routes.
 Creating a new server is extremely easy and can be done within a couple of minutes. Check out the [SherpaJS Server Template](https://github.com/sellersindustry/SherpaJS-template-server) for an example of how to build your server.
 
 
-> [!TIP] Use the `sherpa init server` ([commands](#init-command)) to create a new server in an empty directory.
+> [!TIP]
+> Use the `sherpa init server` ([commands](#init-command)) to create a new server in an empty directory.
 
 
 #### Step 1
@@ -458,7 +464,8 @@ export default NewServer({
 })
 ```
 
-> [!WARNING] You cannot have both a subroute and a module defined at the same level within the app configuration. This ensures clarity and avoids conflicts in route resolution.
+> [!WARNING]
+> You cannot have both a subroute and a module defined at the same level within the app configuration. This ensures clarity and avoids conflicts in route resolution.
 
 
 <br>
@@ -468,7 +475,8 @@ export default NewServer({
 Currently there are only two options for deploying servers. You can either build them locally (ExpressJS) or deploy to [Vercel Server].
 
 
-> [!NOTE] We would like to support more platforms in the future, but for now it's just these two platforms.
+> [!NOTE]
+> We would like to support more platforms in the future, but for now it's just these two platforms.
 
 
 #### ExpressJS Bundler (Local Deployment)
@@ -586,4 +594,3 @@ Any help is very much appreciated. Build some useful modules and [submit them to
  - Dynamic redirect service.
  - Authical Authentication Service.
 
-<br>
