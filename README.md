@@ -5,11 +5,15 @@
 
 
 > [!IMPORTANT]
-> This project is in early development, so it is possible for you to run into issues. If you run into any issues please just create a new issue and link your code. Feel free to debug or update the code too!
+> This project is in early development, so it is possible for you to run into issues. If you run into any issues please just create a new issue and link your code. Feel free to debug or update the code!
 > 
-> Even if you fix are able to solve your issue, let us know, it could help us build a better linter.
+> - If you have an issue, [let us know](https://github.com/sellersindustry/SherpaJS/issues). Could help us build a better linter.
+> - If the documentation is confusing some place, [ask](https://github.com/sellersindustry/SherpaJS/issues). Also feel free to make a pull request with the updates.
+> - Have a suggested change or feature? [Submit a Ticket](https://github.com/sellersindustry/SherpaJS/issues)
+> - Need a module that isn't built? Please help us build the SherpaJS Community and built it following our [build guide](#create-a-module), then [submit your module to the community](https://github.com/sellersindustry/SherpaJS/issues).
 > 
-> If the documentation is ever not clear, ask and feel free to make updates.
+> [Development Notes](#development)
+
 
 SherpaJS empowers developers to effortlessly construct <ins>**modular and reusable microservices**</ins>. Developers can either choose to build their modular endpoints through a directory-based structure, inspired by NextJS, or import a variety of community-built modules. These modules can then be seamlessly integrated into a single SherpaJS server, each at its specific endpoints or sub-routes, with tailored behaviors according to predefined properties. SherpaJS servers can then be bundled into a variety of formats including Vercel Serverless and ExpressJS (with more to come later).
 
@@ -18,12 +22,15 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and reusab
  - [Modules and Packages](#community-modules)
  - [Installation](#installation)
  - [Commands](#commands)
- - [Module](#modules)
+ - [Modules](#modules)
     - [Create a Module](#create-a-module)
     - [Configuration](#module-configuration)
     - [Routes](#routes)
     - [Endpoints](#endpoints)
- - [Create a Server](#servers)
+ - [Servers](#servers)
+    - [Create a Server](#creating-a-server)
+    - [Deploy a Server](#deploy-a-server)
+    - [Configuration](#server-configuration)
  - [Development & Contributing](#development)
 
 
@@ -136,7 +143,7 @@ sherpa lint [options]
 
 
 ### Init Command
-FIXME FIXME
+> [!WARNING] FIXME FIXME
 
 
 <br>
@@ -151,9 +158,9 @@ Modules are self-contained units of functional endpoints. They can do various ta
 
 
 ### Create a Module
-We recommend using `sherpa init module` ([CLI Commands](#init-command)) to create a new module. This must be done in an empty directory.
+A new module can be created relatively easily in just a couple of minutes. Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
 
-Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
+> [!TIP] Use the `sherpa init module` ([commands](#init-command)) to create a new module in an empty directory.
 
 #### Step 1
 Setup a new NodeJS project with `npm init`.
@@ -184,20 +191,49 @@ export type SHERPA_PROPERTIES = {
 > [!NOTE] you can make a new module in your server repository, the module just _needs its directory inside_ the server. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`.
 
 #### Step 4
-To create [routes](#routes) and [endpoints](#endpoints) for a new module in SherpaJS, you'll define a new `/route` directory the module. Each path inside the route directory will correspond to it's relative endpoint. Endpoint logic is implemented in TypeScript file named `index.ts` within these route directories. For detailed instructions on creating routes and endpoints, refer to the [routes](#routes) and [endpoints](#endpoints) sections.
+To create [routes](#routes) and [endpoints](#endpoints) for a new module in SherpaJS, you'll define a new `/route` directory the module. Each path inside the route directory will correspond to it's relative endpoint. Endpoint logic is implemented in TypeScript file named `index.ts` within these route directories.
 
-Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
+A simple implementation of an endpoint can be seen below. For detailed instructions on creating routes and endpoints, refer to the [routes](#routes) and [endpoints](#endpoints) sections.
+```typescript
+// ./route/example/index.ts
+import { Response, Request, Environment } from "sherpa-core";
+
+export function GET(request:Request, env:Environment) {
+    return Response({ "hello": "world" });
+}
+```
+
+> [!TIP] Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
 
 #### Step 5
-Verify your module with `sherpa lint` [Learn More](#lint-command).
+Verify your module with the `sherpa lint` [command](#lint-command).
 
 #### Step 6
-Create a [Sherpa Server](#servers) to import your module and run `sherpa start` [Learn More](#start-command)!
+Create a [Sherpa Server](#servers) to import your module and run the `sherpa start` [command](#start-command)! For more details about creating server configs see [server configuration](#servers) section. [Ready to deploy?](#deploy-a-server)
+```typescript
+// sherpa.server.ts
+import { NewServer } from "sherpa-core";
+
+export default NewServer({
+    version: 1,
+    app: {
+        module: ".", // assuming the module config is in the same directory 
+        properties: {
+            exampleProperty: "hello world"
+        }
+    }
+});
+```
+
 
 #### Step 7
 Share your module with the world and get it listed as a [SherpaJS Community module](#community-modules) by [submitting a new issue](https://github.com/sellersindustry/SherpaJS/issues/new/choose).
 
-Ensure your module is deployed as an NPM package and contains documentation on how to set it up. Please link people to the SherpaJS documentation so people understand how to set it up. 
+> [!IMPORTANT] Ensure your module...
+> - Is deployed as an NPM package
+> - Contains the documentation on how to set it up, like what properties are required.
+> - Link to the SherpaJS documentation, so people understand how to set it up.
+> - Share your creation with the world!! Help support SherpaJS!!!
 
 **Thanks so much for helping support SherpaJS!!! 🥳🎉**
 
@@ -315,7 +351,7 @@ Response from any endpoint can be done by returning a [standard HTTP response cl
 
 
 #### Environment Access
-The environment variable in SherpaJS provides developers with a powerful toolset for accessing contextual information and configurations within endpoint functions.
+The environment variable in SherpaJS provides developers with a powerful toolset for accessing contextual information and configurations within endpoint functions. This is also how you access properties of the module defined in the [server configuration](#server-configuration). 
 
 [Learn More](#environment-class)
 
@@ -329,9 +365,10 @@ The environment variable in SherpaJS provides developers with a powerful toolset
 Servers are a collection of [modules](#modules) mounted at specific routes.
 
 ### Creating a Server
-Creating a new server is extremely easy. But you can also use `sherpa init server` ([CLI Command](#init-command)) to create a new server.
+Creating a new server is extremely easy and can be done within a couple of minutes. Check out the [SherpaJS Server Template](https://github.com/sellersindustry/SherpaJS-template-server) for an example of how to build your server.
 
-Check out the [SherpaJS Server Template](https://github.com/sellersindustry/SherpaJS-template-server) for an example of how to build your server.
+
+> [!TIP] Use the `sherpa init server` ([commands](#init-command)) to create a new server in an empty directory.
 
 
 #### Step 1
@@ -359,32 +396,96 @@ export default NewServer({
 ```
 
 #### Step 4
-Define where you would like to mount the modules inside the `app` property. You can can create subroutes to host multiple modules by providing an object with properties 
-.... FIXME!!!!!!!
-select the location of the module, and supply the module with what ever properties or configurations it requires to run.
+Define where you would like to mount the modules inside the `app` property. You can create subroutes by prefixing route paths with a forward slash, allowing for hierarchical organization, like `/product-1` and `/product-2`. 
+See [server configurations](#server-configuration) for examples.
+
+#### Step 5
+Verify the server with the `sherpa lint` [command](#lint-command).
+
+#### Step 6
+Start the server locally with the `sherpa start` [command](#start-command), this will build and start the server at `localhost:3000` by default.
+
+#### Step 7
+Now your ready to deploy, see the [deployment](#deploy-a-server) section for more details.
 
 
-FIXME STEPS
+<br>
+
 
 ### Server Configuration
+Sherpa servers are configured using a `sherpa.server.ts` file, where you define the structure and behavior of your server. This configuration file serves as the backbone of your Sherpa server, allowing you to specify modules, routes, and various server settings.
 
 
+The server configuration object passed to the NewServer function defines the overall structure of your Sherpa server. It consists of the following properties:
+
+ - `version`: The version of the server configuration. This helps manage changes and updates over time.
+ - `app`: The root of the server configuration, where you define modules and routes for your server.
+
+
+#### Modules Routes
+Within the `app` property, you define modules and routes using route paths. Each route path corresponds to a specific endpoint or functionality within your server. You can create subroutes by prefixing route paths with a forward slash, allowing for hierarchical organization.
+
+The module property in route configurations can either be the path to a module file or the name of an NPM package containing the module.
+
+#### Examples
 ```typescript
-type App = {
-    module: string;
-    filepath?: string;
-    properties?: unknown;
-} | {
-    [key: `/${string}`]: App;
-};
+import { NewServer } from "sherpa-core";
 
-type ConfigServer = {
-    version: 1;
-    app: App;
-};
+export default NewServer({
+    version: 1,
+    app: {
+        "/product-1": {
+            "/a": {
+                module: "./example-module",
+                properties: {
+                    exampleProperty: "1"
+                }
+            },
+            "/b": {
+                module: "./example-module",
+                properties: {
+                    exampleProperty: "2"
+                }
+            }
+        },
+        "/product-2": {
+            module: "./example-module",
+            properties: {
+                exampleProperty: "3"
+            }
+        }
+    }
+})
 ```
 
-### Examples
+> [!WARNING] You cannot have both a subroute and a module defined at the same level within the app configuration. This ensures clarity and avoids conflicts in route resolution.
+
+
+<br>
+
+
+### Deploy a Server
+Currently there are only two options for deploying servers. You can either build them locally (ExpressJS) or deploy to [Vercel Server].
+
+
+> [!NOTE] We would like to support more platforms in the future, but for now it's just these two platforms.
+
+
+#### ExpressJS Bundler (Local Deployment)
+To deploy your Sherpa server locally using the ExpressJS bundler, follow these steps:
+1) Run the `sherpa build -b ExpressJS` [command](#build-command).
+2) Start the server with either `node ./.sherpa/index.js` or with the `sherpa start` [command](#start-command).
+3) Navigate to `localhost:3000` and verify that your Sherpa server is running correctly by accessing it and testing each endpoint.
+
+
+#### Vercel Bundler (Serverless Deployment)
+To deploy your Sherpa server on the [Vercel serverless platform](https://vercel.com/), follow these steps:
+1) Set up a new project on the Vercel platform and connect it to your Git repository containing your Sherpa server code.
+2) Ensure your `package.json` build command runs the `sherpa build -b Vercel` [command](#build-command).
+3) Monitor Deployment: Monitor the deployment process in the Vercel dashboard and ensure that your Sherpa server is deployed successfully.
+4) Test Server: Verify that your Sherpa server is running correctly by accessing it using the provided deployment URL on the Vercel platform.
+
+
 
 <br>
 <br>
@@ -412,19 +513,19 @@ export function GET(request: Request, env: Environment) {
 }
 ```
 
-## Accessing Server Configuration
+### Accessing Server Configuration
 The `Environment` class allows developers to retrieve server-wide configurations using the `GetServerConfig()` method. This includes settings such as server port, environment variables, and other global parameters defined for the SherpaJS server instance.
 
 
-## Accessing Module Configuration
+### Accessing Module Configuration
 Developers can access module-specific configurations using the `GetModuleConfig()` method. This includes properties defined for the specific module within the server configuration, such as route configurations, middleware settings, and custom options.
 
 
-## Accessing Module ID
+### Accessing Module ID
 The `Environment` class provides access to the unique identifier (ID) of the current module using the `GetModuleID()` method. This ID corresponds to the subroute at which the module is hosted within the SherpaJS server instance.
 
 
-## Accessing Module Properties
+### Accessing Module Properties
 Properties set for the module within the server configuration can be retrieved using the `GetProperties()` method. These properties can be utilized to customize the behavior of the module dynamically based on the server configuration.
 
 
@@ -434,11 +535,17 @@ Properties set for the module within the server configuration can be retrieved u
 
 
 ## Development
+This project is in early development, so it is possible for you to run into issues. We do use this product in production, but that doesn't mean there could be issues. If you run into any issues, they will probably be at build time, just let us know.
+
 
 <br>
-<br>
+
 
 ### Contributing
+Any help is very much appreciated. Build some useful modules and [submit them to our community](https://github.com/sellersindustry/SherpaJS/issues/new/choose) module list. Even help with documentation or refactoring code is helpful.
+
+
+<br>
 
 
 ### TODO
@@ -448,14 +555,22 @@ Properties set for the module within the server configuration can be retrieved u
 - Documentation
 - remove example-module from here
 
+
+<br>
+
+
 ### Maintenance
  - Remove the utilities folder, and place the function in the appropriate locations.
  - Clean up the CLI system.
- - Start command does not have to build the server, just starts a local server. Will keep track to ensure that ExpressJS was the last build.
+ - Start command does not have to build the server, just starts a local server. Will keep track to ensure that ExpressJS was the last build. Also allow point controls from arguments on the build file.
  - Remove the ExpressJS bundler as it's too large, use a different smaller system, and just call it the "local" bundler.
  - Make a document website with [Mintlify](https://mintlify.com/preview).
  - Better linting and cleaned linting system.
  - Better method for building JS instead of large multiple-line strings. Can we build a module that allows text files with inline JavaScript, similar to JSX?
+
+
+<br>
+
 
 ### Proposed Features
  - Auto reloading development server.
@@ -465,5 +580,10 @@ Properties set for the module within the server configuration can be retrieved u
  - Catch all dynamic routes.
  - Security concerns with exposing the whole server configuration.
 
+<br>
+
 ### Proposed Modules
  - Dynamic redirect service.
+ - Authical Authentication Service.
+
+<br>
