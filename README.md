@@ -4,7 +4,7 @@
 [![Node.js Package](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml)
 
 
-> [!NOTE]
+> [!IMPORTANT]
 > This project is in early development, so it is possible for you to run into issues. If you run into any issues please just create a new issue and link your code. Feel free to debug or update the code too!
 > 
 > Even if you fix are able to solve your issue, let us know, it could help us build a better linter.
@@ -181,7 +181,7 @@ export type SHERPA_PROPERTIES = {
 }
 ```
 
-*Note: you can make a new module in your server repository, the module just _needs its directory inside_ the server. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`.*
+> [!NOTE] you can make a new module in your server repository, the module just _needs its directory inside_ the server. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`.
 
 #### Step 4
 To create [routes](#routes) and [endpoints](#endpoints) for a new module in SherpaJS, you'll define a new `/route` directory the module. Each path inside the route directory will correspond to it's relative endpoint. Endpoint logic is implemented in TypeScript file named `index.ts` within these route directories. For detailed instructions on creating routes and endpoints, refer to the [routes](#routes) and [endpoints](#endpoints) sections.
