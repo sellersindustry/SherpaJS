@@ -173,9 +173,6 @@ Install SherpaJS with `npm install sherpa-core`.
 #### Step 3
 Then create a module configuration file in the root directory of your modules named `sherpa.module.ts`. This file will default export a [module configuration](#module-configuration).
 
-#### Step 3.5
-Optionally you can export a type named `SHERPA_PROPERTIES`. This type acts as a validation of properties when your module is used in the [server configuration](#module-configuration). 
-
 ```typescript
 // sherpa.module.ts
 import { NewModule } from "sherpa-core";
@@ -191,7 +188,10 @@ export type SHERPA_PROPERTIES = {
 ```
 
 > [!NOTE]
-> you can make a new module in your server repository, the module just _needs its directory inside_ the server. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`.
+> You can make a module in your server repository. So you can have `./server.sherpa.ts`, which loads module `./example` with module config `./example/module.sherpa.ts`. Also if you only plan to have single module your server config and module config can be in the directory.
+
+#### Step 3.5
+Optionally you can export a type named `SHERPA_PROPERTIES`. This type acts as a validation of properties when your module is used in the [server configuration](#module-configuration). 
 
 #### Step 4
 To create [routes](#routes) and [endpoints](#endpoints) for a new module in SherpaJS, you'll define a new `/route` directory the module. Each path inside the route directory will correspond to it's relative endpoint. Endpoint logic is implemented in TypeScript file named `index.ts` within these route directories.
@@ -260,23 +260,23 @@ type Module = {
 <br>
 
 
-### Routes
+## Routes
 Routes in SherpaJS provide a flexible and intuitive way to define [endpoints](#endpoints) and handle incoming requests within your microservice architecture. Drawing inspiration from Next.js, SherpaJS routes follow a directory-based structure located in the `/routes` directory of your module.
 
 
-#### Structure of Routes
+### Structure of Routes
 In the `/routes` directory, you can create additional directories to organize your routes. For instance, you might have a directory like `/example`, which contains specific endpoints related to a particular feature or functionality. Each endpoint within a route is represented by a file named `index.ts`.
 
 These subroutes are located relative to the modules subroute according to the [server configuration](#server-configuration). For example if an endpoint is host at  `/example` and the module is defined at `/app-1/foo` then the example endpoint will be accessed at `/app-1/foo/example`.
 
 
-#### Subroutes and Dynamic Routes
+### Subroutes and Dynamic Routes
 SherpaJS supports the creation of subroutes and dynamic routes to enhance flexibility and customization. Subroutes allow you to nest endpoints within directories, enabling hierarchical organization of your API endpoints.
 
 To define a dynamic route, simply name a directory using square brackets, such as `[id]`. Within a dynamic route directory, you can access the parameter value from the request object in your endpoint logic. For example, if you have a dynamic route named `[id]`, you can access the parameter using `request.params.id.`
 
 
-#### Examples of Route Structures
+### Examples of Route Structures
 ```less
 /routes
 │
@@ -318,13 +318,14 @@ To define a dynamic route, simply name a directory using square brackets, such a
 
 
 <br>
+<br>
 
 
-### Endpoints
+## Endpoints
 Endpoints represent the individual points of access within your microservice architecture, allowing clients to interact with specific functionalities or resources. Endpoints are defined within route files and are associated with specific HTTP methods (GET, POST, PATCH, PUT, DELETE) to perform corresponding actions.
 
 
-#### Structure of Endpoints
+### Structure of Endpoints
 Each endpoint is defined within a route file using the corresponding HTTP method function. These functions provide access to the incoming request and the environment, allowing developers to customize the endpoint's behavior based on the request data and the server environment.
 
 Endpoint can be defined by exporting a function with the desired method name. The following HTTP methods are supported: `GET`, `POST`, `PATCH`, `PUT`, and `DELETE`.
@@ -351,11 +352,11 @@ export function DELETE(request:Request, env:Environment) {
 ```
 
 
-#### Response Handling
+### Response Handling
 Response from any endpoint can be done by returning a [standard HTTP response class](https://developer.mozilla.org/en-US/docs/Web/API/Response), but the SherpaJS Response helper function can make it a little easier. This function allows developers to specify the response body as either a string or JSON (and it will be handled appropriately), along with [additional response options](https://developer.mozilla.org/en-US/docs/Web/API/Response/Response#options) such as status codes and headers.
 
 
-#### Environment Access
+### Environment Access
 The environment variable in SherpaJS provides developers with a powerful toolset for accessing contextual information and configurations within endpoint functions. This is also how you access properties of the module defined in the [server configuration](#server-configuration). 
 
 [Learn More](#environment-class)
@@ -374,7 +375,7 @@ Creating a new server is extremely easy and can be done within a couple of minut
 
 
 > [!TIP]
-> Use the `sherpa init server` ([commands](#init-command)) to create a new server in an empty directory.
+> Use the `sherpa init server` [command](#init-command) to create a new server in an empty directory.
 
 
 #### Step 1
@@ -472,7 +473,7 @@ export default NewServer({
 
 
 ### Deploy a Server
-Currently there are only two options for deploying servers. You can either build them locally (ExpressJS) or deploy to [Vercel Server].
+Currently there are only two options for deploying servers. You can either build them locally (ExpressJS) or deploy to the [Vercel Platform](https://vercel.com/).
 
 
 > [!NOTE]
@@ -487,7 +488,7 @@ To deploy your Sherpa server locally using the ExpressJS bundler, follow these s
 
 
 #### Vercel Bundler (Serverless Deployment)
-To deploy your Sherpa server on the [Vercel serverless platform](https://vercel.com/), follow these steps:
+To deploy your Sherpa server on the [Vercel Platform](https://vercel.com/), follow these steps:
 1) Set up a new project on the Vercel platform and connect it to your Git repository containing your Sherpa server code.
 2) Ensure your `package.json` build command runs the `sherpa build -b Vercel` [command](#build-command).
 3) Monitor Deployment: Monitor the deployment process in the Vercel dashboard and ensure that your Sherpa server is deployed successfully.
