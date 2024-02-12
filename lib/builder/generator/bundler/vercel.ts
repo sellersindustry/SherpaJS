@@ -12,12 +12,11 @@
 
 
 import fs from "fs";
-import { Endpoint, Module } from "../../models";
-import { Utility } from "../../utilities";
-import { Bundler } from "./abstract";
-import { BundlerType } from "../../models/build";
-import { Logger } from "../../logger";
-import { SourceCode } from "../../sourcecode";
+import { Endpoint, Module, BundlerType } from "../../models/index.js";
+import { Utility } from "../../utilities/index.js";
+import { Bundler } from "./abstract.js";
+import { Logger } from "../../logger/index.js";
+import { SourceCode } from "../../sourcecode/index.js";
 
 
 const VERCEL_FUNCTION_CONFIG = {
@@ -73,8 +72,9 @@ export class BundlerVercel extends Bundler {
 
 
     private getEndpointHandlerCode(module:Module, endpoint:Endpoint):string {
+        let __dirname = new URL(".", import.meta.url).pathname.replace("/C:", "C:");
         return [
-            `import { Handler } from "${Utility.File.JoinPath(__dirname, "../handler/index")}";`,
+            `import { Handler } from "${Utility.File.JoinPath(__dirname, "../handler/index.js")}";`,
             `import configServer from "${this.server.config.path}";`,
             `import configModule from "${module.config.path}";`,
             `import * as functions from "./index";`,

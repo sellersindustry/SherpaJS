@@ -11,10 +11,10 @@
  */
 
 
-import { SourceCode } from "../sourcecode";
-import { Logger } from "../logger";
-import { ConfigModule } from "../models";
-import { Utility } from "../utilities";
+import { SourceCode } from "../sourcecode/index.js";
+import { Logger } from "../logger/index.js";
+import { ConfigModule } from "../models/index.js";
+import { Utility } from "../utilities/index.js";
 
 
 const CONFIG_FILE_NAME  = "sherpa.module";

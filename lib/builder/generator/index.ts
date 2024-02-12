@@ -11,11 +11,11 @@
  */
 
 
-import { GetConfigServer } from "./config-server";
-import { GetConfigModule } from "./config-module";
-import { GetEndpoints } from "./endpoints";
-import { Bundler } from "./bundler/abstract";
-import { NewBundler } from "./bundler";
+import { GetConfigServer } from "./config-server.js";
+import { GetConfigModule } from "./config-module.js";
+import { GetEndpoints } from "./endpoints.js";
+import { Bundler } from "./bundler/abstract.js";
+import { NewBundler } from "./bundler/index.js";
 
 
 export const Generator = {

@@ -12,7 +12,7 @@
 
 
 import { cyan, dim, magenta, red, yellow } from "colorette"
-import { Log, LogLevel } from "./model";
+import { Log, LogLevel } from "./model.js";
 
 
 export class Logger {

@@ -2,12 +2,12 @@
 import fs from "fs";
 import { createFromGit } from "create-from-git";
 import { Command, Option } from "commander";
-import { GetConfigServerFilepath } from "../builder/generator/config-server";
-import { GetConfigModuleFilepath } from "../builder/generator/config-module";
-import { Builder } from "../builder";
-import { BundlerType } from "../builder/models/build";
-import { NewBundler } from "../builder/generator/bundler";
-import { LogLevel, Logger } from "../builder/logger";
+import { GetConfigServerFilepath } from "../builder/generator/config-server.js";
+import { GetConfigModuleFilepath } from "../builder/generator/config-module.js";
+import { Builder } from "../builder/index.js";
+import { BundlerType } from "../builder/models/build.js";
+import { NewBundler } from "../builder/generator/bundler/index.js";
+import { LogLevel, Logger } from "../builder/logger/index.js";
 let CLI = new Command();
 
 
@@ -87,7 +87,7 @@ CLI.command("start")
     });
 
 
-CLI.command("init [template] [name]")
+CLI.command("init")
     .description("Initialize a new server or module with starter template")
     .argument("<template>", "template type, either \"server\" or \"module\"")
     .argument("<name>", "name of project")

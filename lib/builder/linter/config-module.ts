@@ -12,8 +12,8 @@
 
 
 import Ajv from "ajv";
-import { CONFIG_MODULE_SCHEMA, ConfigModule } from "../models";
-import { Log, LogLevel } from "../logger";
+import { CONFIG_MODULE_SCHEMA, ConfigModule } from "../models/index.js";
+import { Log, LogLevel } from "../logger/index.js";
 
 
 export function Linter(config:ConfigModule, path:string):Log[] {

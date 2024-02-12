@@ -11,10 +11,10 @@
  */
 
 
-import { CONFIG_MODULE_SCHEMA, ConfigModule } from "./config-module";
-import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties } from "./config-server";
-import { Module, Endpoint, Route, VALID_EXPORTS, Server, REQUEST_METHODS } from "./structure";
-import { BuildOptions, BundlerType } from "./build";
+import { CONFIG_MODULE_SCHEMA, ConfigModule } from "./config-module.js";
+import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties } from "./config-server.js";
+import { Module, Endpoint, Route, VALID_EXPORTS, Server, REQUEST_METHODS } from "./structure.js";
+import { BuildOptions, BundlerType } from "./build.js";
 
 
 export {

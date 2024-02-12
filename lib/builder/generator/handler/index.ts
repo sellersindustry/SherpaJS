@@ -12,9 +12,8 @@
 
 
 import { response as ExpressResponse } from "express";
-import { SherpaRequest, Environment } from "../../../environment";
-import { ConfigModule, ConfigServer, Endpoint, REQUEST_METHODS } from "../../models";
-import { BundlerType } from "../../models/build";
+import { SherpaRequest, Environment } from "../../../environment/index.js";
+import { ConfigModule, ConfigServer, Endpoint, REQUEST_METHODS, BundlerType } from "../../models/index.js";
 
 
 type MethodFunctions = { [key:string]:(request:SherpaRequest, environment:Environment) => Response };

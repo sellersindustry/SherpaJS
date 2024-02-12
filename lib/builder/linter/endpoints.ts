@@ -11,9 +11,9 @@
  */
 
 
-import { Log, LogLevel } from "../logger";
-import { Endpoint, VALID_EXPORTS } from "../models";
-import { Validate } from "./validator";
+import { Log, LogLevel } from "../logger/index.js";
+import { Endpoint, VALID_EXPORTS } from "../models/index.js";
+import { Validate } from "./validator/index.js";
 
 
 const VALID_FILE_TYPES = ["JS", "CJS", "TS"];

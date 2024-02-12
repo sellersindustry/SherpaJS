@@ -1,6 +1,6 @@
-import { ConfigModule, ConfigServer, BundlerType } from "./lib/builder/models";
-import { Environment } from "./lib/environment/index";
-import { SherpaRequest } from "./lib/environment/request";
+import { ConfigModule, ConfigServer, BundlerType } from "./lib/builder/models/index.js";
+import { Environment } from "./lib/environment/index.js";
+import { SherpaRequest } from "./lib/environment/request.js";
 
 const NewModule = (config:ConfigModule) => config;
 const NewServer = (config:ConfigServer) => config;

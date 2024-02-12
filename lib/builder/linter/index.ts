@@ -12,9 +12,9 @@
  */
 
 
-import { Linter as Endpoints } from "./endpoints";
-import { Linter as ConfigServer } from "./config-server";
-import { Linter as ConfigModule } from "./config-module";
+import { Linter as Endpoints } from "./endpoints.js";
+import { Linter as ConfigServer } from "./config-server.js";
+import { Linter as ConfigModule } from "./config-module.js";
 
 export const Linter = {
     Endpoints,
