@@ -558,6 +558,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### TODO
+- Bundlers should bundle to ESM???
 - add init for server and module
     - https://www.npmjs.com/package/create-from-git
 - Headers + Footers
