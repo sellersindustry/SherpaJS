@@ -113,8 +113,8 @@ CLI.command("init")
         }
 
         try {
-            let moduleURL = "git@github.com:sellersindustry/SherpaJS-template-module.git";
-            let serverURL = "git@github.com:sellersindustry/SherpaJS-template-server.git";
+            let moduleURL = "https://github.com/sellersindustry/SherpaJS-template-module.git";
+            let serverURL = "https://github.com/sellersindustry/SherpaJS-template-server.git";
             await createFromGit({
                 from: template == "server" ? serverURL : moduleURL,
                 to: path,
