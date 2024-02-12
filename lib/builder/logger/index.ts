@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Logger
+ *
+ */
+
+
 import { cyan, dim, magenta, red, yellow } from "colorette"
 import { Log, LogLevel } from "./model";
 
@@ -62,3 +75,8 @@ export class Logger {
 
 export type { Log };
 export { LogLevel };
+
+
+// Who is it that overcomes the world? Only the one who believes that Jesus is
+// the Son of God.
+// - 1 John 5:5

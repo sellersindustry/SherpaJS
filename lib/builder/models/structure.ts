@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: structure.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Structural Generation Models
+ *
+ */
+
+
 import { ConfigModule } from "./config-module";
 import { ConfigServer } from "./config-server";
 
@@ -41,3 +54,6 @@ export type Route = {
     isSubroute?:boolean;
 };
 
+
+// As Scripture says, "Anyone who believes in him will never be put to shame."
+// - Romans 10:11

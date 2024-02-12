@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: config-module.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Generate Module Config Structure
+ *
+ */
+
+
 import { SourceCode } from "../sourcecode";
 import { Logger } from "../logger";
 import { ConfigModule } from "../models";
@@ -43,3 +56,7 @@ async function loadDefaultExport(file:string):Promise<unknown> {
     }
 }
 
+
+// Whoever believes and is baptized will be saved, but whoever does not believe
+// will be condemned.
+// - Mark 16:16

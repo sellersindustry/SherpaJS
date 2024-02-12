@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: endpoints.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Endpoint Linter
+ *
+ */
+
+
 import { Log, LogLevel } from "../logger";
 import { Endpoint, VALID_EXPORTS } from "../models";
 import { Validate } from "./validator";
@@ -82,3 +95,7 @@ function exported(endpoint:Endpoint):Log[] {
     }
     return messages;
 }
+
+
+// In the same way, faith by itself, if it is not accompanied by action, is dead.
+// - James 2:17

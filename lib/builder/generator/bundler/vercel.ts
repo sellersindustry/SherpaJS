@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: vercel.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Vercel Bundle Generator
+ *
+ */
+
+
 import fs from "fs";
 import { Endpoint, Module } from "../../models";
 import { Utility } from "../../utilities";
@@ -120,3 +133,6 @@ export class BundlerVercel extends Bundler {
 
 }
 
+
+// Deceit is in the hearts of those who plot evil, but those who promote peace have joy.
+// - Proverbs 12:20

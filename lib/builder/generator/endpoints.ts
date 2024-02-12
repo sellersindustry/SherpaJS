@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: endpoints.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Generate Endpoint Structure
+ *
+ */
+
+
 import { Logger } from "../logger";
 import { Endpoint, Route } from "../models";
 import { SourceCode } from "../sourcecode";
@@ -71,3 +84,7 @@ function getRouteName(name:string):string {
     return (isDynamic(name) ? name.slice(1, -1) : name).toLowerCase()
 }
 
+
+// Who is it that overcomes the world? Only the one who believes that Jesus
+// is the Son of God.
+// - 1 John 5:5

@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: config-server.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Generate Server Config Structure
+ *
+ */
+
+
 import { SourceCode } from "../sourcecode";
 import { Logger } from "../logger";
 import { ConfigServer, ConfigAppProperties } from "../models";
@@ -76,3 +89,7 @@ function _resolveModulePath(route:ConfigAppProperties, path:string):ConfigAppPro
     return route;
 }
 
+
+// Therefore I tell you, whatever you ask for in prayer, believe that you have
+// received it, and it will be yours.
+// - Mark 11:24

@@ -563,6 +563,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 - Headers + Footers
 - Documentation
 - remove example-module from here
+- deploy example server to vercel...
 
 
 <br>
@@ -594,4 +595,5 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 ### Proposed Modules
  - Dynamic redirect service.
  - Authical Authentication Service.
+ - GitHub Issue Creator Form for Support
 
