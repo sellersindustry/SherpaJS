@@ -11,10 +11,10 @@
  */
 
 
-import { Logger } from "../logger";
-import { Endpoint, Route } from "../models";
-import { SourceCode } from "../sourcecode";
-import { Utility } from "../utilities";
+import { Logger } from "../logger/index.js";
+import { Endpoint, Route } from "../models/index.js";
+import { SourceCode } from "../sourcecode/index.js";
+import { Utility } from "../utilities/index.js";
 
 
 export function GetEndpoints(path:string, subroute:string[]):Endpoint[] {

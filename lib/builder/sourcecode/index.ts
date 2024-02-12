@@ -1,6 +1,6 @@
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions } from "esbuild";
-import { TypeScriptValidation } from "./ts-validation";
+import { TypeScriptValidation } from "./ts-validation.js";
 import ts from "typescript";
 import vm from "vm";
 

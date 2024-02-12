@@ -11,8 +11,8 @@
  */
 
 
-import { ConfigModule } from "./config-module";
-import { ConfigServer } from "./config-server";
+import { ConfigModule } from "./config-module.js";
+import { ConfigServer } from "./config-server.js";
 
 
 export const REQUEST_METHODS = [ "GET", "POST", "PUT", "PATCH", "DELETE" ];

@@ -11,11 +11,10 @@
  */
 
 
-import { Endpoint, Module } from "../../models";
-import { BundlerType } from "../../models/build";
-import { SourceCode } from "../../sourcecode";
-import { Utility } from "../../utilities";
-import { Bundler } from "./abstract";
+import { Endpoint, Module, BundlerType } from "../../models/index.js";
+import { SourceCode } from "../../sourcecode/index.js";
+import { Utility } from "../../utilities/index.js";
+import { Bundler } from "./abstract.js";
 
 
 export class BundlerExpressJS extends Bundler {
@@ -45,6 +44,7 @@ export class BundlerExpressJS extends Bundler {
 
     private getHandlerCode():string {
         let port = this.build.port ? this.build.port : 3000;
+        let __dirname = new URL(".", import.meta.url).pathname.replace("/C:", "C:");
         return [
             `import { Handler, ExpressJSResponse } from "${Utility.File.JoinPath(__dirname, "../handler/index")}";`,
             `import config from "${this.server.config.path}";`,

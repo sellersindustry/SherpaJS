@@ -11,8 +11,8 @@
  */
 
 
-import { Logger } from "../../logger";
-import { BuildOptions, Server } from "../../models";
+import { Logger } from "../../logger/index.js";
+import { BuildOptions, Server } from "../../models/index.js";
 import { remove } from "fs-extra";
 
 

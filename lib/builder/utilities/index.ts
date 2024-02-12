@@ -1,4 +1,4 @@
-import { UtilityFile } from "./files";
+import { UtilityFile } from "./files.js";
 
 
 export const Utility = {

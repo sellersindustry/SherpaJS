@@ -12,12 +12,11 @@
 
 
 
-import { Logger } from "../../logger";
-import { BuildOptions, Server } from "../../models";
-import { BundlerType } from "../../models/build";
-import { Bundler } from "./abstract";
-import { BundlerExpressJS } from "./expressjs";
-import { BundlerVercel } from "./vercel";
+import { Logger } from "../../logger/index.js";
+import { BuildOptions, Server, BundlerType } from "../../models/index.js";
+import { Bundler } from "./abstract.js";
+import { BundlerExpressJS } from "./expressjs.js";
+import { BundlerVercel } from "./vercel.js";
 
 
 export function NewBundler(server:Server, options:BuildOptions):Bundler {

@@ -12,10 +12,10 @@
 
 
 import Ajv from "ajv";
-import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties } from "../models";
-import { Validate } from "./validator";
-import { Log, LogLevel } from "../logger";
-import { SourceCode } from "../sourcecode";
+import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties } from "../models/index.js";
+import { Validate } from "./validator/index.js";
+import { Log, LogLevel } from "../logger/index.js";
+import { SourceCode } from "../sourcecode/index.js";
 import fs from "fs";
 import path from "path";
 

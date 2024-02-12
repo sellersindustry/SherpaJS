@@ -1,9 +1,9 @@
-import { Generator } from "./generator";
-import { NewBundler } from "./generator/bundler";
-import { Linter } from "./linter";
-import { Logger } from "./logger";
-import { BuildOptions, ConfigAppProperties, Endpoint, Module, Server } from "./models";
-import { Utility } from "./utilities";
+import { Generator } from "./generator/index.js";
+import { NewBundler } from "./generator/bundler/index.js";
+import { Linter } from "./linter/index.js";
+import { Logger } from "./logger/index.js";
+import { BuildOptions, ConfigAppProperties, Endpoint, Module, Server } from "./models/index.js";
+import { Utility } from "./utilities/index.js";
 
 
 const PATH_ENDPOINTS = "/routes";
