@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: config-module.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Module Config
+ *
+ */
+
+
 import { Schema } from "ajv";
 
 
@@ -25,3 +38,8 @@ export const CONFIG_MODULE_SCHEMA:Schema = {
     required: ["version", "name"],
     additionalProperties: false
 };
+
+
+// Whoever believes in me, as Scripture has said, rivers of living water will
+// flow from within them.
+// - John 7:38

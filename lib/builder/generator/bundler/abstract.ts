@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: abstract.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Abstract Bundle Generator
+ *
+ */
+
+
 import { Logger } from "../../logger";
 import { BuildOptions, Server } from "../../models";
 import { remove } from "fs-extra";
@@ -33,3 +46,6 @@ export abstract class Bundler {
     
 }
 
+
+// I rejoice in following your statutes as one rejoices in great riches.
+// - Psalm 119:14

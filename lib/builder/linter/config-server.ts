@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: config-server.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Server Config Linter
+ *
+ */
+
+
 import Ajv from "ajv";
 import { CONFIG_SERVER_SCHEMA, ConfigServer, ConfigAppProperties } from "../models";
 import { Validate } from "./validator";
@@ -231,3 +244,7 @@ function hasPropertiesType(filepath:string):boolean {
     return SourceCode.GetExportedVariableNames(filepath).includes("SHERPA_PROPERTIES");
 }
 
+
+// Paul said, "John's baptism was a baptism of repentance. He told the people
+// to believe in the one coming after him, that is, in Jesus."
+// - Acts 19:4

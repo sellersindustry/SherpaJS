@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "fs";
+import { createFromGit } from "create-from-git";
 import { Command, Option } from "commander";
 import { GetConfigServerFilepath } from "../builder/generator/config-server";
 import { GetConfigModuleFilepath } from "../builder/generator/config-module";
@@ -83,6 +84,49 @@ CLI.command("start")
         });
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         require(`${process.cwd()}/.sherpa/index.js`);
+    });
+
+
+CLI.command("init [template] [name]")
+    .description("Initialize a new server or module with starter template")
+    .argument("<template>", "template type, either \"server\" or \"module\"")
+    .argument("<name>", "name of project")
+    .option("-i, --input <path>", "path to server or module, defaults to current directory")
+    .action(async (template, name, options) => {
+        let path  = options.input ? options.input : process.cwd();
+        let files = fs.readdirSync(path);
+
+        if (template != "server" && template != "module") {
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `Please specify template type either "server" or "module".`
+            }]);
+            return;
+        }
+
+        if (files.length > 1 || (files.length == 1 && files[0] !== ".git")) {
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `Directory is not empty. Please initialize a new project in a new directory.`,
+            }]);
+            return;
+        }
+
+        try {
+            let moduleURL = "git@github.com:sellersindustry/SherpaJS-template-module.git";
+            let serverURL = "git@github.com:sellersindustry/SherpaJS-template-server.git";
+            await createFromGit({
+                from: template == "server" ? serverURL : moduleURL,
+                to: path,
+                projectName: name,
+            })
+        } catch (e) {
+            Logger.Format([{
+                level: LogLevel.ERROR,
+                message: `Something went wrong. Unable to initialize project.`,
+                content: e.message
+            }]);
+        }
     });
 
 
