@@ -8,6 +8,7 @@ import { Builder } from "../builder/index.js";
 import { BundlerType } from "../builder/models/build.js";
 import { NewBundler } from "../builder/generator/bundler/index.js";
 import { LogLevel, Logger } from "../builder/logger/index.js";
+import { exec } from "child_process";
 let CLI = new Command();
 
 
@@ -82,8 +83,14 @@ CLI.command("start")
             output: process.cwd(),
             port: port
         });
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require(`${process.cwd()}/.sherpa/index.js`);
+        exec(`node ${process.cwd()}/.sherpa/index.cjs`, (_, stdout, stderr) => {
+            if (stdout.length > 0) {
+                console.log(stdout);
+            }
+            if (stderr.length > 0) {
+                console.log(stderr);
+            }
+        });
     });
 
 
