@@ -544,7 +544,6 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### TODO
-- remove example-module from here
 - build static flag module
 - deploy example server to vercel...
 

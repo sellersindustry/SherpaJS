@@ -32,7 +32,7 @@ export class BundlerExpressJS extends Bundler {
     async Build() {
         await SourceCode.Build({
             buffer:  this.getHandlerCode(),
-            output:  this.GetPath("index.js"),
+            output:  this.GetPath("index.cjs"),
             resolve: this.build.input,
             options: { 
                 ...this.build?.developer?.bundler?.esbuild,
