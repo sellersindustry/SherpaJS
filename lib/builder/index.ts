@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Builder
+ *
+ */
+
+
 import { Generator } from "./generator/index.js";
 import { NewBundler } from "./generator/bundler/index.js";
 import { Linter } from "./linter/index.js";
@@ -58,3 +71,7 @@ export class Builder {
 
 }
 
+
+// I write these things to you who believe in the name of the Son of God so
+// that you may know that you have eternal life.
+// - 1 John 5:13

@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Environment SDK
+ *
+ */
+
+
 import { ConfigAppProperties, ConfigModule, ConfigServer, Endpoint } from "../builder/models";
 import { SherpaRequest } from "./request";
 import NewResponse from "./response";
@@ -69,3 +82,8 @@ export class Environment {
 
 
 export type { SherpaRequest };
+
+
+// Now faith is confidence in what we hope for and assurance about what
+// we do not see.
+// - Hebrews 11:1

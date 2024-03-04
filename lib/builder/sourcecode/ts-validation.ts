@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: ts-validation.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Validate Typescript
+ *
+ */
+
+
 import ts from "typescript";
 
 
@@ -64,3 +77,6 @@ function getHost(buffer:string):ts.CompilerHost {
     };
 }
 
+
+// Because you know that the testing of your faith produces perseverance.
+// - James 1:3

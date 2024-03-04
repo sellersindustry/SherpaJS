@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: files.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: File Utilities
+ *
+ */
+
+
 import fs from "fs";
 import path from "path";
 
@@ -66,3 +79,6 @@ export class UtilityFile {
 
 }
 
+
+// Be on your guard; stand firm in the faith; be courageous; be strong.
+// - 1 Corinthians 16:13

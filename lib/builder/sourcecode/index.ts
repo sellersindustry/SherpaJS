@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Source Code Utilities
+ *
+ */
+
+
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions } from "esbuild";
 import { TypeScriptValidation } from "./ts-validation.js";
@@ -64,3 +77,7 @@ export class SourceCode {
 
 }
 
+
+// Whoever believes and is baptized will be saved, but whoever does not
+// believe will be condemned.
+// - Mark 16:16

@@ -140,14 +140,6 @@ sherpa lint [options]
 
 
 <br>
-
-
-### Init Command
-> [!WARNING]
-> FIXME FIXME
-
-
-<br>
 <br>
 
 
@@ -161,8 +153,6 @@ Modules are self-contained units of functional endpoints. They can do various ta
 ### Create a Module
 A new module can be created relatively easily in just a couple of minutes. Check out the [SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module) for an example of how to build your module.
 
-> [!TIP]
-> Use the `sherpa init module` ([commands](#init-command)) to create a new module in an empty directory.
 
 #### Step 1
 Setup a new NodeJS project with `npm init`.
@@ -374,10 +364,6 @@ Servers are a collection of [modules](#modules) mounted at specific routes.
 Creating a new server is extremely easy and can be done within a couple of minutes. Check out the [SherpaJS Server Template](https://github.com/sellersindustry/SherpaJS-template-server) for an example of how to build your server.
 
 
-> [!TIP]
-> Use the `sherpa init server` [command](#init-command) to create a new server in an empty directory.
-
-
 #### Step 1
 Setup a new NodeJS project with `npm init`.
 
@@ -558,12 +544,8 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### TODO
-- Bundlers should bundle to ESM???
-- add init for server and module
-    - https://www.npmjs.com/package/create-from-git
-- Headers + Footers
-- Documentation
 - remove example-module from here
+- build static flag module
 - deploy example server to vercel...
 
 
@@ -584,6 +566,8 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Proposed Features
+ - Migrate to Rust
+ - Add Init Command to build Server and Module
  - Auto reloading development server.
  - Add SherpaJS 500 Error Page.
  - Add SherpaJS 404 Error Page.
