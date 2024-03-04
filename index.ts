@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Entry
+ *
+ */
+
+
 import { ConfigModule, ConfigServer, BundlerType } from "./lib/builder/models/index.js";
 import { Environment } from "./lib/environment/index.js";
 import { SherpaRequest } from "./lib/environment/request.js";
