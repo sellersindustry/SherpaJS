@@ -39,7 +39,9 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and agnost
 
 
 ## Community Modules
-
+| Module | Description | Developer |
+|---|---|---|
+| [Static Flags](https://github.com/sellersindustry/SherpaJS-static-flags) | Create static flags of booleans, strings, or numbers | [Sellers Industries](https://github.com/sellersindustry) |
 
 <br>
 <br>
@@ -544,8 +546,11 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### TODO
-- build static flag module
-- deploy example server to vercel...
+ - build static flag module
+ - Add Documentation to static flag and list
+ - deploy example server to vercel...
+ - Update Website
+ - Inform People
 
 
 <br>
@@ -556,6 +561,8 @@ Any help is very much appreciated. Build some useful modules and [submit them to
  - Clean up the CLI system.
  - Start command does not have to build the server, just starts a local server. Will keep track to ensure that ExpressJS was the last build. Also allow point controls from arguments on the build file.
  - Remove the ExpressJS bundler as it's too large, use a different smaller system, and just call it the "local" bundler.
+ - Console Development Server, Live Logs
+ - Allow Null Response Body
  - Make a document website with [Mintlify](https://mintlify.com/preview).
  - Better linting and cleaned linting system.
  - Better method for building JS instead of large multiple-line strings. Can we build a module that allows text files with inline JavaScript, similar to JSX?
@@ -565,7 +572,6 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Proposed Features
- - Migrate to Rust
  - Add Init Command to build Server and Module
  - Auto reloading development server.
  - Add SherpaJS 500 Error Page.
@@ -573,6 +579,8 @@ Any help is very much appreciated. Build some useful modules and [submit them to
  - Ability to add custom 500 and 404 error pages, with HTML in `/errors`.
  - Catch all dynamic routes.
  - Security concerns with exposing the whole server configuration.
+ - Migrate Compiler to Rust (Eventually)
+
 
 <br>
 
