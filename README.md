@@ -15,7 +15,7 @@
 > [Development Notes](#development)
 
 
-SherpaJS empowers developers to effortlessly construct <ins>**modular and reusable microservices**</ins>. Developers can either choose to build their modular endpoints through a directory-based structure, inspired by NextJS, or import a variety of community-built modules. These modules can then be seamlessly integrated into a single SherpaJS server, each at its specific endpoints or sub-routes, with tailored behaviors according to predefined properties. SherpaJS servers can then be bundled into a variety of formats including Vercel Serverless and ExpressJS (with more to come later).
+SherpaJS empowers developers to effortlessly construct <ins>**modular and agnostic serverless microservices platform**</ins>. Developers can either choose to build their modular endpoints through a directory-based structure, inspired by NextJS, or import a variety of community-built modules. These modules can then be seamlessly integrated into a single SherpaJS server, each at its specific endpoints or sub-routes, with tailored behaviors according to predefined properties. SherpaJS servers can then be bundled into a variety of formats including Vercel Serverless and ExpressJS (with more to come later).
 
 
 ## Table of Contents
