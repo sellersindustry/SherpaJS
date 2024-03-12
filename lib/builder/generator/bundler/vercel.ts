@@ -80,7 +80,7 @@ export class BundlerVercel extends Bundler {
             `import * as functions from "./index";`,
             `export default async function index(request, event) {`,
                 `\tlet endpoint = ${JSON.stringify(endpoint)}`,
-                `\treturn Handler(request, functions, endpoint, configModule, configServer, "${BundlerType.Vercel.toString()}")`,
+                `\treturn await Handler(request, functions, endpoint, configModule, configServer, "${BundlerType.Vercel.toString()}")`,
             `}`
         ].join("\n");
     }

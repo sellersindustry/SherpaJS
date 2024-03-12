@@ -53,7 +53,7 @@ function getSubroute(subroute:string[]):Route[] {
     return subroute.map((name) => {
         return {
             name: name.toLowerCase(),
-            orginal: name,
+            original: name,
             isDynamic: false,
             isSubroute: true
         }
@@ -69,7 +69,7 @@ function getRoute(filepath:string, path:string):Route[] {
             return {
                 name: getRouteName(name),
                 isDynamic: isDynamic(name),
-                orginal: name
+                original: name
             }
         });
 }
@@ -81,7 +81,7 @@ function isDynamic(name:string):boolean {
 
 
 function getRouteName(name:string):string {
-    return (isDynamic(name) ? name.slice(1, -1) : name).toLowerCase()
+    return (isDynamic(name) ? name.slice(1, -1) : name.toLowerCase())
 }
 
 

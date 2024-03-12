@@ -50,7 +50,7 @@ export type Endpoint = {
 export type Route = {
     name:string;
     isDynamic:boolean;
-    orginal?:string;
+    original?:string;
     isSubroute?:boolean;
 };
 

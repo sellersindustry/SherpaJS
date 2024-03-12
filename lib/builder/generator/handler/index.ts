@@ -16,25 +16,24 @@ import { SherpaRequest, Environment } from "../../../environment/index.js";
 import { ConfigModule, ConfigServer, Endpoint, REQUEST_METHODS, BundlerType } from "../../models/index.js";
 
 
-type MethodFunctions = { [key:string]:(request:SherpaRequest, environment:Environment) => Response };
+type MethodFunctions = { [key:string]:(request:SherpaRequest, environment:Environment) => Response|Promise<Response> };
 
 
-export function Handler(
+export async function Handler(
     request:Request, functions:MethodFunctions, 
     endpoint:Endpoint, module:ConfigModule, server:ConfigServer,
     type:BundlerType
-):Response {
+):Promise<Response> {
     let method = request.method.toUpperCase();
-    if (REQUEST_METHODS.includes(method) && functions[method]) {
-        try {
-            let sherpaRequest = prepareRequest(request, type);
-            let environment   = new Environment(server, module, endpoint);
-            return functions[method](sherpaRequest, environment);
-        } catch (error) {
-            return new Response(`SherpaJS: ${error.message}`, { status: 405 });
-        }
-    } else {
-        return new Response(`Unsupported method "${request.method}".`, { status: 405 });
+    if (!REQUEST_METHODS.includes(method) || !functions[method]) {
+        return new Response(`Unsupported method "${method}".`, { status: 405 });
+    }
+    try {
+        let sherpaRequest = prepareRequest(request, type);
+        let environment   = new Environment(server, module, endpoint);
+        return await functions[method](sherpaRequest, environment);
+    } catch (error) {
+        return new Response(`SherpaJS: ${error.message}`, { status: 405 });
     }
 }
 
@@ -74,8 +73,10 @@ export async function ExpressJSResponse(sherpa:Response, express:ExpressResponse
         express.send(await sherpa.text());
     } else if (type && type.includes("application/json")) {
         express.send(await sherpa.json());
+    } else if (!type) {
+        express.send(await sherpa.text());
     } else {
-        express.status(500).send("Error: SherpaJS ExpressJS only currently support JSON and Text, please contact support.");
+        express.status(500).send(`Error: SherpaJS ExpressJS only currently support JSON and Text, your trying to use "${type}", please make a new issue.`);
     }
 }
 

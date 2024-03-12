@@ -52,7 +52,7 @@ function filename(endpoint:Endpoint):Log[] {
 
 
 function routes(endpoint:Endpoint):Log[] {
-    let fullRoute = endpoint.route.map(r => r.orginal).join("/");
+    let fullRoute = endpoint.route.map(r => r.original).join("/");
     for (let subroute of endpoint.route) {
         if (!Validate.AlphaNumericDash(subroute.name)) {
             return [{
@@ -62,7 +62,7 @@ function routes(endpoint:Endpoint):Log[] {
                 path: endpoint.filepath
             }];
         }
-        if (subroute.orginal.toLowerCase() != subroute.orginal) {
+        if (subroute.original.toLowerCase() != subroute.original && !subroute.isDynamic) {
             return [{
                 level: LogLevel.WARN,
                 message: `Routes should be lowercase "${fullRoute}".`,
