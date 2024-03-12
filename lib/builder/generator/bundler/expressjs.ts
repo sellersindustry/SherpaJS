@@ -70,7 +70,7 @@ export class BundlerExpressJS extends Bundler {
             `import configModule_${id} from "${module.config.path}";`,
             `app.all("/${route}", async (request, resolve) => {`,
                 `\tlet endpoint = ${JSON.stringify(endpoint)}`,
-                `\tlet response = Handler(request, functions_${id}, endpoint, configModule_${id}, config, "${BundlerType.ExpressJS.toString()}");`,
+                `\tlet response = await Handler(request, functions_${id}, endpoint, configModule_${id}, config, "${BundlerType.ExpressJS.toString()}");`,
                 `\tawait ExpressJSResponse(response, resolve);`,
             `});`,
         ].join("\n");

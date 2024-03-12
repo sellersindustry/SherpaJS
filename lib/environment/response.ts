@@ -19,7 +19,7 @@ export default function NewResponse(body?:unknown, options?:ResponseInit):Respon
             return Response.json(body, options);
         }
     }
-    return new Response();
+    return new Response("", options);
 }
 
 
