@@ -557,6 +557,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Maintenance
+ - Allow capitizal letters in dynamic routes
  - Remove the utilities folder, and place the function in the appropriate locations.
  - Clean up the CLI system.
  - Start command does not have to build the server, just starts a local server. Will keep track to ensure that ExpressJS was the last build. Also allow point controls from arguments on the build file.
