@@ -15,7 +15,7 @@ export type ServerConfig = {
 
 export type ServerStructure = {
     filepath:string;
-    instance:ServerConfig;
+    config:ServerConfig;
 };
 
 
@@ -26,7 +26,8 @@ export type ModuleConfig = {
 
 export type ModuleStructure = {
     filepath:string;
-    instance:ModuleConfig;
+    context:Context;
+    config:ModuleConfig;
     hasContextSchema:boolean;
 };
 
@@ -40,33 +41,27 @@ export enum Method {
 }
 
 
-export enum RouteType {
-    Segment,
-    Module,
-    Endpoint
+export type Segment = {
+    name:string;
+    isDynamic:boolean;
 }
 
 
-export type Route = RouteSegment|RouteModule|RouteEndpoint;
+export type Route = {
+    [key:string]:Route|Endpoint;
+}
 
 
-export type RouteEndpoint = {
-    type:RouteType.Endpoint;
+export type Endpoint = {
     filepath:string;
     methods:Method[];
     module:ModuleStructure;
-    //! Add routes + dynamic routes (segments??)
+    segments:Segment[];
 }
 
 
-export type RouteSegment = {
-    type:RouteType.Segment;
-    segments:{ [key:string]:Route };
-}
-
-
-export type RouteModule = {
-    type:RouteType.Module;
+export type ModuleLoader = {
     entry:string;
+    context?:Context;
 }
 

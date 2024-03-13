@@ -1,22 +1,23 @@
 import { Files } from "../../files";
 import { Message } from "../../logger/model";
-import { CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE, ModuleStructure, SUPPORTED_FILE_EXTENSIONS, ModuleConfig } from "../../models";
+import { CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE, ModuleStructure, SUPPORTED_FILE_EXTENSIONS, ModuleConfig, Context } from "../../models";
 import { Tooling } from "../../tooling";
 
 
-export async function getModuleStructure(entry:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
+export async function getModuleStructure(entry:string, context:Context|undefined):Promise<{ errors:Message[], module?:ModuleStructure }> {
     let { filepath, errors: errorsFilepath } = getFilepath(entry);
     if (!filepath) return { errors: errorsFilepath };
 
     let { instance, errors: errorsInstance } = await getInstance(filepath);
     if (!instance) return { errors: errorsInstance };
 
-    //! FIXME - Verify types, rebuild type checker in tooling
+    //! FIXME - verify context types
 
     return {
         module: {
             filepath: filepath,
-            instance: instance,
+            context: context,
+            config: instance,
             hasContextSchema: hasContextSchema(filepath)
         },
         errors: []
