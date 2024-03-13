@@ -1,59 +1,62 @@
 import { Files } from "../../files";
-import { Logger } from "../../logger";
-import { SourceCode } from "../../sourcecode";
 import { Message } from "../../logger/model";
-import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig } from "../../models";
+import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models";
+import { Tooling } from "../../tooling";
 
 
-export class ConfigServer {
+export async function getServerStructure(entry:string):Promise<{ errors:Message[], server?:ServerStructure }> {
+    let { filepath, errors: errorsFilepath } = getFilepath(entry);
+    if (!filepath) return { errors: errorsFilepath };
+
+    let { instance, errors: errorsInstance } = await getInstance(filepath);
+    if (!instance) return { errors: errorsInstance };
+
+    //! FIXME - Verify types, rebuild type checker in tooling
+
+    return {
+        server: {
+            filepath: filepath,
+            instance: instance
+        },
+        errors: []
+    }
+}
 
 
-    public static async preflight(entry:string):Promise<Message[]> {
-        if (!ConfigServer.filepath(entry)) {
-            return [{
-                text: "Server config file could not be found.",
-                content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
-                    + `of type "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
-                file: { filepath: entry }
-            }];
+function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
+    let filepath = Files.getFilepathVariableExtension(
+        entry,
+        FILENAME_CONFIG_SERVER,
+        SUPPORTED_FILE_EXTENSIONS
+    );
+    if (filepath) {
+        return { filepath, errors: [] };
+    }
+    return {
+        errors: [{
+            text: "Server config file could not be found.",
+            content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
+                + `of type "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
+            file: { filepath: entry }
+        }]
+    };
+}
+
+
+async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ServerConfig }> {
+    try {
+        return {
+            errors: [],
+            instance: await Tooling.getDefaultExport(filepath) as ServerConfig
         }
-        //! rename source-code to something else
-        //! Verify default export
-        //! Verify types
-        return [];
-    }
-    
-
-    public static async get(entry:string):Promise<ServerConfig> {
-        let filepath = ConfigServer.filepath(entry);
-        if (!filepath) {
-            throw Error("Preflight Crosscheck Error");
-        }
-        return await ConfigServer.load(filepath) as ServerConfig;
-    }
-
-
-    public static filepath(entry:string):string|undefined {
-        return Files.getFilepathVariableExtension(
-            entry,
-            FILENAME_CONFIG_SERVER,
-            SUPPORTED_FILE_EXTENSIONS
-        );
-    }
-
-
-    private static async load(filepath:string):Promise<unknown> {  
-        try {
-            return SourceCode.getDefaultExport(filepath);
-        } catch (e) {
-            throw Logger.error({
-                text: "Server config file could not be found.",
-                content: e.message,
+    } catch (e) {
+        return {
+            errors: [{
+                text: "Server config file could not be processed.",
+                content: `Ensure server config has default export.`,
                 file: { filepath: filepath }
-            });
-        }
+            }]
+        };
     }
-
-
 }
 

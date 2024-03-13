@@ -32,7 +32,7 @@ export const DEFAULT_ESBUILD_TARGET:Partial<BuildOptions> = {
 };
 
 
-export class SourceCode {
+export class Tooling {
 
 
     static getExportedVariableNames(filepath:string):string[] {

@@ -1,6 +1,7 @@
 
+export const CONTEXT_SCHEMA_TYPE_NAME  = "ContextSchema";
 export const SUPPORTED_FILE_EXTENSIONS = ["JS", "CJS", "TS"];
-export const FILENAME_MODULE_SERVER    = "sherpa.module";
+export const FILENAME_CONFIG_MODULE    = "sherpa.module";
 export const FILENAME_CONFIG_SERVER    = "sherpa.server";
 
 
@@ -12,8 +13,21 @@ export type ServerConfig = {
 };
 
 
+export type ServerStructure = {
+    filepath:string;
+    instance:ServerConfig;
+};
+
+
 export type ModuleConfig = {
     name:string;
+};
+
+
+export type ModuleStructure = {
+    filepath:string;
+    instance:ModuleConfig;
+    hasContextSchema:boolean;
 };
 
 
@@ -33,13 +47,6 @@ export enum RouteType {
 }
 
 
-export type Module = {
-    name:string;
-    filepath:string;
-    hasContextSchema:boolean;
-}
-
-
 export type Route = RouteSegment|RouteModule|RouteEndpoint;
 
 
@@ -47,7 +54,7 @@ export type RouteEndpoint = {
     type:RouteType.Endpoint;
     filepath:string;
     methods:Method[];
-    module:Module;
+    module:ModuleStructure;
     //! Add routes + dynamic routes (segments??)
 }
 
