@@ -1,7 +1,7 @@
-import { Files } from "../../files";
-import { Message } from "../../logger/model";
-import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models";
-import { Tooling } from "../../tooling";
+import { Files } from "../../files/index.js";
+import { Level, Message } from "../../logger/model.js";
+import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models/index.js";
+import { Tooling } from "../../tooling/index.js";
 
 
 export async function getServerStructure(entry:string):Promise<{ errors:Message[], server?:ServerStructure }> {
@@ -16,7 +16,7 @@ export async function getServerStructure(entry:string):Promise<{ errors:Message[
     return {
         server: {
             filepath: filepath,
-            instance: instance
+            config: instance
         },
         errors: []
     }
@@ -34,6 +34,7 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
     }
     return {
         errors: [{
+            level: Level.ERROR,
             text: "Server config file could not be found.",
             content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
                 + `of type "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
@@ -45,6 +46,15 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 
 async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ServerConfig }> {
     try {
+        if (!Tooling.hasDefaultExport(filepath)) {
+            return {
+                errors: [{
+                    level: Level.ERROR,
+                    text: "Server config file has no default export.",
+                    file: { filepath: filepath }
+                }]
+            };
+        }
         return {
             errors: [],
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
@@ -52,6 +62,7 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
     } catch (e) {
         return {
             errors: [{
+                level: Level.ERROR,
                 text: "Server config file could not be processed.",
                 content: `Ensure server config has default export.`,
                 file: { filepath: filepath }

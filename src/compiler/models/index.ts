@@ -3,6 +3,7 @@ export const CONTEXT_SCHEMA_TYPE_NAME  = "ContextSchema";
 export const SUPPORTED_FILE_EXTENSIONS = ["JS", "CJS", "TS"];
 export const FILENAME_CONFIG_MODULE    = "sherpa.module";
 export const FILENAME_CONFIG_SERVER    = "sherpa.server";
+export const VALID_EXPORTS             = ["GET", "POST", "PATCH", "DELETE", "PUT"];
 
 
 export type Context = unknown;

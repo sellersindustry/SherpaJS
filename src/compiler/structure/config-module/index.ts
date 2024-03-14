@@ -1,7 +1,11 @@
-import { Files } from "../../files";
-import { Message } from "../../logger/model";
-import { CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE, ModuleStructure, SUPPORTED_FILE_EXTENSIONS, ModuleConfig, Context } from "../../models";
-import { Tooling } from "../../tooling";
+import { Files } from "../../files/index.js";
+import { Level, Message } from "../../logger/model.js";
+import {
+    CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE,
+    ModuleStructure, SUPPORTED_FILE_EXTENSIONS,
+    ModuleConfig, Context
+} from "../../models/index.js";
+import { Tooling } from "../../tooling/index.js";
 
 
 export async function getModuleStructure(entry:string, context:Context|undefined):Promise<{ errors:Message[], module?:ModuleStructure }> {
@@ -36,6 +40,7 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
     }
     return {
         errors: [{
+            level: Level.ERROR,
             text: "Module config file could not be found.",
             content: `Must have module config, "${FILENAME_CONFIG_MODULE}" `
                 + `of type "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
@@ -54,6 +59,7 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
     } catch (e) {
         return {
             errors: [{
+                level: Level.ERROR,
                 text: "Module config file could not be processed.",
                 content: `Ensure module config has default export.`,
                 file: { filepath: filepath }

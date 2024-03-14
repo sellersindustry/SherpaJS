@@ -16,6 +16,8 @@ import { build, BuildOptions } from "esbuild";
 import { TypeScriptValidation } from "./ts-validation.js";
 import ts from "typescript";
 import vm from "vm";
+import fs from "fs";
+import { Files } from "../files/index.js";
 
 
 export const DEFAULT_ESBUILD_TARGET:Partial<BuildOptions> = {
@@ -42,10 +44,16 @@ export class Tooling {
     }
 
 
-    static async getDefaultExport(file:string):Promise<unknown> {
+    static hasDefaultExport(filepath:string):boolean {
+        let buffer = fs.readFileSync(filepath, "utf8");
+        return buffer.match(/export\s+default\s+/) != null;
+    } 
+
+
+    static async getDefaultExport(filepath:string):Promise<unknown> {
         let result = await build({
             ...DEFAULT_ESBUILD_TARGET,
-            entryPoints: [file],
+            entryPoints: [filepath],
             write: false
         });
 
@@ -72,6 +80,19 @@ export class Tooling {
 
     static typeScriptValidation(buffer:string):readonly ts.Diagnostic[] {
         return TypeScriptValidation(buffer);
+    }
+
+
+    public static resolve(path:string, resolveDir:string=""):string|null {
+        let local = Files.join(resolveDir, path);
+        let npm   = Files.join("../../../node_modules", path);
+        if (Files.exists(local)) {
+            return local;
+        }
+        if (Files.exists(npm)) {
+            return npm;
+        }
+        return null;
     }
 
 
