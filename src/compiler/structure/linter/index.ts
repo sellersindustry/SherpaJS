@@ -11,7 +11,6 @@
  */
 
 
-import path from "path";
 import { Files } from "../../files/index.js";
 import { Tooling } from "../../tooling/index.js";
 import { Level, Message } from "../../logger/model.js";
@@ -97,7 +96,7 @@ function validateExportsEndpoints(file:DirStructFile):Message[] {
 async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
     try {
         let moduleLoader = await Tooling.getDefaultExport(file.filepath) as ModuleLoader;
-        if (!moduleLoader["entry"] || typeof moduleLoader["entry"] === "string") {
+        if (!moduleLoader["entry"] || typeof moduleLoader["entry"] !== "string") {
             return [{
                 level: Level.ERROR,
                 text: `Module loader failed to define a module "entry" point.`,
@@ -129,7 +128,7 @@ async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
 function validateSegments(structure:DirStructTree, filepath:string):Message[] {
     let errors:Message[] = [];
     for (let segmentName of Object.keys(structure.directories)) {
-        let _filepath = path.join(filepath, segmentName);
+        let _filepath = Files.join(filepath, segmentName);
         errors.push(...validateSegmentName(segmentName, _filepath));
         errors.push(...validateSegments(structure.directories[segmentName], _filepath));
     }

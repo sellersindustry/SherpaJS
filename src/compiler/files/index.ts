@@ -17,23 +17,6 @@ import path from "path";
 
 export class Files {
 
-    
-    public static walk(directory:string):string[] {
-        return this.recursiveWalk(directory, directory);
-    }
-
-
-    private static recursiveWalk(directory:string, root:string):string[] {
-        return fs.readdirSync(directory).map((file:string) => {
-            let filepath = path.join(directory, file);
-            if (fs.statSync(filepath).isDirectory()) {
-                return this.recursiveWalk(filepath, root);
-            } else {
-                return this.relative(root, filepath);
-            }
-        }).flat();
-    }
-
 
     public static getName(filepath:string):string {
         return path.basename(filepath, path.extname(filepath));
@@ -68,8 +51,8 @@ export class Files {
     public static getFilepathVariableExtension(path:string, name:string, extensions:string[]):string|undefined {
         for (let type of extensions) {
             let filename = name + "." + type.toLowerCase();
-            let filepath = this.join(path, filename);
-            if (this.exists(filepath)) {
+            let filepath = Files.join(path, filename);
+            if (Files.exists(filepath)) {
                 return filepath;
             }
         }

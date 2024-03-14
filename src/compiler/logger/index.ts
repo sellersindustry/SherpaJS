@@ -25,13 +25,17 @@ export class Logger {
     }
 
 
-    public static display(message:Message) {
-        console.log(`${this.levelToString(message.level)} ${message.text}`);
-        if (message.content) {
-            console.log(`\t${message.content}`);
-        }
-        if (message.file) {
-            console.log(this.fileToString(message.file));
+    public static display(message:Message[]|Message) {
+        if (Array.isArray(message)) {
+            message.forEach((m) => this.display(m));
+        } else {
+            console.log(`${this.levelToString(message.level)} ${message.text}`);
+            if (message.content) {
+                console.log(`   ${message.content}`);
+            }
+            if (message.file) {
+                console.log(`   ${this.fileToString(message.file)}`);
+            }
         }
     }
 
@@ -55,13 +59,13 @@ export class Logger {
 
     private static levelToString(level:Level=Level.INFO):string {
         if (level == Level.ERROR) {
-            return red(`[${level}]`);
+            return red(`[ERROR]`);
         } else if (level == Level.WARN) {
-            return yellow(`[${level}]`);
+            return yellow(`[WARN] `);
         } else if (level == Level.DEBUG) {
-            return magenta(`[${level}]`);
+            return magenta(`[DEBUG]`);
         } else {
-            return cyan(`[${level}]`);
+            return cyan(`[INFO] `);
         }
     }
 
@@ -70,7 +74,7 @@ export class Logger {
         if (!file) return "";
         let properties = file.properties ? file.properties.join(".") + " " : "";
         let path       = file.filepath + (file.line ? ":" + file.line : "");
-        return dim(`\tat ${properties}(${path})`);
+        return dim(`at ${properties}(${path})`);
     }
 
 

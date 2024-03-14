@@ -1,10 +1,10 @@
 import fs from "fs";
-import path from "path";
 import {
     DirectoryStructureFile as File,
     DirectoryStructureTree as Tree,
     DirectoryStructure as Structure
 } from "./model.js";
+import { Files } from "../../files/index.js";
 
 
 export function getDirectoryStructure(directory:string):Structure {
@@ -20,7 +20,7 @@ function getTreeStructure(directory:string, segments:string[]=[]):Tree {
     return {
         files: getFiles(directory, segments),
         directories: getDirectories(directory).reduce((directories, segment) => {
-            let nextDirectory = path.join(directory, segment);
+            let nextDirectory = Files.join(directory, segment);
             let nextSegments  = [...segments, segment];
             return {
                 ...directories,
@@ -33,11 +33,11 @@ function getTreeStructure(directory:string, segments:string[]=[]):Tree {
 
 function getFiles(directory:string, segments:string[]):File[] {
     return fs.readdirSync(directory).filter((segment:string) => {
-        return fs.statSync(path.join(directory, segment)).isFile();
+        return fs.statSync(Files.join(directory, segment)).isFile();
     }).map((filename) => {
         return {
             filename: filename,
-            filepath: path.join(directory, filename),
+            filepath: Files.join(directory, filename),
             segments: segments
         }
     });
@@ -46,7 +46,7 @@ function getFiles(directory:string, segments:string[]):File[] {
 
 function getDirectories(directory:string):string[] {
     return fs.readdirSync(directory).filter((segment:string) => {
-        return fs.statSync(path.join(directory, segment)).isDirectory();
+        return fs.statSync(Files.join(directory, segment)).isDirectory();
     });
 }
 
