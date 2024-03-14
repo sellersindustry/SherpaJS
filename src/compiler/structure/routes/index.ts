@@ -107,7 +107,7 @@ async function getRouteFile(module:ModuleStructure, filepath:string, segments:Se
     if (Tooling.hasDefaultExport(filepath)) {
         return await getRouteFileByModule(filepath, segments);
     }
-    return getRouteFileByMethod(module, filepath, segments);
+    return getRouteFileByMethods(module, filepath, segments);
 }
 
 
@@ -137,7 +137,7 @@ async function getRouteFileByModule(filepath:string, segments:Segment[]):Promise
 }
 
 
-function getRouteFileByMethod(module:ModuleStructure, filepath:string, segments:Segment[]):{ errors:Message[], route?:Route } {
+function getRouteFileByMethods(module:ModuleStructure, filepath:string, segments:Segment[]):{ errors:Message[], route?:Route } {
     let exports  = Tooling.getExportedVariableNames(filepath).filter(o => VALID_EXPORTS.includes(o));
     let _methods = exports.filter(o => (Object.values(Method) as string[]).includes(o));
     let methods  =  _methods.map(o => Method[o as keyof typeof Method]);
