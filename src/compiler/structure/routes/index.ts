@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Level, Message } from "../../utilities/logger/model.js";
-import { Context, Method, ModuleLoader, ModuleStructure, Route, Segment, VALID_EXPORTS } from "../../models.js";
+import { Context, Method, LoadModule, ModuleStructure, Route, Segment, VALID_EXPORTS } from "../../models.js";
 import { getModuleStructure } from "../config-module/index.js";
 import { getDirectoryStructure } from "../directory-structure/index.js";
 import { lint } from "../linter/index.js";
@@ -113,7 +113,7 @@ async function getRouteFile(module:ModuleStructure, filepath:string, segments:Se
 
 async function getRouteFileByModule(filepath:string, segments:Segment[]):Promise<{ errors:Message[], route?:Route }> {
     try {
-        let moduleLoader = await Tooling.getDefaultExport(filepath) as ModuleLoader;
+        let moduleLoader = await Tooling.getDefaultExport(filepath) as LoadModule;
         let entry        = Tooling.resolve(moduleLoader.entry, Files.getDirectory(filepath));
         if (!entry) {
             return {

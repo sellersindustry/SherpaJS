@@ -14,7 +14,7 @@
 import { Files } from "../../utilities/files/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
-import { ModuleLoader, SUPPORTED_FILE_EXTENSIONS, VALID_EXPORTS } from "../../models.js";
+import { LoadModule, SUPPORTED_FILE_EXTENSIONS, VALID_EXPORTS } from "../../models.js";
 import {
     DirectoryStructureFile as DirStructFile,
     DirectoryStructure as DirStruct,
@@ -95,7 +95,7 @@ function validateExportsEndpoints(file:DirStructFile):Message[] {
 
 async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
     try {
-        let moduleLoader = await Tooling.getDefaultExport(file.filepath) as ModuleLoader;
+        let moduleLoader = await Tooling.getDefaultExport(file.filepath) as LoadModule;
         if (!moduleLoader["entry"] || typeof moduleLoader["entry"] !== "string") {
             return [{
                 level: Level.ERROR,

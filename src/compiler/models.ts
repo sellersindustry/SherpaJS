@@ -61,7 +61,7 @@ export type Endpoint = {
 }
 
 
-export type ModuleLoader = {
+export type LoadModule = {
     entry:string;
     context?:Context;
 }
