@@ -1,6 +1,6 @@
 import { getStructure } from "./structure/index.js";
-import { Logger } from "./logger/index.js";
-import { Files } from "./files/index.js";
+import { Logger } from "./utilities/logger/index.js";
+import { Files } from "./utilities/files/index.js";
 
 
 (async () => {
@@ -11,6 +11,7 @@ import { Files } from "./files/index.js";
     console.log("============ Results ============");
     Logger.display(results.errors);
     console.log(JSON.stringify(results.route, null, 4));
+    console.log(JSON.stringify(results.endpoints, null, 4));
 })();
 
 

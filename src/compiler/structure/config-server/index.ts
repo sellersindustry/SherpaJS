@@ -1,7 +1,7 @@
-import { Files } from "../../files/index.js";
-import { Level, Message } from "../../logger/model.js";
-import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models/index.js";
-import { Tooling } from "../../tooling/index.js";
+import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models.js";
+import { Files } from "../../utilities/files/index.js";
+import { Tooling } from "../../utilities/tooling/index.js";
+import { Level, Message } from "../../utilities/logger/model.js";
 
 
 export async function getServerStructure(entry:string):Promise<{ errors:Message[], server?:ServerStructure }> {

@@ -4,7 +4,7 @@ import {
     DirectoryStructureTree as Tree,
     DirectoryStructure as Structure
 } from "./model.js";
-import { Files } from "../../files/index.js";
+import { Files } from "../../utilities/files/index.js";
 
 
 export function getDirectoryStructure(directory:string):Structure {

@@ -1,12 +1,12 @@
 import fs from "fs";
-import { Level, Message } from "../../logger/model.js";
-import { Context, Method, ModuleLoader, ModuleStructure, Route, Segment, VALID_EXPORTS } from "../../models/index.js";
+import { Level, Message } from "../../utilities/logger/model.js";
+import { Context, Method, ModuleLoader, ModuleStructure, Route, Segment, VALID_EXPORTS } from "../../models.js";
 import { getModuleStructure } from "../config-module/index.js";
 import { getDirectoryStructure } from "../directory-structure/index.js";
 import { lint } from "../linter/index.js";
-import { Tooling } from "../../tooling/index.js";
+import { Tooling } from "../../utilities/tooling/index.js";
 import { DirectoryStructureTree as DirStructTree } from "../directory-structure/model.js";
-import { Files } from "../../files/index.js";
+import { Files } from "../../utilities/files/index.js";
 
 
 export async function getRouteStructure(entry:string, context:Context|undefined, segments:Segment[]=[], isRoot:boolean=true):Promise<{ errors:Message[], route?:Route }> {

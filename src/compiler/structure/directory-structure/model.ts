@@ -11,6 +11,7 @@ export type DirectoryStructureTree = {
     directories: { [key:string]:DirectoryStructureTree };
 }
 
+
 export type DirectoryStructure = {
     tree: DirectoryStructureTree;
     list: DirectoryStructureFile[];

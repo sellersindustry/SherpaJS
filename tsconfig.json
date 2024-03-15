@@ -16,6 +16,7 @@
         "./example-module"
     ],
     "files": [
+        "./src/compiler/index.ts",
         "./index.ts",
         "./lib/cli/index.ts",
         "./lib/builder/generator/handler/index.ts"

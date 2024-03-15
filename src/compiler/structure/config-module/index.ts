@@ -1,11 +1,12 @@
-import { Files } from "../../files/index.js";
-import { Level, Message } from "../../logger/model.js";
+
 import {
     CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE,
     ModuleStructure, SUPPORTED_FILE_EXTENSIONS,
     ModuleConfig, Context
-} from "../../models/index.js";
-import { Tooling } from "../../tooling/index.js";
+} from "../../models.js";
+import { Files } from "../../utilities/files/index.js";
+import { Tooling } from "../../utilities/tooling/index.js";
+import { Level, Message } from "../../utilities/logger/model.js";
 
 
 export async function getModuleStructure(entry:string, context:Context|undefined):Promise<{ errors:Message[], module?:ModuleStructure }> {

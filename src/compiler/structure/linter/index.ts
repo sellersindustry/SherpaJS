@@ -11,10 +11,10 @@
  */
 
 
-import { Files } from "../../files/index.js";
-import { Tooling } from "../../tooling/index.js";
-import { Level, Message } from "../../logger/model.js";
-import { ModuleLoader, SUPPORTED_FILE_EXTENSIONS, VALID_EXPORTS } from "../../models/index.js";
+import { Files } from "../../utilities/files/index.js";
+import { Tooling } from "../../utilities/tooling/index.js";
+import { Level, Message } from "../../utilities/logger/model.js";
+import { ModuleLoader, SUPPORTED_FILE_EXTENSIONS, VALID_EXPORTS } from "../../models.js";
 import {
     DirectoryStructureFile as DirStructFile,
     DirectoryStructure as DirStruct,
