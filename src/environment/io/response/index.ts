@@ -15,14 +15,14 @@ const DEFAULT_OPTIONS:Options = {
 }
 
 
-export class Request {
+export class Response {
 
 
     static new(options?:Partial<Options>):IResponse {
-        let _options = Request.defaultOptions(BodyType.None, options);
+        let _options = Response.defaultOptions(BodyType.None, options);
         return {
             status: _options.status,
-            statusText: Request.getStatusText(_options.status),
+            statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
             redirect: undefined,
             body: undefined,
@@ -32,10 +32,10 @@ export class Request {
 
 
     static text(text:string, options?:Partial<Options>):IResponse {
-        let _options = Request.defaultOptions(BodyType.Text, options);
+        let _options = Response.defaultOptions(BodyType.Text, options);
         return {
             status: _options.status,
-            statusText: Request.getStatusText(_options.status),
+            statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
             redirect: undefined,
             body: text,
@@ -45,10 +45,10 @@ export class Request {
 
 
     static JSON(JSON:Record<string, any>, options?:Partial<Options>):IResponse {
-        let _options = Request.defaultOptions(BodyType.JSON, options);
+        let _options = Response.defaultOptions(BodyType.JSON, options);
         return {
             status: _options.status,
-            statusText: Request.getStatusText(_options.status),
+            statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
             redirect: undefined,
             body: JSON,
@@ -58,10 +58,10 @@ export class Request {
 
 
     static redirect(redirect:string, options?:Partial<Options>):IResponse {
-        let _options = Request.defaultOptions(BodyType.None, options);
+        let _options = Response.defaultOptions(BodyType.None, options);
         return {
             status: 302,
-            statusText: Request.getStatusText(302),
+            statusText: Response.getStatusText(302),
             headers: _options.headers,
             redirect: redirect,
             body: undefined,

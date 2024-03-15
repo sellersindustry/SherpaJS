@@ -1,11 +1,6 @@
+import { Method } from "../../compiler/models.js";
 
-export enum Method {
-    GET="GET",
-    PUT="PUT",
-    POST="POST",
-    PATCH="PATCH",
-    DELETE="DELETE"
-}
+export type { Method };
 
 export enum BodyType {
     JSON = "JSON",

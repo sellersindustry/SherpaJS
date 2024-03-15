@@ -1,8 +1,7 @@
-import { CONFIG_TEST } from "./test";
+import { SherpaJS } from "../src/environment/index";
 
-export default {
-
-} as CONFIG_TEST;
-
+export default SherpaJS.New.module({
+    name: "foo"
+});
 
 export type CONTEXT_SCHEMA = unknown;

@@ -24,7 +24,6 @@ import {
 
 const REGEX_SEGMENT = /^([a-zA-Z0-9-]+)|(\[[a-zA-Z0-9-]+\])$/;
 
-
 export async function lint(structure:DirStruct, filepath:string):Promise<Message[]> {
     let errors:Message[] = [];
     for (let file of structure.list) {
