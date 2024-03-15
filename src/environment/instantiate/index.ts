@@ -18,8 +18,8 @@ export class Load {
 
     //! FIXME - Load.module<boolean>("", true);
     //! Consider this when writing docs and making context checker
-    static module<T>(entry:string, context?:T):LoadModule {
-        return { entry, context };
+    static module<T>(module:LoadModule<T>):LoadModule<T> {
+        return module;
     }
 
 }

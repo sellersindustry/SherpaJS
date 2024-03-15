@@ -1,7 +1,10 @@
-import * as http from "http";
+import {
+    IncomingMessage, ServerResponse,
+    Server as HTTPServer, createServer
+} from "http";
 
 
-type handler = (request?:http.IncomingMessage, response?:http.ServerResponse) => Promise<undefined>|undefined;
+type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined;
 type endpoint = {
     url:RegExp;
     handler:handler;
@@ -11,7 +14,7 @@ type endpoint = {
 export class LocalServer {
 
     private port: number;
-    private server: http.Server|null;
+    private server: HTTPServer|null;
     private endpoints:endpoint[];
 
     
@@ -27,7 +30,7 @@ export class LocalServer {
             throw new Error("Server is already running");
         }
 
-        this.server = http.createServer(this.handleRequest.bind(this));
+        this.server = createServer(this.handleRequest.bind(this));
         this.server.listen(this.port, () => {
             console.log(`SherpaJS Server is listening on port "${this.port}".`);
         });
@@ -61,7 +64,7 @@ export class LocalServer {
     }
 
 
-    private async handleRequest(req:http.IncomingMessage, res:http.ServerResponse):Promise<void> {
+    private async handleRequest(req:IncomingMessage, res:ServerResponse):Promise<void> {
         let url = req.url;
         if (!url) {
             res.writeHead(400);

@@ -4,7 +4,7 @@ import { Files } from "./utilities/files/index.js";
 
 
 (async () => {
-    let entry = Files.join(process.cwd(), "test");
+    let entry = Files.join(process.cwd(), "test/test1");
     console.log(entry)
     
     let results = await getStructure(entry);

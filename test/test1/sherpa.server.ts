@@ -1,4 +1,4 @@
-import { SherpaJS } from "../src/environment/index";
+import { SherpaJS } from "../../src/environment/index";
 
 export default SherpaJS.New.server({
     context: "foo"

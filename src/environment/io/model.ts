@@ -1,6 +1,6 @@
 import { Method } from "../../compiler/models.js";
 
-export type { Method };
+export { Method };
 
 export enum BodyType {
     JSON = "JSON",
@@ -19,6 +19,6 @@ export type Body = Record<string, any>|string|undefined;
 export type Headers = Record<string, string>;
 
 export type URLParameter    = string|number|boolean;
-export type PathParameters  = { [key:string]:URLParameter };
+export type PathParameters  = { [key:string]:URLParameter|URLParameter[] };
 export type QueryParameters = { [key:string]:URLParameter|URLParameter[] }
 

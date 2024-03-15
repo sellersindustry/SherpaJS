@@ -82,7 +82,7 @@ function validateExportsEndpoints(file:DirStructFile):Message[] {
     }
     if (variables.filter((name) => VALID_EXPORTS.includes(name)).length == 0) {
         errors.push({
-            level: Level.ERROR,
+            level: Level.WARN,
             text: "No Valid Exports. No route will be generated.",
             content: `The only valid exports are: "${VALID_EXPORTS.join("\", \"")}".`,
             file: { filepath: file.filepath }
@@ -103,7 +103,7 @@ async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
             }];
         }
 
-        let entry = Tooling.resolve(moduleLoader.entry, file.filepath);
+        let entry = Tooling.resolve(moduleLoader.entry, Files.getDirectory(file.filepath));
         if (!entry) {
             return [{
                 level: Level.ERROR,
