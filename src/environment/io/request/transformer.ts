@@ -1,5 +1,5 @@
 import { Segment } from "../../../compiler/models.js";
-import { BodyType, Method, PathParameters, QueryParameters, URLParameter } from "../model.js";
+import { Body, BodyType, Headers, Method, PathParameters, QueryParameters, URLParameter } from "../model.js";
 import { IRequest } from "./interface.js";
 import { IncomingMessage as LocalRequest } from "http";
 
@@ -7,10 +7,12 @@ import { IncomingMessage as LocalRequest } from "http";
 export class RequestTransform {
 
 
-    static Local(req:LocalRequest, segments:Segment[]):IRequest {
+    static async Local(req:LocalRequest, segments:Segment[]):Promise<IRequest> {
         if (!req.url || !req.method) {
             throw new Error("Missing URL and Methods");
         }
+
+        let { body, bodyType } = await RequestTransform.parseBodyLocal(req);
         return {
             url: new URL(req.url).pathname,
             params: {
@@ -18,9 +20,9 @@ export class RequestTransform {
                 query: RequestTransform.parseParamsQuery(req.url)
             },
             method: req.method.toUpperCase() as keyof typeof Method,
-            headers: {}, //! FIXME
-            body: "", //! FIXME
-            bodyType: BodyType.Text //! FIXME
+            headers: RequestTransform.parseHeader(req.headers),
+            body: body,
+            bodyType: bodyType
         }
     }
 
@@ -37,6 +39,51 @@ export class RequestTransform {
             body: "",
             bodyType: BodyType.Text
         }
+    }
+
+
+    private static parseBodyLocal(req:LocalRequest):Promise<{ body:Body, bodyType:BodyType }> {
+        return new Promise((resolve, reject) => {
+            let body:Body = "";
+            let bodyType  = BodyType.Text;
+    
+            req.on("data", (chunk: Buffer) => {
+                body += chunk.toString();
+            });
+    
+            req.on("end", () => {
+                const contentType = req.headers["content-type"];
+                if (!contentType || body == "") {
+                    resolve({
+                        body: undefined,
+                        bodyType: BodyType.None
+                    });
+                }
+
+                if (contentType == "application/json") {
+                    body     = JSON.parse(body as string);
+                    bodyType = BodyType.JSON;
+                }
+    
+                resolve({
+                    body,
+                    bodyType
+                });
+            });
+    
+            req.on("error", (error:Error) => {
+                resolve({ body: undefined, bodyType: BodyType.None });
+            });
+        });
+    }
+
+
+    private static parseHeader(headers:any):Headers {
+        let _headers = {};
+        Object.keys(headers).forEach((key:string) => {
+            _headers[key] = headers[key];
+        });
+        return _headers;
     }
 
 

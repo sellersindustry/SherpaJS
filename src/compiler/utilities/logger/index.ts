@@ -45,16 +45,16 @@ export class Logger {
     }
 
 
-    // public static raise(message:Message) {
-    //     this.display({ ...message, level: Level.ERROR });
-    //     this.exit();
-    // }
+    public static raise(message:Message) {
+        this.display({ ...message, level: Level.ERROR });
+        this.exit();
+    }
 
 
-    // public static exit() {
-    //     console.log("EXITED");
-    //     process.exit(1);
-    // }
+    public static exit() {
+        console.log("EXITED");
+        process.exit(1);
+    }
 
 
     private static levelToString(level:Level=Level.INFO):string {

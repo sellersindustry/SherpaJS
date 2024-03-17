@@ -1,4 +1,7 @@
 
+import { BuildOptions as ESBuildOptions } from "esbuild";
+
+
 export const CONTEXT_SCHEMA_TYPE_NAME  = "ContextSchema";
 export const SUPPORTED_FILE_EXTENSIONS = ["JS", "CJS", "TS"];
 export const FILENAME_CONFIG_MODULE    = "sherpa.module";
@@ -64,5 +67,23 @@ export type Endpoint = {
 export type LoadModule<T=Context> = {
     entry:string;
     context?:T;
+}
+
+
+export enum BundlerType {
+    Vercel = "Vercel",
+    Local  = "Local",
+}
+
+
+export type BuildOptions = {
+    input:string;
+    output:string;
+    bundler:BundlerType;
+    developer?:{
+        bundler?:{
+            esbuild?:Partial<ESBuildOptions>;
+        }
+    }
 }
 
