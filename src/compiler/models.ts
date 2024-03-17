@@ -31,6 +31,7 @@ export type ModuleConfig = {
 export type ModuleStructure = {
     filepath:string;
     context:Context;
+    contextFilepath:string;
     config:ModuleConfig;
     hasContextSchema:boolean;
 };

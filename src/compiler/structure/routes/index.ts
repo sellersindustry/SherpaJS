@@ -9,10 +9,10 @@ import { DirectoryStructureTree as DirStructTree } from "../directory-structure/
 import { Files } from "../../utilities/files/index.js";
 
 
-export async function getRouteStructure(entry:string, context:Context|undefined, segments:Segment[]=[], isRoot:boolean=true):Promise<{ errors:Message[], route?:Route }> {
+export async function getRouteStructure(entry:string, context:Context|undefined, contextFilepath:string, segments:Segment[]=[], isRoot:boolean=true):Promise<{ errors:Message[], route?:Route }> {
     let errors:Message[] = [];
 
-    let { module, errors: errorsModule } = await getModule(entry, context, isRoot);
+    let { module, errors: errorsModule } = await getModule(entry, context, contextFilepath, isRoot);
     errors.push(...errorsModule);
     if (!module) {
         return { errors };
@@ -35,20 +35,21 @@ export async function getRouteStructure(entry:string, context:Context|undefined,
 }
 
 
-async function getModule(entry:string, context:Context|undefined, isRoot:boolean):Promise<{ errors:Message[], module?:ModuleStructure }> {
+async function getModule(entry:string, context:Context|undefined, contextFilepath:string, isRoot:boolean):Promise<{ errors:Message[], module?:ModuleStructure }> {
     if (isRoot) {
-        return getModuleByRoot(entry, context);
+        return getModuleByRoot(entry, context, contextFilepath);
     }
-    return await getModuleByConfig(entry, context);
+    return await getModuleByConfig(entry, context, contextFilepath);
 }
 
 
-function getModuleByRoot(entry:string, context:Context|undefined):{ errors:Message[], module?:ModuleStructure } {
+function getModuleByRoot(entry:string, context:Context|undefined, contextFilepath:string):{ errors:Message[], module?:ModuleStructure } {
     return {
         errors: [],
         module: {
             filepath: entry,
             context: context,
+            contextFilepath: contextFilepath,
             config: {
                 name: "."
             },
@@ -58,8 +59,8 @@ function getModuleByRoot(entry:string, context:Context|undefined):{ errors:Messa
 }
 
 
-async function getModuleByConfig(entry:string, context:Context|undefined):Promise<{ errors:Message[], module?:ModuleStructure }> {
-    let { module, errors } = await getModuleStructure(entry, context);
+async function getModuleByConfig(entry:string, context:Context|undefined, contextFilepath:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
+    let { module, errors } = await getModuleStructure(entry, context, contextFilepath);
     if (!module) {
         return { errors };
     }
@@ -124,7 +125,7 @@ async function getRouteFileByModule(filepath:string, segments:Segment[]):Promise
                 }]
             }
         }
-        return await getRouteStructure(entry, moduleLoader.context, segments, false);
+        return await getRouteStructure(entry, moduleLoader.context, filepath, segments, false);
     } catch {
         return {
             errors: [{

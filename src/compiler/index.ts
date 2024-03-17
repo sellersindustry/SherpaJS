@@ -9,21 +9,26 @@ import { BundlerType } from "./models.js";
     console.log(entry)
     
     let results = await getStructure(entry);
-    if (!results.endpoints || !results.route) {
-        Logger.raise({ text: `Unable to generate server.` });
-        return;
-    }
-
-    let bundler = NewBundler(results.route,  results.endpoints, {
-        input: "../../test2",
-        output: "../../output",
-        bundler: BundlerType.Local
-    }, results.errors);
 
     console.log("============ Results ============");
     Logger.display(results.errors);
     console.log(JSON.stringify(results.route, null, 4));
     console.log(JSON.stringify(results.endpoints, null, 4));
+
+    
+    if (!results.endpoints || !results.route) {
+        Logger.raise({ text: `Unable to generate server.` });
+        return;
+    }
+
+
+    let bundler = NewBundler(results.route,  results.endpoints, {
+        input: "/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
+        output: "/Users/sellerew/Desktop/libraries/sherpa-core/output",
+        bundler: BundlerType.Local
+    }, results.errors);
+
+    bundler.build();
 })();
 
 

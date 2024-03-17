@@ -9,7 +9,7 @@ import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 
 
-export async function getModuleStructure(entry:string, context:Context|undefined):Promise<{ errors:Message[], module?:ModuleStructure }> {
+export async function getModuleStructure(entry:string, context:Context|undefined, contextFilepath:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
     let { filepath, errors: errorsFilepath } = getFilepath(entry);
     if (!filepath) return { errors: errorsFilepath };
 
@@ -22,6 +22,7 @@ export async function getModuleStructure(entry:string, context:Context|undefined
         module: {
             filepath: filepath,
             context: context,
+            contextFilepath: contextFilepath,
             config: instance,
             hasContextSchema: hasContextSchema(filepath)
         },

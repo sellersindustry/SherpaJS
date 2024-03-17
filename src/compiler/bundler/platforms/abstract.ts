@@ -1,4 +1,5 @@
-import { mkdir, remove, writeFile } from "fs-extra";
+import fs from "fs";
+import { remove } from "fs-extra";
 import { BuildOptions, Endpoint, Route } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 import { Files } from "../../utilities/files/index.js";
@@ -29,8 +30,8 @@ export abstract class Bundler {
 
     async build() {
         await this.clean();
-        await this.makeBuildDirectory();
-        await this.makeBuildManifest();
+        this.makeBuildDirectory();
+        this.makeBuildManifest();
     }
 
 
@@ -50,12 +51,12 @@ export abstract class Bundler {
     }
 
 
-    private async makeBuildDirectory() {
-        await mkdir(this.getFilepath());
+    private makeBuildDirectory() {
+        fs.mkdirSync(this.getFilepath());
     }
 
 
-    private async makeBuildManifest() {
+    private makeBuildManifest() {
         let filepath = Files.join(this.getFilepath(), "sherpa.manifest.json");
         let data = {
             created: new Date().toISOString(),
@@ -64,7 +65,7 @@ export abstract class Bundler {
             endpoints: this.endpoints,
             errors: this.errors
         };
-        await writeFile(filepath, JSON.stringify(data, null, 4));
+        fs.writeFileSync(filepath, JSON.stringify(data, null, 4));
     }
 
     

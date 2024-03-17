@@ -12,7 +12,7 @@ export async function getStructure(entry:string):Promise<{ errors:Message[], rou
         return { errors };
     }
 
-    let { route, errors: errorsRoute } = await getRouteStructure(entry, server.config.context);
+    let { route, errors: errorsRoute } = await getRouteStructure(entry, server.config.context, server.filepath);
     errors.push(...errorsRoute);
     return {
         errors,
