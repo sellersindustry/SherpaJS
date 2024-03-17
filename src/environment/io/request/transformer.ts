@@ -14,7 +14,7 @@ export class RequestTransform {
 
         let { body, bodyType } = await RequestTransform.parseBodyLocal(req);
         return {
-            url: new URL(req.url).pathname,
+            url: req.url,
             params: {
                 path: RequestTransform.parseParamsPath(req.url, segments),
                 query: RequestTransform.parseParamsQuery(req.url)
@@ -89,7 +89,7 @@ export class RequestTransform {
 
     private static parseParamsPath(url:string, segments:Segment[]):PathParameters {
         let params = {};
-        new URL(url).pathname.split(url).forEach((value:string, index:number) => {
+        url.split("/").filter((o) => o != "").forEach((value:string, index:number) => {
             if (segments[index].isDynamic) {
                 let key    = segments[index].name;
                 let _value = RequestTransform.parseParam(value);
@@ -110,7 +110,7 @@ export class RequestTransform {
 
     private static parseParamsQuery(url:string):QueryParameters {    
         let params = {};
-        new URL(url).searchParams.forEach((value, key) => {
+        this.getURL(url).searchParams.forEach((value, key) => {
             let _value = RequestTransform.parseParam(value);
             if (params[key]) {
                 if (Array.isArray(params[key])) {
@@ -135,6 +135,12 @@ export class RequestTransform {
             return parseInt(value);
         }
         return value;
+    }
+
+
+    private static getURL(url:string):URL {
+        // a hostname is required, doesn't matter what it is
+        return new URL(`localhost:3000${url}`);
     }
 
 

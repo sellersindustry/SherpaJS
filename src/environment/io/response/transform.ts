@@ -1,5 +1,4 @@
 import { Body, BodyType } from "../model.js";
-import { IRequest } from "../request/interface.js";
 import { IResponse } from "./interface.js";
 import { ServerResponse as LocalResponse } from "http";
 
@@ -11,7 +10,7 @@ export class ResponseTransform {
         nativeResponse.statusCode    = response.status;
         nativeResponse.statusMessage = response.statusText;
 
-        for (let [key, value] of Object(response.headers).entries()) {
+        for (let [key, value] of Object.entries(response.headers)) {
             nativeResponse.setHeader(key, value);
         }
 

@@ -10,10 +10,8 @@ export class Local extends Bundler {
 
     async build() {
         await super.build();
-        // console.log(this.getBuffer());
         await Tooling.build({
             buffer:  this.getBuffer(),
-            // buffer: "/Users/sellerew/Desktop/libraries/sherpa-core/src/compiler/bundler/platforms/local/foo.ts",
             output:  Files.join(this.getFilepath(), "index.js"),
             resolve: this.options.input,
             options: { 

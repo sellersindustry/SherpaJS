@@ -6,7 +6,6 @@ import { BundlerType } from "./models.js";
 
 (async () => {
     let entry = Files.join(process.cwd(), "test/test1");
-    console.log(entry)
     
     let results = await getStructure(entry);
 
@@ -23,9 +22,16 @@ import { BundlerType } from "./models.js";
 
 
     let bundler = NewBundler(results.route,  results.endpoints, {
-        input: "/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
-        output: "/Users/sellerew/Desktop/libraries/sherpa-core/output",
-        bundler: BundlerType.Local
+        input: "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
+        output: "C:/Users/sellerew/Desktop/libraries/sherpa-core/output",
+        bundler: BundlerType.Local,
+        developer: {
+            bundler: {
+                esbuild: {
+                    minify: false
+                }
+            }
+        }
     }, results.errors);
 
     bundler.build();
