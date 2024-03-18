@@ -2,6 +2,7 @@ import {
     IncomingMessage, ServerResponse,
     Server as HTTPServer, createServer
 } from "http";
+import { URLs } from "../../compiler/utilities/url";
 
 
 type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined;
@@ -60,7 +61,7 @@ export class LocalServer {
     private convertDynamicSegments(url:string):RegExp {
         return new RegExp("^\/" + url.replace(/\[([^/]+?)\]/g, (_, segmentName) => {
             return `(?<${segmentName}>[^/]+)`
-        }) + "$");
+        }) + "(\/)?$");
     }
 
 
@@ -84,8 +85,9 @@ export class LocalServer {
 
 
     private getEndpoint(url:string):endpoint|undefined {
+        let _url = URLs.getPathname(url);
         for (let endpoint of this.endpoints) {
-            if (endpoint.url.test(url)) {
+            if (endpoint.url.test(_url)) {
                 return endpoint;
             }
         }

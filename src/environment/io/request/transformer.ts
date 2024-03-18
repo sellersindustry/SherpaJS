@@ -1,4 +1,5 @@
 import { Segment } from "../../../compiler/models.js";
+import { URLs } from "../../../compiler/utilities/url/index.js";
 import { Body, BodyType, Headers, Method, PathParameters, QueryParameters, URLParameter } from "../model.js";
 import { IRequest } from "./interface.js";
 import { IncomingMessage as LocalRequest } from "http";
@@ -14,7 +15,7 @@ export class RequestTransform {
 
         let { body, bodyType } = await RequestTransform.parseBodyLocal(req);
         return {
-            url: req.url,
+            url: URLs.getPathname(req.url),
             params: {
                 path: RequestTransform.parseParamsPath(req.url, segments),
                 query: RequestTransform.parseParamsQuery(req.url)
@@ -110,7 +111,7 @@ export class RequestTransform {
 
     private static parseParamsQuery(url:string):QueryParameters {    
         let params = {};
-        this.getURL(url).searchParams.forEach((value, key) => {
+        URLs.getSearchParams(url).forEach((value, key) => {
             let _value = RequestTransform.parseParam(value);
             if (params[key]) {
                 if (Array.isArray(params[key])) {
@@ -135,12 +136,6 @@ export class RequestTransform {
             return parseInt(value);
         }
         return value;
-    }
-
-
-    private static getURL(url:string):URL {
-        // a hostname is required, doesn't matter what it is
-        return new URL(`localhost:3000${url}`);
     }
 
 

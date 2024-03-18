@@ -1,16 +1,24 @@
 {
-    "created": "2024-03-17T20:51:47.388Z",
+    "created": "2024-03-18T13:20:43.277Z",
     "options": {
-        "input": "/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
-        "output": "/Users/sellerew/Desktop/libraries/sherpa-core/output",
-        "bundler": "Local"
+        "input": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
+        "output": "C:/Users/sellerew/Desktop/libraries/sherpa-core/output",
+        "bundler": "Local",
+        "developer": {
+            "bundler": {
+                "esbuild": {
+                    "minify": false
+                }
+            }
+        }
     },
     "route": {
         "module": {
             ".": {
                 "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/routes/index.ts",
                 "methods": [
-                    "GET"
+                    "GET",
+                    "POST"
                 ],
                 "module": {
                     "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/sherpa.module.ts",
@@ -68,7 +76,8 @@
                     ".": {
                         "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/routes/[id]/path2/index.ts",
                         "methods": [
-                            "GET"
+                            "GET",
+                            "POST"
                         ],
                         "module": {
                             "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/sherpa.module.ts",
@@ -127,7 +136,8 @@
         {
             "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/routes/index.ts",
             "methods": [
-                "GET"
+                "GET",
+                "POST"
             ],
             "module": {
                 "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/sherpa.module.ts",
@@ -181,7 +191,8 @@
         {
             "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/routes/[id]/path2/index.ts",
             "methods": [
-                "GET"
+                "GET",
+                "POST"
             ],
             "module": {
                 "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/sherpa.module.ts",

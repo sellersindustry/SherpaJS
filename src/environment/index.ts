@@ -41,6 +41,7 @@ export type {
     Headers,
     PathParameters,
     QueryParameters,
+    IRequest as Request,
     IRequest,
     IResponse,
     Options as ResponseOptions,

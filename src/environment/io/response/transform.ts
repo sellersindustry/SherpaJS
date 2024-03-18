@@ -1,4 +1,4 @@
-import { Body, BodyType } from "../model.js";
+import { Body, BodyType, CONTENT_TYPE } from "../model.js";
 import { IResponse } from "./interface.js";
 import { ServerResponse as LocalResponse } from "http";
 
@@ -14,6 +14,10 @@ export class ResponseTransform {
             nativeResponse.setHeader(key, value);
         }
 
+        if (response.bodyType != BodyType.None && !nativeResponse.hasHeader("Content-Type")) {
+            nativeResponse.setHeader("Content-Type", CONTENT_TYPE[response.bodyType]);
+        }
+
         if (response.redirect) {
             nativeResponse.setHeader("Location", response.redirect);
         }
@@ -27,6 +31,7 @@ export class ResponseTransform {
                 body = JSON.stringify(response.body);
                 break;
         }
+
         nativeResponse.end(body);
     }
 
