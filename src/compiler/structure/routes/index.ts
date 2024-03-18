@@ -65,7 +65,7 @@ async function getModuleByConfig(entry:string, context:Context|undefined, contex
         return { errors };
     }
     return {
-        errors: [],
+        errors: errors,
         module
     }
 }

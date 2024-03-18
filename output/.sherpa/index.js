@@ -651,8 +651,7 @@ function GET4(request, context) {
 
 // /Users/sellerew/Desktop/libraries/sherpa-core/test/test1/sherpa.server.ts
 var sherpa_server_default = SherpaJS.New.server({
-  context: "foo",
-  nice: true
+  context: "foo"
 });
 
 // <stdin>

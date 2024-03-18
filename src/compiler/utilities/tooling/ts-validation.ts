@@ -119,6 +119,7 @@ export class TypeValidation {
     private hasDefaultExport():Message[] {
         if (!this.buffer.match(/export\s+default\s+/)) {
             return [{
+                level: Level.ERROR,
                 text: `${this.fileTypeName} has no default export.`,
                 file: { filepath: this.filepath }
             }];

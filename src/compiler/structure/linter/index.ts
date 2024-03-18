@@ -112,7 +112,7 @@ async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
             }];
         }
 
-        return []; //! FIXME - VALIDATE CONTEXT BY SCHEMA LATER
+        return [];
     } catch {
         return [{
             level: Level.ERROR,

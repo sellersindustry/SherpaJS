@@ -16,7 +16,24 @@ export async function getModuleStructure(entry:string, context:Context|undefined
     let { instance, errors: errorsInstance } = await getInstance(filepath);
     if (!instance) return { errors: errorsInstance };
 
-    //! FIXME - verify context types
+    let hasContextSchema  = getHasContextSchema(filepath);
+    let errorsModuleTypes = Tooling.typeCheck(filepath, "Module Config", "SherpaJS.New.module", {
+        filepath: Files.join(Files.getRootDirectory(), "src/compiler/models"),
+        name: "ModuleConfig"
+    });
+    let errorsLoaderTypes = Tooling.typeCheck(contextFilepath, "Module Loader", "SherpaJS.Load.module", {
+        filepath: Files.join(Files.getRootDirectory(), "src/compiler/models"),
+        name: "LoadModule",
+        subtype: hasContextSchema ? {
+            name: CONTEXT_SCHEMA_TYPE_NAME,
+            filepath: filepath.replace(/\.[a-zA-Z0-9]+$/, "")
+        } : undefined
+    }).map((message:Message) => {
+        if (message.text.includes(CONTEXT_SCHEMA_TYPE_NAME)) {
+            message.content = `${CONTEXT_SCHEMA_TYPE_NAME} at (${filepath})`
+        }
+        return message;
+    });
 
     return {
         module: {
@@ -24,9 +41,9 @@ export async function getModuleStructure(entry:string, context:Context|undefined
             context: context,
             contextFilepath: contextFilepath,
             config: instance,
-            hasContextSchema: hasContextSchema(filepath)
+            hasContextSchema: hasContextSchema
         },
-        errors: []
+        errors: [...errorsModuleTypes, ...errorsLoaderTypes]
     }
 }
 
@@ -71,7 +88,7 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
 }
 
 
-function hasContextSchema(filepath:string):boolean {
+function getHasContextSchema(filepath:string):boolean {
     let exportedVariables = Tooling.getExportedVariableNames(filepath);
     let exportedSchema    = exportedVariables.includes(CONTEXT_SCHEMA_TYPE_NAME);
     let isTypescript      = Files.getExtension(filepath) == "TS";

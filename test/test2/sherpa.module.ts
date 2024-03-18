@@ -4,4 +4,6 @@ export default SherpaJS.New.module({
     name: "foo"
 });
 
-export type ContextSchema = unknown;
+export type ContextSchema = {
+    test: boolean
+};

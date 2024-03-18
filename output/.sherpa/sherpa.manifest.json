@@ -1,5 +1,5 @@
 {
-    "created": "2024-03-18T17:59:59.492Z",
+    "created": "2024-03-18T18:39:09.387Z",
     "options": {
         "input": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
         "output": "C:/Users/sellerew/Desktop/libraries/sherpa-core/output",
@@ -245,11 +245,12 @@
     "errors": [
         {
             "level": 1,
-            "text": "Server config Type Error - Object literal may only specify known properties, and 'nice' does not exist in type 'ServerConfig'.",
+            "text": "Module Loader Type Error - Type 'string' is not assignable to type 'boolean'. The expected type comes from property 'test' which is declared here on type 'ContextSchema'",
             "file": {
-                "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test1/sherpa.server.ts",
-                "line": 5
-            }
+                "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test1/routes/module/index.ts",
+                "line": 6
+            },
+            "content": "ContextSchema (C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2/sherpa.module.ts)"
         }
     ]
 }
