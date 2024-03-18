@@ -11,13 +11,13 @@
  */
 
 
-import { Project as TSMorphProject } from "ts-morph";
-import { build, BuildOptions } from "esbuild";
-import { TypeScriptValidation } from "./ts-validation.js";
-import ts from "typescript";
 import vm from "vm";
 import fs from "fs";
+import { Project as TSMorphProject } from "ts-morph";
+import { build, BuildOptions } from "esbuild";
+import { TypeValidation, Schema } from "./ts-validation.js";
 import { Files } from "../files/index.js";
+import { Message } from "../logger/model.js";
 
 
 export const DEFAULT_ESBUILD_TARGET:Partial<BuildOptions> = {
@@ -78,8 +78,8 @@ export class Tooling {
     }
 
 
-    static typeScriptValidation(buffer:string):readonly ts.Diagnostic[] {
-        return TypeScriptValidation(buffer);
+    static typeCheck(filepath:string, fileTypeName:string, functionName:string, schema:Schema):Message[] {
+        return new TypeValidation(filepath, fileTypeName, functionName, schema).apply();
     }
 
 

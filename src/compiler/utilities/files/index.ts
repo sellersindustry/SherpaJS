@@ -60,6 +60,18 @@ export class Files {
     }
 
 
+    public static getRootDirectory() {
+        return Files.join(Files.getDirectory(import.meta.url)
+            .replace("file:///", "")
+            .replace("file://", ""), "../../../../../");
+    }
+
+
+    public static unix(filepath:string):string {
+        return filepath.replace(/^[A-Za-z]:/, '').replace(/\\/g, '/');
+    }
+
+
 }
 
 

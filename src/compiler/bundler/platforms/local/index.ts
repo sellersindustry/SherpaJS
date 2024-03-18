@@ -23,17 +23,16 @@ export class Local extends Bundler {
 
 
     private getBuffer() {
-        let __dirname = new URL(".", import.meta.url).pathname.replace("C:/", "");
         return `
-            import { __internal__ as SherpaJS } from "${Files.join(__dirname, "../../../../environment/index.js")}";
+            import { __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/src/environment/index.js"))}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
             let server  = new SherpaJS.LocalServer(port);
             ${this.endpoints.map((endpoint:Endpoint, index:number) => {
                 return `
-                    import * as endpoint_${index} from "${endpoint.filepath.replace("C:/", "/")}";
-                    import import_context_${index} from "${endpoint.module.contextFilepath.replace("C:/", "/")}";
+                    import * as endpoint_${index} from "${Files.unix(endpoint.filepath)}";
+                    import import_context_${index} from "${Files.unix(endpoint.module.contextFilepath)}";
 
                     let context_${index} = import_context_${index}.context;
                     let segments_${index} = ${JSON.stringify(endpoint.segments)};

@@ -11,14 +11,17 @@ export async function getServerStructure(entry:string):Promise<{ errors:Message[
     let { instance, errors: errorsInstance } = await getInstance(filepath);
     if (!instance) return { errors: errorsInstance };
 
-    //! FIXME - Verify types, rebuild type checker in tooling
+    let errorsTypes = Tooling.typeCheck(filepath, "Server config", "SherpaJS.New.server", {
+        filepath: Files.join(Files.getRootDirectory(), "src/compiler/models"),
+        name: "ServerConfig",
+    });
 
     return {
         server: {
             filepath: filepath,
             config: instance
         },
-        errors: []
+        errors: errorsTypes
     }
 }
 

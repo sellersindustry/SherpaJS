@@ -221,7 +221,7 @@ var LocalServer = class {
   convertDynamicSegments(url) {
     return new RegExp("^/" + url.replace(/\[([^/]+?)\]/g, (_, segmentName) => {
       return `(?<${segmentName}>[^/]+)`;
-    }) + "$");
+    }) + "(/)?$");
   }
   async handleRequest(req, res) {
     let url = req.url;
@@ -651,7 +651,8 @@ function GET4(request, context) {
 
 // /Users/sellerew/Desktop/libraries/sherpa-core/test/test1/sherpa.server.ts
 var sherpa_server_default = SherpaJS.New.server({
-  context: "foo"
+  context: "foo",
+  nice: true
 });
 
 // <stdin>

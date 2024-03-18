@@ -11,8 +11,8 @@ import { BundlerType } from "./models.js";
 
     console.log("============ Results ============");
     Logger.display(results.errors);
-    console.log(JSON.stringify(results.route, null, 4));
-    console.log(JSON.stringify(results.endpoints, null, 4));
+    // console.log(JSON.stringify(results.route, null, 4));
+    // console.log(JSON.stringify(results.endpoints, null, 4));
 
     
     if (!results.endpoints || !results.route) {

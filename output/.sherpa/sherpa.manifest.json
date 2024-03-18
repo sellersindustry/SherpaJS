@@ -1,5 +1,5 @@
 {
-    "created": "2024-03-18T13:20:43.277Z",
+    "created": "2024-03-18T17:59:59.492Z",
     "options": {
         "input": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
         "output": "C:/Users/sellerew/Desktop/libraries/sherpa-core/output",
@@ -242,5 +242,14 @@
             ]
         }
     ],
-    "errors": []
+    "errors": [
+        {
+            "level": 1,
+            "text": "Server config Type Error - Object literal may only specify known properties, and 'nice' does not exist in type 'ServerConfig'.",
+            "file": {
+                "filepath": "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test1/sherpa.server.ts",
+                "line": 5
+            }
+        }
+    ]
 }

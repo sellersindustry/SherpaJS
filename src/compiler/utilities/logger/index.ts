@@ -61,7 +61,7 @@ export class Logger {
         if (level == Level.ERROR) {
             return red(`[ERROR]`);
         } else if (level == Level.WARN) {
-            return yellow(`[WARN] `);
+            return yellow(`[WARNING]`);
         } else if (level == Level.DEBUG) {
             return magenta(`[DEBUG]`);
         } else {
