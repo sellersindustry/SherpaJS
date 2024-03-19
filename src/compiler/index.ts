@@ -1,40 +1,104 @@
+import fs from "fs";
+import path from "path";
+import { green, red } from "colorette";
 import { getStructure } from "./structure/index.js";
 import { Logger } from "./utilities/logger/index.js";
-import { Files } from "./utilities/files/index.js";
 import { NewBundler } from "./bundler/index.js";
-import { BundlerType } from "./models.js";
+import { BuildOptions, BundlerType } from "./models.js";
+import { Level, Message } from "./utilities/logger/model.js";
 
-(async () => {
-    let entry = Files.join(process.cwd(), "test/test1");
-    
-    let results = await getStructure(entry);
 
-    console.log("============ Results ============");
-    Logger.display(results.errors);
-    // console.log(JSON.stringify(results.route, null, 4));
-    // console.log(JSON.stringify(results.endpoints, null, 4));
+export { BundlerType };
+export type { BuildOptions };
 
-    
-    if (!results.endpoints || !results.route) {
-        Logger.raise({ text: `Unable to generate server.` });
-        return;
+export class Compiler {
+
+
+    public static async build(options:BuildOptions, verbose:boolean=true):Promise<{ success:boolean, errors:Message[] }> {
+        let errorsBuildOptions = this.validateBuildOptions(options);
+        if (errorsBuildOptions.length) {
+            return this.display({ errors: errorsBuildOptions, verbose, success: false });
+        }
+
+        let { errors, route, endpoints } = await getStructure(options.input);
+        if (!endpoints || !route) {
+            errors.push({
+                level: Level.ERROR,
+                text: "Failed to generate endpoints."
+            });
+            return this.display({ errors, verbose, success: false });
+        }
+        try {
+            NewBundler(route,  endpoints, options, errors).build();
+        } catch (error) {
+            errors.push({
+                level: Level.ERROR,
+                text: "Failed to bundle SherpaJS Server",
+                content: error.message
+            });
+            return this.display({ errors, verbose, success: false });
+        }
+        return this.display({ errors, verbose, success: true });
     }
 
 
-    let bundler = NewBundler(results.route,  results.endpoints, {
-        input: "C:/Users/sellerew/Desktop/libraries/sherpa-core/test/test2",
-        output: "C:/Users/sellerew/Desktop/libraries/sherpa-core/output",
-        bundler: BundlerType.Local,
-        developer: {
-            bundler: {
-                esbuild: {
-                    minify: false
-                }
+    private static validateBuildOptions(options:BuildOptions):Message[] {
+        let errors = [];
+
+        if (!path.isAbsolute(options.input)) {
+            errors.push({
+                level: Level.ERROR,
+                text: "Input path is not an absolute path.",
+                file: { filepath: options.input }
+            });
+        }
+    
+        if (!fs.existsSync(options.input)) {
+            errors.push({
+                level: Level.ERROR,
+                text: "Input path does not exist.",
+                file: { filepath: options.input }
+            });
+        }
+
+        if (!path.isAbsolute(options.output)) {
+            errors.push({
+                level: Level.ERROR,
+                text: "Output path is not an absolute path.",
+                file: { filepath: options.output }
+            });
+        }
+    
+        if (!fs.existsSync(options.output)) {
+            errors.push({
+                level: Level.ERROR,
+                text: "Output path does not exist.",
+                file: { filepath: options.output }
+            });
+        }
+
+        return errors;
+    }
+
+
+    private static display(output:{ errors:Message[], success:boolean, verbose:boolean }):{ success:boolean, errors:Message[] } {
+        if (output.verbose) {
+            if (output.errors.length == 0) {
+                console.log("No Build Logs.")
+            } else {
+                console.log("============ Build Logs ============")
+                Logger.display(output.errors);
+                console.log("");
+            }
+            if (output.success) {
+                console.log(green("SherpaJS Successfully Built Server!"));
+            } else {
+                console.log(red("SherpaJS Failed to Build Server.") + " See logs for more information.")
             }
         }
-    }, results.errors);
+        return { errors: output.errors, success: output.success };
+    }
 
-    bundler.build();
-})();
 
+}
 

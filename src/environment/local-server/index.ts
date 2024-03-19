@@ -2,7 +2,7 @@ import {
     IncomingMessage, ServerResponse,
     Server as HTTPServer, createServer
 } from "http";
-import { URLs } from "../../compiler/utilities/url";
+import { URLs } from "../../compiler/utilities/url/index.js";
 
 
 type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined;
