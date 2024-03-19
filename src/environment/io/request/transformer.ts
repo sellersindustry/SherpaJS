@@ -1,3 +1,15 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: transformer.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Native Request to SherpaJS Request
+ *
+ */
+
 import { Segment } from "../../../compiler/models.js";
 import { URLs } from "../../../compiler/utilities/url/index.js";
 import { Body, BodyType, Headers, Method, PathParameters, QueryParameters, URLParameter } from "../model.js";
@@ -141,3 +153,7 @@ export class RequestTransform {
 
 }
 
+
+// Therefore I tell you, whatever you ask for in prayer, believe that you have
+// received it, and it will be yours.
+// - Mark 11:24

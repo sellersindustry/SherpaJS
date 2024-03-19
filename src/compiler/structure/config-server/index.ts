@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Server Config Structure
+ *
+ */
+
+
 import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models.js";
 import { Files } from "../../utilities/files/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
@@ -74,3 +87,7 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
     }
 }
 
+
+// Therefore I tell you, whatever you ask for in prayer, believe that you have
+// received it, and it will be yours.
+// - Mark 11:24

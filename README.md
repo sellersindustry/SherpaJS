@@ -557,30 +557,22 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Maintenance
- - Allow capitizal letters in dynamic routes
- - Remove the utilities folder, and place the function in the appropriate locations.
- - Clean up the CLI system.
- - Start command does not have to build the server, just starts a local server. Will keep track to ensure that ExpressJS was the last build. Also allow point controls from arguments on the build file.
- - Remove the ExpressJS bundler as it's too large, use a different smaller system, and just call it the "local" bundler.
  - Console Development Server, Live Logs
- - Allow Null Response Body
  - Make a document website with [Mintlify](https://mintlify.com/preview).
- - Better linting and cleaned linting system.
- - Better method for building JS instead of large multiple-line strings. Can we build a module that allows text files with inline JavaScript, similar to JSX?
 
 
 <br>
 
 
 ### Proposed Features
- - Add Init Command to build Server and Module
  - Auto reloading development server.
+ - Clean Command.
  - Add SherpaJS 500 Error Page.
  - Add SherpaJS 404 Error Page.
  - Ability to add custom 500 and 404 error pages, with HTML in `/errors`.
  - Catch all dynamic routes.
- - Security concerns with exposing the whole server configuration.
- - Migrate Compiler to Rust (Eventually)
+ - Ability to add admin portal
+ - Public Assets
 
 
 <br>

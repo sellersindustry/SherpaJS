@@ -1,8 +1,20 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: expressjs.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Local Bundler
+ *
+ */
+
+
 import { Endpoint, Segment } from "../../../models.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
 import { Files } from "../../../utilities/files/index.js";
 import { Bundler } from "../abstract.js";
-
 
 
 export class Local extends Bundler {
@@ -61,3 +73,5 @@ export class Local extends Bundler {
 }
 
 
+// A wise son brings joy to his father, but a foolish son brings grief to his mother.
+// - Proverbs 10:1

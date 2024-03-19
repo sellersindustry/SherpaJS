@@ -1,3 +1,15 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: models.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Models
+ *
+ */
+
 
 import { BuildOptions as ESBuildOptions } from "esbuild";
 
@@ -88,3 +100,6 @@ export type BuildOptions = {
     }
 }
 
+
+// Because you know that the testing of your faith produces perseverance.
+// - James 1:3

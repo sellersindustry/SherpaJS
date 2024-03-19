@@ -1,3 +1,15 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Endpoint Structure
+ *
+ */
+
 import fs from "fs";
 import { Level, Message } from "../../utilities/logger/model.js";
 import { Context, Method, LoadModule, ModuleStructure, Route, Segment, VALID_EXPORTS } from "../../models.js";
@@ -179,3 +191,7 @@ function getRoutesDirectory(entry:string):string {
     return Files.join(entry, "routes");
 }
 
+
+// Who is it that overcomes the world? Only the one who believes that Jesus
+// is the Son of God.
+// - 1 John 5:5

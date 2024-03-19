@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Environment SDK
+ *
+ */
+
+
 import {
     Body, BodyType, Headers,
     Method, PathParameters, QueryParameters
@@ -9,7 +22,7 @@ import { IRequest } from "./io/request/interface.js";
 import { Options } from "./io/response/index.js";
 import { LocalServer } from "./local-server/index.js";
 import { RequestTransform } from "./io/request/transformer.js";
-import { ResponseTransform } from "./io/response/transform.js";
+import { ResponseTransform } from "./io/response/transformer.js";
 import { Context } from "../compiler/models.js";
 import { Handler } from "./handler/index.js";
 
@@ -47,3 +60,8 @@ export type {
     Options as ResponseOptions,
     Context
 }
+
+
+// Now faith is confidence in what we hope for and assurance about what
+// we do not see.
+// - Hebrews 11:1

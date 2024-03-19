@@ -1,3 +1,15 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Tue Mar 19 2024
+ *   file: status-text.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Response Status Text
+ *
+ */
+
 
 export const STATUS_TEXT:Record<number, string|undefined> = {
     100: "Continue",
@@ -62,3 +74,7 @@ export const STATUS_TEXT:Record<number, string|undefined> = {
     510: "Not Extended",
     511: "Network Authentication Required",
 };
+
+
+// As Scripture says, "Anyone who believes in him will never be put to shame."
+// - Romans 10:11

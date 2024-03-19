@@ -1,3 +1,15 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Sun Feb 11 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Module Config Structure
+ *
+ */
+
 
 import {
     CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE,
@@ -95,3 +107,7 @@ function getHasContextSchema(filepath:string):boolean {
     return exportedSchema && isTypescript;
 }
 
+
+// Whoever believes and is baptized will be saved, but whoever does not believe
+// will be condemned.
+// - Mark 16:16

@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Tue Mar 19 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Local Server
+ *
+ */
+
+
 import {
     IncomingMessage, ServerResponse,
     Server as HTTPServer, createServer
@@ -98,3 +111,6 @@ export class LocalServer {
 }
 
 
+// Whoever has the Son has life; whoever does not have the Son of God does
+// not have life.
+// - 1 John 5:12

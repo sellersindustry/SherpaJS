@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Tue Mar 19 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Response builder
+ *
+ */
+
+
 import { BodyType, CONTENT_TYPE, Headers } from "../model.js";
 import { IResponse } from "./interface.js";
 import { STATUS_TEXT } from "./status-text.js";
@@ -93,3 +106,8 @@ export class Response {
 
 
 }
+
+
+// I write these things to you who believe in the name of the Son of God so
+// that you may know that you have eternal life.
+// - 1 John 5:13

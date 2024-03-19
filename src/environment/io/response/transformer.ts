@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Mar 04 2024
+ *   file: transformer.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: SherpaJS Response to Native
+ *
+ */
+
+
 import { Body, BodyType, CONTENT_TYPE } from "../model.js";
 import { IResponse } from "./interface.js";
 import { ServerResponse as LocalResponse } from "http";
@@ -42,4 +55,9 @@ export class ResponseTransform {
 
     
 }
+
+
+// We have come to share in Christ, if indeed we hold our original conviction
+// firmly to the very end.
+// - Hebrews 3:14
 
