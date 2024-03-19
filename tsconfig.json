@@ -16,6 +16,7 @@
     ],
     "files": [
         "./index.ts",
-        "./src/cli/index.ts"
+        "./src/cli/index.ts",
+        "./src/compiler/index.ts"
     ]
 }

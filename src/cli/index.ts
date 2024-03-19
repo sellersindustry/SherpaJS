@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import path from "path";
-import { BundlerType, Compiler } from "../../index.js"
 import { Command, Option } from "commander";
+import { Compiler, BundlerType } from  "../compiler/index.js";
 let CLI = new Command();
 
 

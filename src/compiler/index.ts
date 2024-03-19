@@ -11,6 +11,7 @@ import { Level, Message } from "./utilities/logger/model.js";
 export { BundlerType };
 export type { BuildOptions };
 
+
 export class Compiler {
 
 
@@ -43,7 +44,7 @@ export class Compiler {
 
 
     private static validateBuildOptions(options:BuildOptions):Message[] {
-        let errors = [];
+        let errors:Message[] = [];
 
         if (!path.isAbsolute(options.input)) {
             errors.push({

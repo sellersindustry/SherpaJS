@@ -11,7 +11,6 @@
  */
 
 
-export * from "./src/compiler/index.js";
 export * from "./src/environment/index.js";
 export type * from "./src/environment/index.js";
 
