@@ -11,10 +11,11 @@
  */
 
 
-import { Endpoint, Segment } from "../../../models.js";
+import { Endpoint } from "../../../models.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
 import { Files } from "../../../utilities/files/index.js";
 import { Bundler } from "../abstract.js";
+import { RequestUtilities } from "../../../../environment/io/request/utilities.js";
 
 
 export class Local extends Bundler {
@@ -48,7 +49,7 @@ export class Local extends Bundler {
 
                     let context_${index} = import_context_${index}.context;
                     let segments_${index} = ${JSON.stringify(endpoint.segments)};
-                    let url_${index} = "${this.getDynamicURL(endpoint.segments)}";
+                    let url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
                     server.addRoute(url_${index}, async (nativeRequest, nativeResponse) => {
                         let req = await SherpaJS.RequestTransform.Local(nativeRequest, segments_${index});
                         let res = await SherpaJS.Handler(endpoint_${index}, context_${index}, req);
@@ -60,13 +61,6 @@ export class Local extends Bundler {
 
             server.start();
         `;
-    }
-
-
-    private getDynamicURL(segments:Segment[]):string {
-        return segments.map((segment) => {
-            return segment.isDynamic ? `[${segment.name}]` : segment.name;
-        }).join("/");
     }
 
     

@@ -565,6 +565,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Proposed Features
+ - Support more than Text and JSON body payloads
  - Auto reloading development server.
  - Clean Command.
  - Add SherpaJS 500 Error Page.
