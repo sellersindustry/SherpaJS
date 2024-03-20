@@ -27,7 +27,7 @@ export class RequestUtilities {
         let parameters:string[] = [];
         for (let i = 0; i < segments.length; i++) {
             if (segments[i].isDynamic) {
-                paths.push(`(?<key-${i}>\\w+)`);
+                paths.push(`(?<key-${i}>[a-zA-Z0-9,-_]+)`);
                 parameters.push(`$key-${i}`);
             } else {
                 paths.push(segments[i].name);

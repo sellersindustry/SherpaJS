@@ -17,7 +17,7 @@ import { Level, Message } from "../logger/model.js";
 import { Files } from "../files/index.js";
 
 
-const BUFFER_FILE_NAME = "TS_BUFFER.ts";
+const BUFFER_FILE_NAME = "sherpa.TS_VALIDATION_BUFFER.ts";
 const CTRL_LINE_ZERO   = "// <SHERPA-LINE-0>";
 
 

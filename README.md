@@ -557,6 +557,8 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Maintenance
+ - What happens to ENV Variables?
+ - Test harness
  - Console Development Server, Live Logs
  - Make a document website with [Mintlify](https://mintlify.com/preview).
 

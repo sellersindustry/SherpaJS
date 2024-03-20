@@ -42,7 +42,7 @@ export class Compiler {
             return this.display({ errors, verbose, success: false });
         }
         try {
-            NewBundler(route,  endpoints, options, errors).build();
+            await NewBundler(route,  endpoints, options, errors).build();
         } catch (error) {
             errors.push({
                 level: Level.ERROR,
