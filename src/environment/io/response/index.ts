@@ -37,7 +37,6 @@ export class Response {
             status: _options.status,
             statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
-            redirect: undefined,
             body: undefined,
             bodyType: BodyType.None
         }
@@ -50,7 +49,6 @@ export class Response {
             status: _options.status,
             statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
-            redirect: undefined,
             body: text,
             bodyType: BodyType.Text
         }
@@ -63,7 +61,6 @@ export class Response {
             status: _options.status,
             statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
-            redirect: undefined,
             body: JSON,
             bodyType: BodyType.JSON
         }
@@ -75,8 +72,10 @@ export class Response {
         return {
             status: 302,
             statusText: Response.getStatusText(302),
-            headers: _options.headers,
-            redirect: redirect,
+            headers: {
+                "Location": redirect,
+                ..._options.headers
+            },
             body: undefined,
             bodyType: BodyType.None
         }
@@ -84,13 +83,13 @@ export class Response {
 
 
     private static defaultOptions(bodyType:BodyType, options?:Partial<Options>):Options {
-        let _options = {
+        let _options:Options = {
             ...DEFAULT_OPTIONS,
             ...options
         };
-        _options["header"] = {
+        _options.headers = {
             "Content-Type": CONTENT_TYPE[bodyType],
-            ..._options["header"]
+            ..._options.headers
         }
         return _options;
     }

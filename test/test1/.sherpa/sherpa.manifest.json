@@ -1,13 +1,13 @@
 {
-    "created": "2024-03-20T15:11:03.753Z",
+    "created": "2024-03-20T18:14:08.117Z",
     "options": {
         "input": "C:\\Users\\sellerew\\Desktop\\libraries\\sherpa-core\\test\\test1",
         "output": "C:\\Users\\sellerew\\Desktop\\libraries\\sherpa-core\\test\\test1",
-        "bundler": "Vercel",
+        "bundler": "Local",
         "developer": {
             "bundler": {
                 "esbuild": {
-                    "minify": true
+                    "minify": false
                 }
             }
         }

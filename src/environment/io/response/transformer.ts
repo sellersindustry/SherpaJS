@@ -11,9 +11,11 @@
  */
 
 
-import { Body, BodyType, CONTENT_TYPE } from "../model.js";
+import { BodyType } from "../model.js";
 import { IResponse } from "./interface.js";
 import { ServerResponse as LocalResponse } from "http";
+const VercelResponse = Response;
+type VercelResponseType = Response;
 
 
 export class ResponseTransform {
@@ -24,33 +26,32 @@ export class ResponseTransform {
         nativeResponse.statusMessage = response.statusText;
 
         for (let [key, value] of Object.entries(response.headers)) {
-            nativeResponse.setHeader(key, value);
+            if (value) {
+                nativeResponse.setHeader(key, value);
+            }
         }
 
-        if (response.bodyType != BodyType.None && !nativeResponse.hasHeader("Content-Type")) {
-            nativeResponse.setHeader("Content-Type", CONTENT_TYPE[response.bodyType]);
-        }
-
-        if (response.redirect) {
-            nativeResponse.setHeader("Location", response.redirect);
-        }
-
-        let body:Body = undefined;
-        switch (response.bodyType) {
-            case BodyType.Text:
-                body = response.body;
-                break;
-            case BodyType.JSON:
-                body = JSON.stringify(response.body);
-                break;
-        }
-
-        nativeResponse.end(body);
+        nativeResponse.end(this.getBody(response));
     }
 
 
-    public static Vercel(response:IResponse) {
+    public static Vercel(response:IResponse):VercelResponseType {
+        return new VercelResponse(this.getBody(response), {
+            headers: response.headers,
+            status: response.status,
+            statusText: response.statusText
+        });
+    }
 
+
+    private static getBody(response:IResponse):string|undefined {
+        switch (response.bodyType) {
+            case BodyType.Text:
+                return response.body as string;
+            case BodyType.JSON:
+                return JSON.stringify(response.body);
+        }
+        return undefined;
     }
 
     

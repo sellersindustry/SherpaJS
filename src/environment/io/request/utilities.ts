@@ -76,7 +76,7 @@ export class RequestUtilities {
 
     static parseParamsPath(url:string, segments:Segment[]):PathParameters {
         let params = {};
-        url.split("/").filter((o) => o != "").forEach((value:string, index:number) => {
+        URLs.getPathname(url).split("/").filter((o) => o != "").forEach((value:string, index:number) => {
             if (segments[index].isDynamic) {
                 let key    = segments[index].name;
                 let _value = this.parseParam(value);

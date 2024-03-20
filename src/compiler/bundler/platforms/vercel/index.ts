@@ -61,7 +61,7 @@ export class Vercel extends Bundler {
             export default async function index(nativeRequest, event) {
                 let req = await SherpaJS.RequestTransform.Vercel(nativeRequest, segments);
                 let res = await SherpaJS.Handler(endpoint, context, req);
-                SherpaJS.ResponseTransform.Vercel(res, nativeResponse);
+                return SherpaJS.ResponseTransform.Vercel(res, nativeResponse);
             }
         `;
     }

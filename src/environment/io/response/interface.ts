@@ -20,7 +20,6 @@ export interface IResponse {
     readonly statusText:string;
     readonly headers:Headers;
 
-    readonly redirect:string|undefined;
     readonly body:Body;
     readonly bodyType:keyof typeof BodyType;
 

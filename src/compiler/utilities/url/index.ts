@@ -15,7 +15,11 @@ export class URLs {
 
 
     static getPathname(url:string):string {
-        return this.getInstance(url).pathname;
+        let path = this.getInstance(url).pathname;
+        // NOTE: normalize url, remove "./" and "../"
+        path = path.replace(/\/\.\//g, "/");
+        path = path.replace(/\/[^/]+\/\.\.\//g, "/");
+        return path;
     }
 
 
