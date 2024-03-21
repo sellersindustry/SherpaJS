@@ -37,11 +37,11 @@ export class Local extends Bundler {
 
     private getBuffer() {
         return `
-            import { __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/src/environment/index.js"))}";
+            import { LocalServer, __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/src/environment/index.js"))}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
-            let server  = new SherpaJS.LocalServer(port);
+            let server  = new LocalServer(port);
             ${this.endpoints.map((endpoint:Endpoint, index:number) => {
                 return `
                     import * as endpoint_${index} from "${Files.unix(endpoint.filepath)}";

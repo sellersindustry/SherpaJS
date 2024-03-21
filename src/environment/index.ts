@@ -36,7 +36,6 @@ const SherpaJS = {
 const __internal__ = {
     RequestTransform,
     ResponseTransform,
-    LocalServer,
     Handler
 };
 
@@ -45,6 +44,7 @@ export {
     SherpaJS,
     Response,
     __internal__,
+    LocalServer
 }
 
 export type {

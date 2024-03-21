@@ -16,46 +16,7 @@ import { Segment } from "../../../compiler/models.js";
 import { URLs } from "../../../compiler/utilities/url/index.js";
 
 
-const REDIRECT_PARAM_NAME = "SHERPA-PARAMS";
-
-
 export class RequestUtilities {
-
-
-    static pathParamAsQueryParamRedirect(segments:Segment[]):{ source:string, destination:string } {
-        let paths:string[]      = [];
-        let parameters:string[] = [];
-        for (let i = 0; i < segments.length; i++) {
-            if (segments[i].isDynamic) {
-                paths.push(`(?<key-${i}>[a-zA-Z0-9,-_]+)`);
-                parameters.push(`$key-${i}`);
-            } else {
-                paths.push(segments[i].name);
-            }
-        }
-        let source      = `/${paths.join("/")}`;
-        let destination = `/${this.getDynamicURL(segments)}?${REDIRECT_PARAM_NAME}=${parameters.join(",")}`;
-        return { source, destination };
-    }
-
-
-    static pathParamAsQueryParamRedirectProcess(url:string, segments:Segment[]):string {
-        let parameters = URLs.getSearchParams(url);
-        if (!parameters.has(REDIRECT_PARAM_NAME)) {
-            return url;
-        }
-        let dynamicSegments     = parameters.get(REDIRECT_PARAM_NAME) as string;
-        let dynamicSegmentIndex = 0;
-        parameters.delete(REDIRECT_PARAM_NAME);
-        return `/${segments.map((segment) => {
-            if (segment.isDynamic) {
-                dynamicSegmentIndex += 1;
-                return dynamicSegments[dynamicSegmentIndex - 1];
-            } else {
-                return segment.name;
-            }
-        }).join("/")}${parameters.size > 0 ? `?${parameters.toString()}` : ""}`;
-    }
 
 
     static getDynamicURL(segments:Segment[]):string {

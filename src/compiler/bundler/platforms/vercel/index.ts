@@ -13,7 +13,7 @@
 
 import fs from "fs";
 import { Bundler } from "../abstract.js";
-import { Endpoint } from "../../../models.js";
+import { Endpoint, Segment } from "../../../models.js";
 import { Files } from "../../../utilities/files/index.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
 import { RequestUtilities } from "../../../../environment/io/request/utilities.js";
@@ -61,7 +61,7 @@ export class Vercel extends Bundler {
             export default async function index(nativeRequest, event) {
                 let req = await SherpaJS.RequestTransform.Vercel(nativeRequest, segments);
                 let res = await SherpaJS.Handler(endpoint, context, req);
-                return SherpaJS.ResponseTransform.Vercel(res, nativeResponse);
+                return SherpaJS.ResponseTransform.Vercel(res);
             }
         `;
     }
@@ -84,7 +84,7 @@ export class Vercel extends Bundler {
 
     private writeEndpointConfig(path:string) {
         let buffer   = JSON.stringify(this.getEndpointConfig(), null, 3);
-        let filepath = Files.join(path, "config.json");
+        let filepath = Files.join(path, ".vc-config.json");
         fs.writeFileSync(filepath, buffer);
     }
 
@@ -110,8 +110,17 @@ export class Vercel extends Bundler {
             routes: this.endpoints.filter((endpoint) => {
                 return endpoint.segments.filter((segment) => segment.isDynamic).length > 0
             }).map((endpoint) => {
-                return RequestUtilities.pathParamAsQueryParamRedirect(endpoint.segments);
+                let { source: src, destination: dest } = this.pathParamRedirects(endpoint.segments)
+                return { src, dest };
             })
+        }
+    }
+
+
+    private pathParamRedirects(segments:Segment[]):{ source:string, destination:string } {
+        return {
+            source: "/" + segments.map((segment) => segment.isDynamic ? "([a-zA-Z0-9,-_]+)" : segment.name).join("/"),
+            destination: "/" + RequestUtilities.getDynamicURL(segments)
         }
     }
 

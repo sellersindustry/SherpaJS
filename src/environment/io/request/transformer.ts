@@ -80,13 +80,12 @@ export class RequestTransform {
 
 
     static async Vercel(req:VercelRequest, segments:Segment[]):Promise<IRequest> {
-        let url                = RequestUtilities.pathParamAsQueryParamRedirectProcess(req.url, segments);
         let { body, bodyType } = await this.parseBodyVercel(req);
         return {
-            url: URLs.getPathname(url),
+            url: URLs.getPathname(req.url),
             params: {
-                path: RequestUtilities.parseParamsPath(url, segments),
-                query: RequestUtilities.parseParamsQuery(url),
+                path: RequestUtilities.parseParamsPath(req.url, segments),
+                query: RequestUtilities.parseParamsQuery(req.url),
             },
             method: req.method.toUpperCase() as keyof typeof Method,
             headers: RequestUtilities.parseHeader(req.headers),
