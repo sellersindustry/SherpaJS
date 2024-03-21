@@ -556,17 +556,9 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 <br>
 
 
-### Maintenance
- - What happens to ENV Variables?
- - Test harness
- - Console Development Server, Live Logs
- - Make a document website with [Mintlify](https://mintlify.com/preview).
-
-
-<br>
-
-
 ### Proposed Features
+ - How do you handle Environment?
+ - Build Test Harness to test standard endpoint features, bug detection, (and later Vercel Deployment).
  - Support more than Text and JSON body payloads
  - Auto reloading development server.
  - Clean Command.
@@ -575,7 +567,17 @@ Any help is very much appreciated. Build some useful modules and [submit them to
  - Ability to add custom 500 and 404 error pages, with HTML in `/errors`.
  - Catch all dynamic routes.
  - Ability to add admin portal
+ - Ability to interact with modules. This can allow other endpoints or code
+    in the system or admin portals to call special functions that are part of the
+    module, with the given context.
+    - Import the endpoint which loads the module. The default export
+        using SherpaJS.Load.module(path, context, interactionClass); will have
+        a added optional variable of a class. The sherpaJS.Load.module will return
+        an instatiatied version of tha class with the context.
  - Public Assets
+ - Migrate to RUST (Start by Migrating Tooling as it probs takes the longest)
+ - Make a document website with [Mintlify](https://mintlify.com/preview).
+ - Console Development Server, Live Logs
 
 
 <br>

@@ -1,9 +1,9 @@
 {
-    "created": "2024-03-21T16:48:17.401Z",
+    "created": "2024-03-21T16:48:39.484Z",
     "options": {
         "input": "C:\\Users\\sellerew\\Desktop\\libraries\\sherpa-core\\test\\test1",
         "output": "C:\\Users\\sellerew\\Desktop\\libraries\\sherpa-core\\test\\test1",
-        "bundler": "Local",
+        "bundler": "Vercel",
         "developer": {
             "bundler": {
                 "esbuild": {

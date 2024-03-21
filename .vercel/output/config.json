@@ -1,0 +1,13 @@
+{
+   "version": 3,
+   "routes": [
+      {
+         "source": "/module/(?<key-1>[a-zA-Z0-9,-_]+)/path1",
+         "destination": "/module/[id]/path1?SHERPA-PARAMS=$key-1"
+      },
+      {
+         "source": "/module/(?<key-1>[a-zA-Z0-9,-_]+)/path2",
+         "destination": "/module/[id]/path2?SHERPA-PARAMS=$key-1"
+      }
+   ]
+}

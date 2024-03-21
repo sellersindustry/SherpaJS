@@ -1,5 +1,5 @@
-**/.vercel/
-**/.sherpa/
+# **/.vercel/
+# **/.sherpa/
 **/sherpa.TS_VALIDATION_BUFFER.ts
 /node_modules
 /dist
