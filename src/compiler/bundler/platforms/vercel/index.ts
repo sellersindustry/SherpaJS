@@ -119,7 +119,7 @@ export class Vercel extends Bundler {
 
     private pathParamRedirects(segments:Segment[]):{ source:string, destination:string } {
         return {
-            source: "/" + segments.map((segment) => segment.isDynamic ? "([a-zA-Z0-9,-_]+)" : segment.name).join("/"),
+            source: "/" + segments.map((segment) => segment.isDynamic ? "([^/]+)" : segment.name).join("/"),
             destination: "/" + RequestUtilities.getDynamicURL(segments)
         }
     }

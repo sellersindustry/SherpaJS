@@ -72,8 +72,8 @@ export class LocalServer {
 
 
     private convertDynamicSegments(url:string):RegExp {
-        return new RegExp("^\/" + url.replace(/\[([^/]+?)\]/g, (_, segmentName) => {
-            return `(?<${segmentName}>[^/]+)`
+        return new RegExp("^\/" + url.replace(/\[([^/]+?)\]/g, () => {
+            return `([^/]+)`
         }) + "(\/)?$");
     }
 
