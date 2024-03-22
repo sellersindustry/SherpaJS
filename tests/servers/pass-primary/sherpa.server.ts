@@ -1,4 +1,4 @@
-import { SherpaJS } from "../../index";
+import { SherpaJS } from "../../../index";
 
 
 export default SherpaJS.New.server({

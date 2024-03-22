@@ -19,7 +19,7 @@ let CLI = new Command();
 
 
 CLI.name("sherpa")
-    .description("Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.")
+    .description("Modular and agnostic serverless web framework, developed by Sellers Industries.")
     .version(process.env.npm_package_version as string);
 
 
@@ -28,7 +28,7 @@ CLI.command("build")
     .option("-i, --input <path>", "path to SherpaJS server, defaults to current directory")
     .option("-o, --output <path>", "path to server output, defaults to input directory")
     .option("--dev", "enable development mode, do not minify output")
-    .addOption(new Option("-b, --bundler <type>", "bundler to package server with")
+    .addOption(new Option("-b, --bundler <type>", "platform bundler")
         .choices(Object.values(BundlerType))
         .default(BundlerType.Local))
     .action((options) => {

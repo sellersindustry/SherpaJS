@@ -1,7 +1,7 @@
-import { SherpaJS } from "../../src/environment/index";
+import { SherpaJS } from "../../../src/environment/index";
 
 export default SherpaJS.New.module({
-    name: "foo"
+    name: "pass-primary-2"
 });
 
 export type ContextSchema = {

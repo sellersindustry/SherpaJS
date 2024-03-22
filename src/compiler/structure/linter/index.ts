@@ -145,7 +145,7 @@ function validateSegmentName(segment:string, filepath?:string):Message[] {
             file: filepath ? { filepath: filepath } : undefined
         });
     }
-    if (segment.toLowerCase() != segment) {
+    if (!segment.startsWith("[") && !segment.endsWith("]") && segment.toLowerCase() != segment) {
         errors.push({
             level: Level.WARN,
             text: `Segment route should only be lowercase "${segment}".`,
