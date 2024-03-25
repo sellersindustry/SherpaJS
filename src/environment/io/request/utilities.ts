@@ -13,7 +13,7 @@
 
 import { PathParameters, QueryParameters, URLParameter } from "../model.js";
 import { Segment } from "../../../compiler/models.js";
-import { URLs } from "../../../compiler/utilities/url/index.js";
+import { OriginURL } from "../../../compiler/utilities/url/index.js";
 
 
 export class RequestUtilities {
@@ -28,7 +28,7 @@ export class RequestUtilities {
 
     static parseParamsPath(url:string, segments:Segment[]):PathParameters {
         let params = {};
-        URLs.getPathname(url).split("/").filter((o) => o != "").forEach((value:string, index:number) => {
+        new OriginURL(url).pathname.split("/").filter((o) => o != "").forEach((value:string, index:number) => {
             if (segments[index].isDynamic) {
                 let key    = segments[index].name;
                 let _value = this.parseParam(value);
@@ -41,7 +41,7 @@ export class RequestUtilities {
 
     static parseParamsQuery(url:string):QueryParameters {    
         let params = {};
-        URLs.getSearchParams(url).forEach((value, key) => {
+        new OriginURL(url).searchParams.forEach((value, key) => {
             this.setValue(params, key, this.parseParam(value));
         });
         return params;

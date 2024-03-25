@@ -15,7 +15,7 @@ import { IRequest } from "./interface.js";
 import { RequestUtilities } from "./utilities.js";
 import { Headers, Body, BodyType, Method } from "../model.js";
 import { Segment } from "../../../compiler/models.js";
-import { URLs } from "../../../compiler/utilities/url/index.js";
+import { OriginURL } from "../../../compiler/utilities/url/index.js";
 import { IncomingMessage as LocalRequest } from "http";
 type VercelRequest = Request;
 
@@ -30,7 +30,7 @@ export class RequestTransform {
         let headers = new Headers(req.headers);
         let { body, bodyType } = await this.parseBodyLocal(req, headers);
         return {
-            url: URLs.getPathname(req.url),
+            url: new OriginURL(req.url).pathname,
             params: {
                 path: RequestUtilities.parseParamsPath(req.url, segments),
                 query: RequestUtilities.parseParamsQuery(req.url),
@@ -88,7 +88,7 @@ export class RequestTransform {
         let headers = new Headers(req.headers);
         let { body, bodyType } = await this.parseBodyVercel(req, headers);
         return {
-            url: URLs.getPathname(req.url),
+            url: new OriginURL(req.url).pathname,
             params: {
                 path: RequestUtilities.parseParamsPath(req.url, segments),
                 query: RequestUtilities.parseParamsQuery(req.url),

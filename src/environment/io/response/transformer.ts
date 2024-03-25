@@ -11,7 +11,7 @@
  */
 
 
-import { URLs } from "../../../compiler/utilities/url/index.js";
+import { OriginURL } from "../../../compiler/utilities/url/index.js";
 import { BodyType } from "../model.js";
 import { IRequest } from "../request/interface.js";
 import { IResponse } from "./interface.js";
@@ -64,10 +64,11 @@ export class ResponseTransform {
             let host     = request.headers.get("host");
             let protocol = host.toLowerCase().includes("localhost") ? "http" : "https";
             let origin   = `${protocol}://${host}`;
-            let url      = URLs.getHrefNoParameters(request.url, origin);
+            let url      = new OriginURL(request.url, origin);
+            let path     = url.origin + url.pathname;
             // NOTE: a base url is required, trailing "/" required for proper "./" and "../"
-            url = !url.endsWith("/") ? `${url}/` : url;
-            response.headers.set("Location", URLs.getHref(response.headers.get("Location"), url));
+            path = !path.endsWith("/") ? `${path}/` : path;
+            response.headers.set("Location", new OriginURL(response.headers.get("Location"), path).href);
         }
     }
 

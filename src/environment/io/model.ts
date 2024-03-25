@@ -12,7 +12,7 @@
 
 
 import { Method } from "../../compiler/models.js";
-import { IHeaders } from "./headers.js";
+import { IHeaders } from "./headers/index.js";
 
 export { Method };
 

@@ -10,7 +10,9 @@
  *
  */
 
+
 export type HeadersInit = string[][] | Record<string, string | ReadonlyArray<string>> | IHeaders | Headers;
+
 
 export class IHeaders implements Headers {
     

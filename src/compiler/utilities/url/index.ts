@@ -11,35 +11,17 @@
  */
 
 
-export class URLs {
+import { URL } from "url";
 
 
-    static getPathname(url:string, base?:string):string {
-        return this.getInstance(url, base).pathname;
-    }
+export class OriginURL extends URL {
 
-
-    static getSearchParams(url:string, base?:string):URLSearchParams {
-        return this.getInstance(url, base).searchParams;
-    }
-
-
-    static getHref(url:string, base?:string):string {
-        return this.getInstance(url, base).toString();
-    }
-
-
-    static getHrefNoParameters(url:string, base?:string):string {
-        let instance = this.getInstance(url, base);
-        return instance.origin + instance.pathname;
-    }
-
-
-    private static getInstance(url:string, base?:string):URL {
-        return new URL(url, base ? base : "https://example.com");
+    constructor(input: string, base?:string|OriginURL|URL) {
+        super(input, base ? base : "http://0.0");
     }
 
 }
+
 
 
 // Paul said, "John's baptism was a baptism of repentance. He told the people

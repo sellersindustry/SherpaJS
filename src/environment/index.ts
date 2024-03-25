@@ -44,14 +44,15 @@ export {
     SherpaJS,
     Response,
     __internal__,
-    LocalServer
+    LocalServer,
+    Headers
 }
+
 
 export type {
     Method,
     BodyType,
     Body,
-    Headers,
     PathParameters,
     QueryParameters,
     IRequest as Request,

@@ -15,7 +15,7 @@ import {
     IncomingMessage, ServerResponse,
     Server as HTTPServer, createServer
 } from "http";
-import { URLs } from "../../compiler/utilities/url/index.js";
+import { OriginURL } from "../../compiler/utilities/url/index.js";
 
 
 type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined;
@@ -98,7 +98,7 @@ export class LocalServer {
 
 
     private getEndpoint(url:string):endpoint|undefined {
-        let _url = URLs.getPathname(url);
+        let _url = new OriginURL(url).pathname;
         for (let endpoint of this.endpoints) {
             if (endpoint.url.test(_url)) {
                 return endpoint;
