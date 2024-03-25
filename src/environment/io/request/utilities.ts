@@ -11,7 +11,7 @@
  */
 
 
-import { Headers, PathParameters, QueryParameters, URLParameter } from "../model.js";
+import { PathParameters, QueryParameters, URLParameter } from "../model.js";
 import { Segment } from "../../../compiler/models.js";
 import { URLs } from "../../../compiler/utilities/url/index.js";
 
@@ -23,15 +23,6 @@ export class RequestUtilities {
         return segments.map((segment) => {
             return segment.isDynamic ? `[${segment.name}]` : segment.name;
         }).join("/");
-    }
-
-
-    static parseHeader(headers:any):Headers {
-        let _headers = {};
-        Object.keys(headers).forEach((key:string) => {
-            _headers[key] = headers[key];
-        });
-        return _headers;
     }
 
 

@@ -14,24 +14,29 @@
 export class URLs {
 
 
-    static getPathname(url:string):string {
-        let path = this.getInstance(url).pathname;
-        // NOTE: normalize url, remove "./" and "../"
-        path = path.replace(/\/\.\//g, "/");
-        path = path.replace(/\/[^/]+\/\.\.\//g, "/");
-        return path;
+    static getPathname(url:string, base?:string):string {
+        return this.getInstance(url, base).pathname;
     }
 
 
-    static getSearchParams(url:string):URLSearchParams {
-        return this.getInstance(url).searchParams;
+    static getSearchParams(url:string, base?:string):URLSearchParams {
+        return this.getInstance(url, base).searchParams;
     }
 
 
-    private static getInstance(url:string):URL {
-        // NOTE: a base url is required
-        url = url.endsWith("/") ? url.slice(0, -1) : url;
-        return new URL(url, "https://example.com");
+    static getHref(url:string, base?:string):string {
+        return this.getInstance(url, base).toString();
+    }
+
+
+    static getHrefNoParameters(url:string, base?:string):string {
+        let instance = this.getInstance(url, base);
+        return instance.origin + instance.pathname;
+    }
+
+
+    private static getInstance(url:string, base?:string):URL {
+        return new URL(url, base ? base : "https://example.com");
     }
 
 }

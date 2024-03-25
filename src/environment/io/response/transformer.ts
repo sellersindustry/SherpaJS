@@ -11,7 +11,9 @@
  */
 
 
+import { URLs } from "../../../compiler/utilities/url/index.js";
 import { BodyType } from "../model.js";
+import { IRequest } from "../request/interface.js";
 import { IResponse } from "./interface.js";
 import { ServerResponse as LocalResponse } from "http";
 const VercelResponse = Response;
@@ -21,11 +23,12 @@ type VercelResponseType = Response;
 export class ResponseTransform {
 
 
-    public static Local(response:IResponse, nativeResponse:LocalResponse) {
+    public static Local(request:IRequest, response:IResponse, nativeResponse:LocalResponse) {
+        this.applyRedirectHeaders(request, response);
         nativeResponse.statusCode    = response.status;
         nativeResponse.statusMessage = response.statusText;
 
-        for (let [key, value] of Object.entries(response.headers)) {
+        for (let [key, value] of response.headers.entries()) {
             if (value) {
                 nativeResponse.setHeader(key, value);
             }
@@ -35,7 +38,8 @@ export class ResponseTransform {
     }
 
 
-    public static Vercel(response:IResponse):VercelResponseType {
+    public static Vercel(request:IRequest, response:IResponse):VercelResponseType {
+        this.applyRedirectHeaders(request, response);
         return new VercelResponse(this.getBody(response), {
             headers: response.headers,
             status: response.status,
@@ -52,6 +56,19 @@ export class ResponseTransform {
                 return JSON.stringify(response.body);
         }
         return undefined;
+    }
+
+
+    private static applyRedirectHeaders(request:IRequest, response:IResponse) {
+        if (response.headers.has("Location")) {
+            let host     = request.headers.get("host");
+            let protocol = host.toLowerCase().includes("localhost") ? "http" : "https";
+            let origin   = `${protocol}://${host}`;
+            let url      = URLs.getHrefNoParameters(request.url, origin);
+            // NOTE: a base url is required, trailing "/" required for proper "./" and "../"
+            url = !url.endsWith("/") ? `${url}/` : url;
+            response.headers.set("Location", URLs.getHref(response.headers.get("Location"), url));
+        }
     }
 
     

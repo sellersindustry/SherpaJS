@@ -13,7 +13,7 @@
 
 import { IRequest } from "./interface.js";
 import { RequestUtilities } from "./utilities.js";
-import { Body, BodyType, Method } from "../model.js";
+import { Headers, Body, BodyType, Method } from "../model.js";
 import { Segment } from "../../../compiler/models.js";
 import { URLs } from "../../../compiler/utilities/url/index.js";
 import { IncomingMessage as LocalRequest } from "http";
@@ -27,8 +27,8 @@ export class RequestTransform {
         if (!req.url || !req.method) {
             throw new Error("Missing URL and Methods");
         }
-
-        let { body, bodyType } = await this.parseBodyLocal(req);
+        let headers = new Headers(req.headers);
+        let { body, bodyType } = await this.parseBodyLocal(req, headers);
         return {
             url: URLs.getPathname(req.url),
             params: {
@@ -36,15 +36,20 @@ export class RequestTransform {
                 query: RequestUtilities.parseParamsQuery(req.url),
             },
             method: req.method.toUpperCase() as keyof typeof Method,
-            headers: RequestUtilities.parseHeader(req.headers),
+            headers: headers,
             body: body,
             bodyType: bodyType
         }
     }
 
 
-    private static parseBodyLocal(req:LocalRequest):Promise<{ body:Body, bodyType:BodyType }> {
+    private static parseBodyLocal(req:LocalRequest, headers:Headers):Promise<{ body:Body, bodyType:BodyType }> {
         return new Promise((resolve, reject) => {
+            if (req.method.toUpperCase() == Method.GET) {
+                resolve({ body: undefined, bodyType: BodyType.None });
+                return;
+            }
+
             let body:Body = "";
             let bodyType  = BodyType.Text;
     
@@ -53,7 +58,7 @@ export class RequestTransform {
             });
     
             req.on("end", () => {
-                let contentType = req.headers["content-type"];
+                let contentType = (headers.get("Content-Type") || "").toLowerCase();
                 if (!contentType || body == "") {
                     resolve({
                         body: undefined,
@@ -80,7 +85,8 @@ export class RequestTransform {
 
 
     static async Vercel(req:VercelRequest, segments:Segment[]):Promise<IRequest> {
-        let { body, bodyType } = await this.parseBodyVercel(req);
+        let headers = new Headers(req.headers);
+        let { body, bodyType } = await this.parseBodyVercel(req, headers);
         return {
             url: URLs.getPathname(req.url),
             params: {
@@ -88,15 +94,18 @@ export class RequestTransform {
                 query: RequestUtilities.parseParamsQuery(req.url),
             },
             method: req.method.toUpperCase() as keyof typeof Method,
-            headers: RequestUtilities.parseHeader(req.headers),
+            headers: headers,
             body: body,
             bodyType: bodyType
         }
     }
 
 
-    private static async parseBodyVercel(req:VercelRequest):Promise<{ body:Body, bodyType:BodyType }> {
-        let contentType = req.headers["content-type"];
+    private static async parseBodyVercel(req:VercelRequest, headers:Headers):Promise<{ body:Body, bodyType:BodyType }> {
+        if (req.method.toUpperCase() == Method.GET) {
+            return { body: undefined, bodyType: BodyType.None };
+        }
+        let contentType = (headers.get("Content-Type") || "").toLowerCase();
         if (!contentType) {
             return { body: undefined, bodyType: BodyType.None };
         }

@@ -258,6 +258,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Proposed Features
+ - Merge URLs and RequestUtilities into URL and replace internal URL class
  - How do you handle Environment?
  - Build Test Harness to test standard endpoint features, bug detection, (and later Vercel Deployment).
  - Support more than Text and JSON body payloads

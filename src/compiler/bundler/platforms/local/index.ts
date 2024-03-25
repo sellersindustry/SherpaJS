@@ -53,7 +53,7 @@ export class Local extends Bundler {
                     server.addRoute(url_${index}, async (nativeRequest, nativeResponse) => {
                         let req = await SherpaJS.RequestTransform.Local(nativeRequest, segments_${index});
                         let res = await SherpaJS.Handler(endpoint_${index}, context_${index}, req);
-                        SherpaJS.ResponseTransform.Local(res, nativeResponse);
+                        SherpaJS.ResponseTransform.Local(req, res, nativeResponse);
                     });
 
                 `;

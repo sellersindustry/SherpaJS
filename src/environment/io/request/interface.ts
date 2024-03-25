@@ -11,7 +11,7 @@
  */
 
 
-import { Method, Body, BodyType, Headers, PathParameters, QueryParameters } from "../model.js";
+import { Headers, Method, Body, BodyType, PathParameters, QueryParameters } from "../model.js";
 
 
 export interface IRequest {

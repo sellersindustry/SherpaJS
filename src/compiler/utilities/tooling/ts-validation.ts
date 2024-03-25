@@ -91,7 +91,9 @@ export class TypeValidation {
 
 
     private processDiagnostics(diagnostic:readonly ts.Diagnostic[]):Message[] {
-        return diagnostic.map(diagnostic => {
+        return diagnostic.filter(diagnostic => {
+            return !diagnostic.messageText.toString().includes("--target"); // NOTE: Remove warning about targeting ES2022
+        }).map(diagnostic => {
             let message = diagnostic.messageText.toString();
             if (diagnostic.relatedInformation && diagnostic.relatedInformation.length > 0) {
                 let context = diagnostic.relatedInformation[0].messageText;

@@ -23,7 +23,7 @@ export interface Options {
 
 
 const DEFAULT_OPTIONS:Options = {
-    headers:{},
+    headers:new Headers(),
     status:200,
 }
 
@@ -69,13 +69,13 @@ export class Response {
 
     static redirect(redirect:string, options?:Partial<Options>):IResponse {
         let _options = Response.defaultOptions(BodyType.None, options);
+        if (!_options.headers.has("Location")) {
+            _options.headers.set("Location", redirect);
+        }
         return {
             status: 302,
             statusText: Response.getStatusText(302),
-            headers: {
-                "Location": redirect,
-                ..._options.headers
-            },
+            headers: _options.headers,
             body: undefined,
             bodyType: BodyType.None
         }
@@ -87,9 +87,8 @@ export class Response {
             ...DEFAULT_OPTIONS,
             ...options
         };
-        _options.headers = {
-            "Content-Type": CONTENT_TYPE[bodyType],
-            ..._options.headers
+        if (!_options.headers.has("Content-Type")) {
+            _options.headers.set("Content-Type", CONTENT_TYPE[bodyType]);
         }
         return _options;
     }
