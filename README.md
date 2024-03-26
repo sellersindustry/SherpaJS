@@ -655,8 +655,6 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### TODO
- - build static flag module
- - Add Documentation to static flag and list
  - deploy example server to vercel...
  - Update Website
  - Inform People
