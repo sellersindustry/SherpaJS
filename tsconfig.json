@@ -12,12 +12,11 @@
         "node_modules",
         "./dist",
         "./sherpa",
-        "./vercel",
-        "./example-module"
+        "./vercel"
     ],
     "files": [
         "./index.ts",
-        "./lib/cli/index.ts",
-        "./lib/builder/generator/handler/index.ts"
+        "./src/cli/index.ts",
+        "./src/compiler/index.ts"
     ]
 }
