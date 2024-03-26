@@ -28,7 +28,7 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and agnost
     - [Create a Server](#creating-a-server)
     - [Configuration](#server-configuration)
     - [Deploy a Server](#deploy-a-server)
- - [Endpoints & Routes](#endpoints--routes)
+ - [Endpoints & Routes](#routes--endpoints)
  - [Modules](#modules)
     - [Create a Module](#creating-a-module)
     - [Configuration](#module-configuration)
@@ -132,7 +132,7 @@ export default SherpaJS.New.server({
 ```
 
 #### Step 4
-Create an your endpoints in the `/routes` directory. See an example below or [learn about endpoints](#endpoints--routes).
+Create an your endpoints in the `/routes` directory. See an example below or [learn about endpoints](#routes--endpoints).
 
 ```typescript
 // ./routes/index.ts
@@ -145,7 +145,7 @@ export function GET(request:Request, context:Context) {
 
 > [!NOTE]
 > It's here where you can load pre-build SherpaJS modules and provide them with context.
-> [Loading Modules](#loading-modules)
+> [Loading Modules](#module-endpoint)
 
 
 #### Step 6
@@ -221,10 +221,277 @@ Building to local server will generate a NodeJS server, that utilizes the built 
 <br>
 
 
-## Endpoints & Routes
+## Routes & Endpoints
 
 
-### Loading Modules
+## Routes
+Routes in SherpaJS provide a flexible and intuitive way to define
+[endpoints](#endpoints) and handle incoming requests within your microservice
+architecture. Drawing inspiration from Next.js, SherpaJS routes follow a
+directory-based structure located in the `/routes` directory of your module.
+
+
+### Structure of Routes
+In the `/routes` directory, you can create additional directories to organize
+your routes. For instance, you might have a directory like `/example`, which
+contains specific endpoints related to a particular feature or functionality.
+Each endpoint within a route is represented by a file named `index.ts`.
+
+Subroutes are located relative to the modules. For example if an endpoint is
+defined in a module at `/example` and the module is loaded at `/app-1/foo` then
+the example endpoint will be accessed at `/app-1/foo/example`.
+
+### Dynamic Routes
+To define a dynamic route, simply name a directory using square brackets, such
+as `[id]`. Within a dynamic route directory, you can access the parameter value
+from the request object in your endpoint logic. For example, if you have a
+dynamic route named `[id]`, you can access the parameter using
+`request.params.path.id`, to learn more see [endpoint requests](#requests).
+
+### Examples of Route Structures
+```less
+/routes
+│
+├── /users
+│   └── index.ts     // Endpoint logic for "/users"
+│
+├── /posts
+│   └── index.ts     // Endpoint logic for "/posts"
+│
+├── /auth
+│   └── index.ts     // Endpoint logic for "/auth"
+
+```
+
+```less
+/routes
+│
+├── /example
+│   ├── index.ts     // Endpoint logic for "/example"
+│   ├── /subroute
+│       └── index.ts // Endpoint logic for "/example/subroute"
+│
+├── /[id]
+│   └── index.ts     // Endpoint logic for "/[id]" access "[id]" with request.params.path.id
+```
+
+```less
+/routes
+│
+├── /products
+│   ├── index.ts     // Endpoint logic for "/products"
+│   ├── /[productID]
+│   │   └── index.ts // Endpoint logic for "/products/[productID]" access "[productID]" with request.params.path.productID
+│   │
+│   └── /category
+│       └── index.ts // Endpoint logic for "/products/category"
+
+```
+
+
+<br>
+
+
+## Endpoints
+Endpoints represent the individual points of access within your microservice
+architecture, allowing clients to interact with specific functionalities or
+resources. Endpoints are defined within route files `index.ts` and are
+associated with specific HTTP methods (GET, POST, PATCH, PUT, DELETE) to
+perform corresponding actions.
+
+### Regular Endpoint
+Each endpoint is defined within a route file using the corresponding
+HTTP method function. These functions provide access to the incoming request
+and the environment, allowing developers to customize the endpoint's behavior
+based on the request data and the server environment.
+
+Endpoint can be defined by exporting a function with the desired method name.
+The following HTTP methods are supported: `GET`, `POST`, `PATCH`, `PUT`, and
+`DELETE`.
+
+Endpoint functions receive two parameters: the [request](#requests) which
+contains the HTTP request information and the [context](#context) which is
+additional properties provided to configure the endpoint. The context is either
+provided by the [server configuration](#server-config), if it's the root route
+or the [module loader](#module-endpoint), if it's a module route.
+
+A response should be returned by the function, using the
+[SherpaJS Response utility](#response).
+
+```typescript
+import { Request, Context, Response } from "sherpa-core";
+
+// Example GET endpoint
+export function GET(request:Request, context:Context) {
+    return Response.text("Hello World");
+}
+
+// Example POST endpoint
+export function POST(request:Request, env:Environment) {
+    return Response.text("Example POST", { status: 201 });
+}
+
+// Example DELETE endpoint
+export function DELETE(request:Request, env:Environment) {
+    return Response.JSON({ message: "DELETE request received" }, { status: 204 });
+}
+```
+
+
+### Module Endpoint
+SherpaJS allows endpoint modules to be loaded, which is a set of endpoints
+built by the [community](#community-modules) or [your self](#creating-a-module).
+By integrating these prebuilt modules which can range from authentication to
+analytics into your server, you can easily extend your server's
+functionality without duplicating code. This promotes code organization,
+modularity, and reusability, simplifying development and accelerating
+time-to-market for your web applications.
+
+Modules are loaded in the same endpoint file (`index.ts`) as a regular endpoint,
+but instead of export HTTP methods you export a loaded module. Simply use the
+module loader provided `SherpaJS.Load.module`.
+
+Provide the loader an entry point for the module, this should be the root
+directory of the module. This entry point can either be a relative directory
+or a NPM package name. Optionally you can also provide context to the module.
+The module your loading may require a context with specific properties so
+please adhere to the modules requirements.
+
+```typescript
+// index.ts
+import { SherpaJS } from "sherpa-core";
+
+export default SherpaJS.Load.module({
+    entry: "../modules/pass-primary-1",
+    context: {
+        test: "Hello World"
+    }
+});
+```
+
+
+
+### Requests
+The request as a typescript type. Parameters are parsed are parsed as the types
+they are provided as and if multiple are provided as an array.
+
+```typescript
+enum BodyType {
+    JSON = "JSON",
+    Text = "Text",
+    None = "None"
+}
+
+type Body = Record<string, any>|string|undefined;
+
+type URLParameter    = string|number|boolean;
+type PathParameters  = { [key:string]:URLParameter|URLParameter[] };
+type QueryParameters = { [key:string]:URLParameter|URLParameter[] }
+
+interface Request {
+    readonly url:string;
+    readonly params:{ path:PathParameters, query:QueryParameters };
+    readonly method:keyof typeof Method;
+    readonly headers:Headers;
+    readonly body:Body;
+    readonly bodyType:keyof typeof BodyType;
+}
+```
+
+#### Request Example
+```json
+// doc/abc/def/page/2?thing1=foo,bar&thing2=true&thing2=false&thing3=4
+// doc/[testID]/[testID]/page/[pageID]
+{
+    "request": {
+        "url": "/regular/dynamic-paths/abc/def/page/2",
+        "params": {
+            "path": {
+                "testID": [ "abc", "def" ],
+                "pageID": 2
+            },
+            "query": {
+                "thing1": [ "foo", "bar" ],
+                "thing2": [ true, false ],
+                "thing3": 4
+            }
+        },
+        "method": "POST",
+        "headers": {
+            "content-type": "application/json",
+        },
+        "bodyType": "JSON",
+        "body":  {
+            "test": "hello world"
+        }
+    },
+    "context": "foo"
+}
+```
+
+
+### Context
+The [context](#context) is additional properties provided to configure the
+endpoint. The context is either provided by the
+[server configuration](#server-config), if it's the root route or the
+[module loader](#module-endpoint), if it's a module route. If the module provides
+a context schema type, the context provided will be verified during build.
+
+
+### Response
+The Response class is used to generate HTTP responses. It provides static
+methods to create different types of responses, such as text, JSON, and
+redirects.
+
+#### Blank Response
+Creates a new response object with default options. Optional provide object that
+specifies custom response options such as headers and status code.
+
+```typescript
+import { Request, Headers } from "sherpa-core";
+Response.new();
+Response.new({ status: 201 });
+Response.new({ status: 201, headers: new Headers() });
+```
+
+#### Text Response
+Generates a text response with the specified text content. Optional provide
+object that specifies custom response options such as headers and status code.
+
+```typescript
+import { Request, Headers } from "sherpa-core";
+Response.text("hello world");
+Response.text("hello world", { status: 201 });
+Response.text("hello world", { status: 201, headers: new Headers() });
+```
+
+
+#### JSON Response
+Generates a JSON response with the specified JSON data. Optional provide
+object that specifies custom response options such as headers and status code.
+
+```typescript
+import { Request, Headers } from "sherpa-core";
+Response.text({ test: "hello world" });
+Response.text({ foo: "bar" }, { status: 201 });
+Response.text({ num: 3 }, { status: 201, headers: new Headers() });
+```
+
+
+#### Redirect Response
+Generates a redirect response with the specified URL. This URL can either be either...
+ - Absolute with Origin `https://example.com/foo`
+ - Absolute `/foo`
+ - Relative `./foo` or `../foo`
+Optional provide object that specifies custom response options such as headers
+and status code.
+
+```typescript
+import { Request, Headers } from "sherpa-core";
+Response.redirect("https://example.com/foo");
+Response.redirect("/foo", { status: 201 });
+Response.redirect("../foo", { status: 201, headers: new Headers() });
+```
 
 
 <br>
@@ -258,7 +525,7 @@ Install SherpaJS with `npm install sherpa-core`.
 Then create a module configuration file in the root directory of your modules named `sherpa.module.ts`. This file will default export a [module configuration](#module-configuration).
 
 Optionally you can export a type named `ContextSchema`. This type acts
-as a validation of properties when your module is [loaded](#loading-modules). 
+as a validation of properties when your module is [loaded](#module-endpoint). 
 
 ```typescript
 // sherpa.module.ts
@@ -280,7 +547,7 @@ correspond to it's relative endpoint. Endpoint logic is implemented in
 javascript file named `index.ts` within these route directories.
 
 A simple implementation of an endpoint can be seen below. For detailed
-instructions on creating routes and endpoints, see the [endpoints](#endpoints--routes)
+instructions on creating routes and endpoints, see the [endpoints](#routes--endpoints)
 section.
 
 ```typescript
@@ -341,7 +608,7 @@ export default SherpaJS.New.module({
 ```
 
 Optionally you can export a type named `ContextSchema`. This type acts
-as a validation of properties when your module is [loaded](#loading-modules). 
+as a validation of properties when your module is [loaded](#module-endpoint). 
 
 
 #### Config Structure
@@ -399,7 +666,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Proposed Features
- - How do you handle Environment?
+ - How do you handle Environment files?
  - Build Test Harness to test standard endpoint features, bug detection, (and later Vercel Deployment).
  - Support more than Text and JSON body payloads
  - Auto reloading development server.
