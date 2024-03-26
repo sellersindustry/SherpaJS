@@ -147,7 +147,7 @@ export class TypeValidation {
 
 
     private getBuffer():string {
-        return fs.readFileSync(this.filepath, "utf8");;
+        return fs.readFileSync(this.filepath, "utf8");
     }
 
 

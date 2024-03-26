@@ -28,7 +28,7 @@ export const CONTENT_TYPE:Record<BodyType, string|undefined> = {
     [BodyType.None]: undefined
 }
 
-export type Body = Record<string, any>|string|undefined;
+export type Body = Record<string, unknown>|string|undefined;
 
 export type URLParameter    = string|number|boolean;
 export type PathParameters  = { [key:string]:URLParameter|URLParameter[] };

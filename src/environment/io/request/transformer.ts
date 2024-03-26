@@ -44,7 +44,7 @@ export class RequestTransform {
 
 
     private static parseBodyLocal(req:LocalRequest, headers:Headers):Promise<{ body:Body, bodyType:BodyType }> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (req.method.toUpperCase() == Method.GET) {
                 resolve({ body: undefined, bodyType: BodyType.None });
                 return;
@@ -77,7 +77,7 @@ export class RequestTransform {
                 });
             });
     
-            req.on("error", (error:Error) => {
+            req.on("error", () => {
                 resolve({ body: undefined, bodyType: BodyType.None });
             });
         });

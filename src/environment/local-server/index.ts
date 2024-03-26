@@ -72,9 +72,9 @@ export class LocalServer {
 
 
     private convertDynamicSegments(url:string):RegExp {
-        return new RegExp("^\/" + url.replace(/\[([^/]+?)\]/g, () => {
+        return new RegExp("^/" + url.replace(/\[([^/]+?)\]/g, () => {
             return `([^/]+)`
-        }) + "(\/)?$");
+        }) + "(/)?$");
     }
 
 
