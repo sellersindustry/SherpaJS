@@ -85,7 +85,7 @@ export type LoadModule<T=Context> = {
 
 export enum BundlerType {
     Vercel = "Vercel",
-    Local  = "Local",
+    local  = "local",
 }
 
 
