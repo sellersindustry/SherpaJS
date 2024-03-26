@@ -77,15 +77,14 @@ export type Endpoint = {
 }
 
 
-export type LoadModule<T=Context> = {
-    entry:string;
-    context?:T;
-}
+export type LoadModule<T=undefined> = {
+    entry: string;
+} & (T extends undefined ? { context?: unknown } : { context: T });
 
 
 export enum BundlerType {
     Vercel = "Vercel",
-    Local  = "Local",
+    local  = "local",
 }
 
 

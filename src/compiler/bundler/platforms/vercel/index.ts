@@ -89,7 +89,7 @@ export class Vercel extends Bundler {
     }
 
 
-    private getEndpointConfig():Record<string, any> {
+    private getEndpointConfig():Record<string, unknown> {
         return {
             "runtime": "edge",
             "entrypoint": "index.js"
@@ -104,7 +104,7 @@ export class Vercel extends Bundler {
     }
 
 
-    private getRootConfig():Record<string, any> {
+    private getRootConfig():Record<string, unknown> {
         return {
             version: 3,
             routes: this.endpoints.filter((endpoint) => {

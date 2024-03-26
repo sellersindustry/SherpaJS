@@ -49,7 +49,7 @@ export class RequestUtilities {
 
 
     static setValue<T>(object:Record<string, T|T[]>, key:string, values:T[]) {
-        if (object.hasOwnProperty(key)) {
+        if (object[key]) {
             if (Array.isArray(object[key])) {
                 (object[key] as T[]).push(...values);
             } else {

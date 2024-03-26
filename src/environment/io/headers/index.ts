@@ -83,7 +83,7 @@ export class IHeaders implements Headers {
     getSetCookie():string[] {
         return Object.entries(this.headers)
             .filter(([name]) => name.toLowerCase() === "set-cookie")
-            .flatMap(([_, value]) => value.split(", "));
+            .flatMap(([, value]) => value.split(", "));
     }
 
 

@@ -16,7 +16,7 @@
 > [Development Notes](#development)
 
 
-SherpaJS empowers developers to effortlessly construct <ins>**modular and agnostic serverless web framework**</ins>. Developers can easily build serverless web server using a directory-based structure, inspired by NextJS and even import pre-built modules at endpoints. SherpaJS servers can then be compiled to a variety of different web platforms including Vercel Serverless and Local Server (with more to come later).
+SherpaJS empowers developers to effortlessly construct <ins>**modular and agnostic serverless web framework**</ins>. Developers can easily build serverless web server using a directory-based structure, inspired by NextJS and even import pre-built modules at endpoints. SherpaJS servers can then be compiled to a variety of different web platforms including Vercel Serverless and local Server (with more to come later).
 
 
 ## Table of Contents
@@ -92,7 +92,7 @@ sherpa build [options]
 #### Options:
  - `-i`, `--input <path>` path to SherpaJS server, defaults to current directory
  - `-o`, `--output <path>` path to server output, defaults to input directory
-  - `-b`, `--bundler <type>` platform bundler ("**Vercel**", "**Local**", *default: "Local"*)
+  - `-b`, `--bundler <type>` platform bundler ("**Vercel**", "*local**", *default: "local"*)
  - `--dev` enable development mode, does not minify output
  - `-h`, `--help` display help for command
 
@@ -369,6 +369,21 @@ export default SherpaJS.Load.module({
 });
 ```
 
+You can also provide the module loader with context schema as exported by the
+module. This is completely optional and we will verify the schema regardless
+but it could be helpful.
+```typescript
+// index.ts
+import { SherpaJS } from "sherpa-core";
+import { ContextSchema } from "../modules/pass-primary-1/sherpa.module.ts";
+
+export default SherpaJS.Load.module<ContextSchema>({
+    entry: "../modules/pass-primary-1",
+    context: {
+        test: "Hello World"
+    }
+});
+```
 
 
 ### Requests

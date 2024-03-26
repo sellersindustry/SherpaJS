@@ -30,7 +30,7 @@ CLI.command("build")
     .option("--dev", "enable development mode, do not minify output")
     .addOption(new Option("-b, --bundler <type>", "platform bundler")
         .choices(Object.values(BundlerType))
-        .default(BundlerType.Local))
+        .default(BundlerType.local))
     .action((options) => {
         let input = options.input ? options.input : process.cwd();
         if (!path.isAbsolute(input)) {

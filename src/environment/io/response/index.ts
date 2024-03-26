@@ -55,7 +55,7 @@ export class Response {
     }
 
 
-    static JSON(JSON:Record<string, any>, options?:Partial<Options>):IResponse {
+    static JSON(JSON:Record<string, unknown>, options?:Partial<Options>):IResponse {
         let _options = Response.defaultOptions(BodyType.JSON, options);
         return {
             status: _options.status,

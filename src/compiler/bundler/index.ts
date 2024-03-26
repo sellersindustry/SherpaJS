@@ -21,7 +21,7 @@ import { Bundler } from "./platforms/abstract.js";
 export function NewBundler(route:Route, endpoints:Endpoint[], options:BuildOptions, errors?:Message[]):Bundler {
     if (options.bundler === BundlerType.Vercel) {
         return new Vercel(route, endpoints, options, errors);
-    } else if (options.bundler === BundlerType.Local) {
+    } else if (options.bundler === BundlerType.local) {
         return new Local(route, endpoints, options, errors);
     } else {
         Logger.raise({ text: `Invalid bundler "${options.bundler}"` });

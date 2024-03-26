@@ -1,7 +1,7 @@
-import { Response, Request } from "../../../../../../../../src/environment/index";
+import { Response, Request, Context } from "../../../../../../../../src/environment/index";
 
 
-export function GET(request:Request, context:any) {
+export function GET(request:Request, context:Context) {
     return Response.JSON({
         request,
         context
