@@ -369,6 +369,21 @@ export default SherpaJS.Load.module({
 });
 ```
 
+You can also provide the module loader with context schema as exported by the
+module. This is completely optional and we will verify the schema regardless
+but it could be helpful.
+```typescript
+// index.ts
+import { SherpaJS } from "sherpa-core";
+import { ContextSchema } from "../modules/pass-primary-1/sherpa.module.ts";
+
+export default SherpaJS.Load.module<ContextSchema>({
+    entry: "../modules/pass-primary-1",
+    context: {
+        test: "Hello World"
+    }
+});
+```
 
 
 ### Requests

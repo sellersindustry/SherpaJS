@@ -30,9 +30,7 @@ export class New {
 
 export class Load {
 
-    //! FIXME - Load.module<boolean>("", true);
-    //! Consider this when writing docs and making context checker
-    static module<T>(module:LoadModule<T>):LoadModule<T> {
+    static module<T=undefined>(module:LoadModule<T>):LoadModule<T> {
         return module;
     }
 

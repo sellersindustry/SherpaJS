@@ -107,7 +107,7 @@ async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
         if (!entry) {
             return [{
                 level: Level.ERROR,
-                text: `Unable to resolve module \"${moduleLoader.entry}\".`,
+                text: `Unable to resolve module "${moduleLoader.entry}".`,
                 file: { filepath: file.filepath }
             }];
         }
