@@ -43,6 +43,7 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and agnost
 | Module | Description | Developer |
 |---|---|---|
 | [Static Flags](https://github.com/sellersindustry/SherpaJS-static-flags) | Create static flags of booleans, strings, or numbers | [Sellers Industries](https://github.com/sellersindustry) |
+| [Events](https://github.com/sellersindustry/SherpaJS-events) | Create event sending endpoints for analytics platforms like PostHog using [Metadapter Events](https://github.com/sellersindustry/metadapter-event) | [Sellers Industries](https://github.com/sellersindustry) |
 
 <br>
 <br>
