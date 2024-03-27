@@ -11,8 +11,7 @@
  */
 
 
-import { Method } from "../io/model.js";
-import { Context } from "../../compiler/models.js";
+import { Context, Method } from "../../compiler/models.js";
 import { IResponse } from "../io/response/interface.js";
 import { IRequest } from "../io/request/interface";
 import { Response } from "../io/response/index.js";

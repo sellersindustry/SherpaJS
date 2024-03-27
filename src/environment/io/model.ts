@@ -11,11 +11,6 @@
  */
 
 
-import { Method } from "../../compiler/models.js";
-import { IHeaders } from "./headers/index.js";
-
-export { Method };
-
 export enum BodyType {
     JSON = "JSON",
     Text = "Text",
@@ -30,11 +25,6 @@ export const CONTENT_TYPE:Record<BodyType, string|undefined> = {
 
 export type Body = Record<string, unknown>|string|undefined;
 
-export type URLParameter    = string|number|boolean;
-export type PathParameters  = { [key:string]:URLParameter|URLParameter[] };
-export type QueryParameters = { [key:string]:URLParameter|URLParameter[] }
-
-export { IHeaders as Headers };
 
 // For you were once darkness, but now you are light in the Lord. Live as
 // children of light.

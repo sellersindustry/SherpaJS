@@ -12,11 +12,12 @@
 
 
 import { IRequest } from "./interface.js";
-import { RequestUtilities } from "./utilities.js";
-import { Headers, Body, BodyType, Method } from "../model.js";
-import { Segment } from "../../../compiler/models.js";
-import { OriginURL } from "../../../compiler/utilities/url/index.js";
+import { Body, BodyType } from "../model.js";
+import { Headers } from "../headers/index.js";
+import { Parameters } from "../parameters/index.js";
 import { IncomingMessage as LocalRequest } from "http";
+import { Method, Segment } from "../../../compiler/models.js";
+import { OriginURL } from "../url/index.js";
 type VercelRequest = Request;
 
 
@@ -32,8 +33,8 @@ export class RequestTransform {
         return {
             url: new OriginURL(req.url).pathname,
             params: {
-                path: RequestUtilities.parseParamsPath(req.url, segments),
-                query: RequestUtilities.parseParamsQuery(req.url),
+                path: Parameters.getPathParams(req.url, segments),
+                query: Parameters.getQueryParams(req.url),
             },
             method: req.method.toUpperCase() as keyof typeof Method,
             headers: headers,
@@ -90,8 +91,8 @@ export class RequestTransform {
         return {
             url: new OriginURL(req.url).pathname,
             params: {
-                path: RequestUtilities.parseParamsPath(req.url, segments),
-                query: RequestUtilities.parseParamsQuery(req.url),
+                path: Parameters.getPathParams(req.url, segments),
+                query: Parameters.getQueryParams(req.url),
             },
             method: req.method.toUpperCase() as keyof typeof Method,
             headers: headers,

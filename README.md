@@ -246,7 +246,7 @@ To define a dynamic route, simply name a directory using square brackets, such
 as `[id]`. Within a dynamic route directory, you can access the parameter value
 from the request object in your endpoint logic. For example, if you have a
 dynamic route named `[id]`, you can access the parameter using
-`request.params.path.id`, to learn more see [endpoint requests](#requests).
+`request.params.path.get("id")`, to learn more see [endpoint requests](#requests).
 
 ### Examples of Route Structures
 ```less
@@ -272,7 +272,7 @@ dynamic route named `[id]`, you can access the parameter using
 │       └── index.ts // Endpoint logic for "/example/subroute"
 │
 ├── /[id]
-│   └── index.ts     // Endpoint logic for "/[id]" access "[id]" with request.params.path.id
+│   └── index.ts     // Endpoint logic for "/[id]" access "[id]" with request.params.path.get("id")
 ```
 
 ```less
@@ -281,7 +281,7 @@ dynamic route named `[id]`, you can access the parameter using
 ├── /products
 │   ├── index.ts     // Endpoint logic for "/products"
 │   ├── /[productID]
-│   │   └── index.ts // Endpoint logic for "/products/[productID]" access "[productID]" with request.params.path.productID
+│   │   └── index.ts // Endpoint logic for "/products/[productID]" access "[productID]" with request.params.path.get("productID")
 │   │
 │   └── /category
 │       └── index.ts // Endpoint logic for "/products/category"
@@ -399,13 +399,9 @@ enum BodyType {
 
 type Body = Record<string, any>|string|undefined;
 
-type URLParameter    = string|number|boolean;
-type PathParameters  = { [key:string]:URLParameter|URLParameter[] };
-type QueryParameters = { [key:string]:URLParameter|URLParameter[] }
-
 interface Request {
     readonly url:string;
-    readonly params:{ path:PathParameters, query:QueryParameters };
+    readonly params:{ path:Parameters, query:Parameters };
     readonly method:keyof typeof Method;
     readonly headers:Headers;
     readonly body:Body;
@@ -414,33 +410,34 @@ interface Request {
 ```
 
 #### Request Example
+ - `doc/abc/def/page/2?thing1=foo,bar&thing2=true&thing2=false&thing3=4`
+ - `doc/[testID]/[testID]/page/[pageID]`
+ - `request.params.path.get("testID")` ➜ `"abc"`
+ - `request.params.path.getAll("testID")` ➜ `[ "abc", "def" ]`
+ - `request.params.path.has("testID")` ➜ `true`
+ - `request.params.path.keys()` ➜ `[ "testID", "pageID" ]`
 ```json
-// doc/abc/def/page/2?thing1=foo,bar&thing2=true&thing2=false&thing3=4
-// doc/[testID]/[testID]/page/[pageID]
 {
-    "request": {
-        "url": "/regular/dynamic-paths/abc/def/page/2",
-        "params": {
-            "path": {
-                "testID": [ "abc", "def" ],
-                "pageID": 2
-            },
-            "query": {
-                "thing1": [ "foo", "bar" ],
-                "thing2": [ true, false ],
-                "thing3": 4
-            }
+    "url": "/regular/dynamic-paths/abc/def/page/2",
+    "params": {
+        "path": {
+            "testID": [ "abc", "def" ],
+            "pageID": [ 2 ]
         },
-        "method": "POST",
-        "headers": {
-            "content-type": "application/json",
-        },
-        "bodyType": "JSON",
-        "body":  {
-            "test": "hello world"
+        "query": {
+            "thing1": [ "foo", "bar" ],
+            "thing2": [ true, false ],
+            "thing3": [ 4 ]
         }
     },
-    "context": "foo"
+    "method": "POST",
+    "headers": {
+        "content-type": "application/json",
+    },
+    "bodyType": "JSON",
+    "body":  {
+        "test": "hello world"
+    }
 }
 ```
 
