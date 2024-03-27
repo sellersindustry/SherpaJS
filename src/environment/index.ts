@@ -11,10 +11,9 @@
  */
 
 
-import {
-    Body, BodyType, Headers,
-    Method, PathParameters, QueryParameters
-} from "./io/model.js";
+import { Parameters } from "./io/parameters/index.js";
+import { Headers } from "./io/headers/index.js";
+import { Body, BodyType } from "./io/model.js";
 import { New, Load } from "./instantiate/index.js";
 import { IResponse } from "./io/response/interface.js";
 import { Response } from "./io/response/index.js";
@@ -23,7 +22,7 @@ import { Options } from "./io/response/index.js";
 import { LocalServer } from "./local-server/index.js";
 import { RequestTransform } from "./io/request/transformer.js";
 import { ResponseTransform } from "./io/response/transformer.js";
-import { Context } from "../compiler/models.js";
+import { Context, Method } from "../compiler/models.js";
 import { Handler } from "./handler/index.js";
 
 
@@ -45,7 +44,8 @@ export {
     Response,
     __internal__,
     LocalServer,
-    Headers
+    Headers,
+    Parameters
 }
 
 
@@ -53,8 +53,6 @@ export type {
     Method,
     BodyType,
     Body,
-    PathParameters,
-    QueryParameters,
     IRequest as Request,
     IRequest,
     IResponse,

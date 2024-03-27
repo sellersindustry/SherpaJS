@@ -14,7 +14,7 @@
 export type HeadersInit = string[][] | Record<string, string | ReadonlyArray<string>> | IHeaders | Headers;
 
 
-export class IHeaders implements Headers {
+class IHeaders implements Headers {
     
     private headers:Record<string, string>;
 
@@ -117,6 +117,9 @@ export class IHeaders implements Headers {
 
 
 }
+
+
+export { IHeaders as Headers };
 
 
 // I will never forget your precepts, for by them you have preserved my life.

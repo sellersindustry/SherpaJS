@@ -11,13 +11,16 @@
  */
 
 
-import { Headers, Method, Body, BodyType, PathParameters, QueryParameters } from "../model.js";
+import { Body, BodyType } from "../model.js";
+import { Headers } from "../headers/index.js";
+import { Parameters } from "../parameters/index.js";
+import { Method } from "../../../compiler/models.js";
 
 
 export interface IRequest {
 
     readonly url:string;
-    readonly params:{ path:PathParameters, query:QueryParameters };
+    readonly params:{ path:Parameters, query:Parameters };
     readonly method:keyof typeof Method;
     readonly headers:Headers;
 

@@ -11,7 +11,8 @@
  */
 
 
-import { BodyType, CONTENT_TYPE, Headers } from "../model.js";
+import { Headers } from "../headers/index.js";
+import { BodyType, CONTENT_TYPE } from "../model.js";
 import { IResponse } from "./interface.js";
 import { STATUS_TEXT } from "./status-text.js";
 

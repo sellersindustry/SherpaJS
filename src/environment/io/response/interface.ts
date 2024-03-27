@@ -11,8 +11,9 @@
  */
 
 
+import { Body, BodyType } from "../model.js";
+import { Headers } from "../headers/index.js";
 
-import { Headers, Body, BodyType } from "../model.js";
 
 export interface IResponse {
 

@@ -11,7 +11,7 @@
  */
 
 
-import { OriginURL } from "../../../compiler/utilities/url/index.js";
+import { OriginURL } from "../url/index.js";
 import { BodyType } from "../model.js";
 import { IRequest } from "../request/interface.js";
 import { IResponse } from "./interface.js";
