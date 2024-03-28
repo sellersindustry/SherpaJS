@@ -531,6 +531,23 @@ Setup a new NodeJS project with `npm init`.
 > You don't have to create a repository to make a module. If you choice you can
 > simply create a new directory in your server and skip to [step 3](#step-3-1).
 
+Ensure your main is set to `sherpa.module.ts` so your ContextSchema and other
+resources are accessible by servers implementing your module.
+```json
+{
+	"name": "sherpa-module",
+	"version": "0.0.2",
+	"main": "sherpa.module.ts",
+	"scripts": {
+		"build": "sherpa build -b Vercel",
+		"dev": "sherpa build -b local && node ./.sherpa/index.js"
+	},
+	"dependencies": {
+		"sherpa-core": "^1.0.4"
+	}
+}
+```
+
 #### Step 2
 Install SherpaJS with `npm install sherpa-core`.
 
