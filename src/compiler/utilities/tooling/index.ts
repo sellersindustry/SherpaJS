@@ -85,7 +85,7 @@ export class Tooling {
 
     public static resolve(path:string, resolveDir:string=""):string|null {
         let local = Files.join(resolveDir, path);
-        let npm   = Files.join("../../../node_modules", path);
+        let npm   = Files.join(resolveDir, "../../../node_modules", path);
         if (Files.exists(local)) {
             return local;
         }
