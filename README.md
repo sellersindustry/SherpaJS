@@ -19,6 +19,9 @@
 SherpaJS empowers developers to effortlessly construct <ins>**modular and agnostic serverless web framework**</ins>. Developers can easily build serverless web server using a directory-based structure, inspired by NextJS and even import pre-built modules at endpoints. SherpaJS servers can then be compiled to a variety of different web platforms including Vercel Serverless and local Server (with more to come later).
 
 
+<br>
+
+
 ## Table of Contents
  - [Supported Platforms](#deploy-a-server)
  - [Community Modules](#community-modules)
@@ -56,7 +59,7 @@ npm install sherpa-core -g
 ```
 This command will globally install the SherpaJS core package, enabling you to utilize its features across your system. Once installed, you can easily run the SherpaJS command-line interface (CLI) using the following command:
 ```bash
-npx sherpa
+sherpa
 ```
 This command initializes the SherpaJS CLI, allowing you to efficiently manage and configure your modular microservice endpoints. [Learn about CLI Commands](#commands).
 
