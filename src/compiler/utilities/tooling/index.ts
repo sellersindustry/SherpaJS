@@ -13,14 +13,17 @@
 
 import vm from "vm";
 import fs from "fs";
+import { BuildOptions } from "../../models.js";
 import { Project as TSMorphProject } from "ts-morph";
-import { build, BuildOptions } from "esbuild";
+import { build, BuildOptions as ESBuildOptions } from "esbuild";
 import { TypeValidation, Schema } from "./ts-validation.js";
 import { Files } from "../files/index.js";
 import { Message } from "../logger/model.js";
+import { EnvironmentVariables } from "../../models.js";
+import { getEnvironmentVariables } from "./dot-env.js";
 
 
-export const DEFAULT_ESBUILD_TARGET:Partial<BuildOptions> = {
+export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
     format: "cjs",
     target: "es2022",
     platform: "node",
@@ -58,23 +61,36 @@ export class Tooling {
         });
 
         let code    = result.outputFiles[0].text;
-        let context = vm.createContext({ module: { exports: {} } });
+        let context = vm.createContext({ process, module: { exports: {} }});
         vm.runInContext(code, context);
         return context.module.exports.default;
     }
 
 
-    static async build(props:{ buffer:string, output:string, resolve?:string, options?:Partial<BuildOptions> }) {
+    static async build(props:{ buffer:string, output:string, resolve?:string, options?:BuildOptions, esbuild?:Partial<ESBuildOptions> }) {
         await build({
             ...DEFAULT_ESBUILD_TARGET,
-            ...props.options,
+            ...props.options?.developer?.bundler?.esbuild,
+            ...props.esbuild,
             stdin: {
                 contents: props.buffer,
                 resolveDir: props.resolve,
                 loader: "ts",
             },
             outfile: props.output,
+            define: this.getESBuildEnvironmentVariables(props.options)
         });
+    }
+
+
+    private static getESBuildEnvironmentVariables(options:BuildOptions):{ [key:string]:string } {
+        let variables = this.getEnvironmentVariables(options);
+        return { "process.env": JSON.stringify(variables) };
+    }
+
+
+    static getEnvironmentVariables(options:BuildOptions):EnvironmentVariables {
+        return getEnvironmentVariables(options);
     }
 
 
