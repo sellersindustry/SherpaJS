@@ -88,6 +88,9 @@ export enum BundlerType {
 }
 
 
+export type EnvironmentVariables = { [key:string]:string };
+
+
 export type BuildOptions = {
     input:string;
     output:string;
@@ -95,6 +98,10 @@ export type BuildOptions = {
     developer?:{
         bundler?:{
             esbuild?:Partial<ESBuildOptions>;
+        },
+        environment?:{
+            variables?:EnvironmentVariables,
+            files?:string[]
         }
     }
 }

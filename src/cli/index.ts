@@ -15,6 +15,7 @@
 import path from "path";
 import { Command, Option } from "commander";
 import { Compiler, BundlerType } from  "../compiler/index.js";
+import { Files } from "../compiler/utilities/files/index.js";
 let CLI = new Command();
 
 
@@ -51,6 +52,9 @@ CLI.command("build")
                     esbuild: {
                         minify: options.dev ? false : true
                     }
+                },
+                environment: {
+                    files: [Files.join(input, ".env")]
                 }
             }
         });

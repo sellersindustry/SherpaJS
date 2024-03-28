@@ -27,8 +27,8 @@ export class Local extends Bundler {
             buffer:  this.getBuffer(),
             output:  Files.join(this.getFilepath(), "index.js"),
             resolve: this.options.input,
-            options: {
-                ...this.options?.developer?.bundler?.esbuild,
+            options: this.options,
+            esbuild: {
                 platform: "node",
             }
         });

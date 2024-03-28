@@ -39,8 +39,8 @@ export class Vercel extends Bundler {
                 buffer:  this.getBuffer(endpoint),
                 output:  Files.join(path, "index.js"),
                 resolve: Files.getDirectory(endpoint.filepath),
-                options: { 
-                    ...this.options?.developer?.bundler?.esbuild,
+                options: this.options,
+                esbuild: { 
                     platform: "node",
                 }
             });

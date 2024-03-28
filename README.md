@@ -206,6 +206,16 @@ export default SherpaJS.New.server({
 <br>
 
 
+### Environment Variables
+The `.env` environment file is loaded into your server when the system is
+compiled. Any environment variables provided by hosting services (like Vercel)
+will also automatically be included in your build.
+
+
+<br>
+
+
+
 ### Deploy a Server
 SherpaJS can compile to various different web platforms, with more to come later. [Want to support a new framework? Submit a Ticket](https://github.com/sellersindustry/SherpaJS/issues). See the [build command](#build-command) to compile to each platform.
 
@@ -694,6 +704,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 
 
 ### Proposed Features
+ - Fix linter, remove the linter and move each to it's perspective location
  - How do you handle Environment files?
  - Build Test Harness to test standard endpoint features, bug detection, (and later Vercel Deployment).
  - Support more than Text and JSON body payloads
