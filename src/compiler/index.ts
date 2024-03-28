@@ -57,40 +57,31 @@ export class Compiler {
 
     private static validateBuildOptions(options:BuildOptions):Message[] {
         let errors:Message[] = [];
-
-        if (!path.isAbsolute(options.input)) {
-            errors.push({
-                level: Level.ERROR,
-                text: "Input path is not an absolute path.",
-                file: { filepath: options.input }
-            });
-        }
-    
-        if (!fs.existsSync(options.input)) {
-            errors.push({
-                level: Level.ERROR,
-                text: "Input path does not exist.",
-                file: { filepath: options.input }
-            });
-        }
-
-        if (!path.isAbsolute(options.output)) {
-            errors.push({
-                level: Level.ERROR,
-                text: "Output path is not an absolute path.",
-                file: { filepath: options.output }
-            });
-        }
-    
-        if (!fs.existsSync(options.output)) {
-            errors.push({
-                level: Level.ERROR,
-                text: "Output path does not exist.",
-                file: { filepath: options.output }
-            });
-        }
-
+        errors.push(...this.validateFilepath(options.input, "Input"));
+        errors.push(...this.validateFilepath(options.output, "Output"));
+        errors.push(...options.developer.environment.files.map(filepath => {
+            return this.validateFilepath(filepath, "Environment File");
+        }).flat());
         return errors;
+    }
+
+
+    private static validateFilepath(filepath:string, name:string):Message[] {
+        if (!path.isAbsolute(filepath)) {
+            return [{
+                level: Level.ERROR,
+                text: `${name} path is not an absolute path.`,
+                file: { filepath: filepath }
+            }];
+        }
+        if (!fs.existsSync(filepath)) {
+            return [{
+                level: Level.ERROR,
+                text: `${name} path does not exist.`,
+                file: { filepath: filepath }
+            }];
+        }
+        return [];
     }
 
 

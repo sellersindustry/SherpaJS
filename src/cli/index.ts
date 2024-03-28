@@ -12,10 +12,9 @@
  */
 
 
-import path from "path";
 import { Command, Option } from "commander";
 import { Compiler, BundlerType } from  "../compiler/index.js";
-import { Files } from "../compiler/utilities/files/index.js";
+import { getEnvironmentFiles, getAbsolutePath } from "./utilities.js";
 let CLI = new Command();
 
 
@@ -33,15 +32,8 @@ CLI.command("build")
         .choices(Object.values(BundlerType))
         .default(BundlerType.local))
     .action((options) => {
-        let input = options.input ? options.input : process.cwd();
-        if (!path.isAbsolute(input)) {
-            input = path.resolve(input);
-        }
-
-        let output = options.output ? options.output : input;
-        if (!path.isAbsolute(output)) {
-            output = path.resolve(output);
-        }
+        let input  = getAbsolutePath(options.input, process.cwd());
+        let output = getAbsolutePath(options.output, input);
 
         Compiler.build({
             input: input,
@@ -54,7 +46,7 @@ CLI.command("build")
                     }
                 },
                 environment: {
-                    files: [Files.join(input, ".env")]
+                    files: getEnvironmentFiles(input)
                 }
             }
         });
