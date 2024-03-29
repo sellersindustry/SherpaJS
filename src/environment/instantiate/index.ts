@@ -17,7 +17,7 @@ import { LoadModule, ModuleConfig, ServerConfig } from "../../compiler/models.js
 
 export class New {
 
-    static server(config:ServerConfig):ServerConfig {
+    static server<T=undefined>(config:ServerConfig<T>):ServerConfig<T> {
         return config;
     }
 

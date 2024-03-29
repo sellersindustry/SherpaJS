@@ -24,9 +24,11 @@ export const VALID_EXPORTS             = ["GET", "POST", "PATCH", "DELETE", "PUT
 export type Context = unknown;
 
 
-export type ServerConfig = {
-    context?:Context;
-};
+export type ServerConfig<T=Context> = (T extends undefined ? {
+    context?: unknown
+} : {
+    context: T
+});
 
 
 export type ServerStructure = {
@@ -77,7 +79,7 @@ export type Endpoint = {
 }
 
 
-export type LoadModule<T=undefined> = {
+export type LoadModule<T=Context> = {
     entry: string;
 } & (T extends undefined ? { context?: unknown } : { context: T });
 
