@@ -37,8 +37,30 @@ export type ServerStructure = {
 };
 
 
-export type ModuleConfig = {
+export class ContextSchema<Schema> implements HasContext<Schema> {
+    context:Schema;
+    constructor(context:Schema) { this.context = context; }
+}
+
+
+export interface HasContext<Schema> {
+    context:Schema;
+}
+
+
+export type Instantiable<Interface extends HasContext<Schema>, Schema> = {
+    new (context:Schema):Interface;
+};
+
+
+export type ModuleConfig<Interface extends HasContext<Schema>, Schema> = {
     name:string;
+    interface:Instantiable<Interface, Schema>;
+};
+
+
+export type ModuleConfigLoader<Interface extends HasContext<Schema>, Schema> = ModuleConfig<Interface, Schema> & {
+    load:(context:Schema) => Interface;
 };
 
 
@@ -46,8 +68,7 @@ export type ModuleStructure = {
     filepath:string;
     context:Context;
     contextFilepath:string;
-    config:ModuleConfig;
-    hasContextSchema:boolean;
+    config:ModuleConfig<HasContext<unknown>, unknown>;
 };
 
 
@@ -77,11 +98,6 @@ export type Endpoint = {
     module:ModuleStructure;
     segments:Segment[];
 }
-
-
-export type LoadModule<T=Context> = {
-    entry: string;
-} & (T extends undefined ? { context?: unknown } : { context: T });
 
 
 export enum BundlerType {

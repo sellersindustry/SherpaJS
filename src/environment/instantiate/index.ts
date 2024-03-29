@@ -12,27 +12,30 @@
 
 
 
-import { LoadModule, ModuleConfig, ServerConfig } from "../../compiler/models.js";
+import {
+    HasContext,
+    ModuleConfig,
+    ModuleConfigLoader, ServerConfig
+} from "../../compiler/models.js";
 
 
 export class New {
+
 
     static server<T=undefined>(config:ServerConfig<T>):ServerConfig<T> {
         return config;
     }
 
-    static module(config:ModuleConfig):ModuleConfig {
-        return config;
+
+    static module<Interface extends HasContext<Schema>, Schema>(config:ModuleConfig<Interface, Schema>):ModuleConfigLoader<Interface, Schema> {
+        return {
+            ...config,
+            load: (context:Schema) => {
+                return new config.interface(context);
+            }
+        };
     }
 
-}
-
-
-export class Load {
-
-    static module<T=undefined>(module:LoadModule<T>):LoadModule<T> {
-        return module;
-    }
 
 }
 

@@ -12,50 +12,30 @@
 
 
 import {
-    CONTEXT_SCHEMA_TYPE_NAME, FILENAME_CONFIG_MODULE,
+    FILENAME_CONFIG_MODULE,
     ModuleStructure, SUPPORTED_FILE_EXTENSIONS,
-    ModuleConfig, Context
+    ModuleConfig, Context, HasContext
 } from "../../models.js";
 import { Files } from "../../utilities/files/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 
 
-export async function getModuleStructure(entry:string, context:Context|undefined, contextFilepath:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
+export async function getModuleStructure(entry:string, context:Context, contextFilepath:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
     let { filepath, errors: errorsFilepath } = getFilepath(entry);
     if (!filepath) return { errors: errorsFilepath };
 
     let { instance, errors: errorsInstance } = await getInstance(filepath);
     if (!instance) return { errors: errorsInstance };
 
-    let hasContextSchema  = getHasContextSchema(filepath);
-    let errorsModuleTypes = Tooling.typeCheck(filepath, "Module Config", "SherpaJS.New.module", {
-        filepath: Files.join(Files.getRootDirectory(), "src/compiler/models"),
-        name: "ModuleConfig"
-    });
-    let errorsLoaderTypes = Tooling.typeCheck(contextFilepath, "Module Loader", "SherpaJS.Load.module", {
-        filepath: Files.join(Files.getRootDirectory(), "src/compiler/models"),
-        name: "LoadModule",
-        subtype: hasContextSchema ? {
-            name: CONTEXT_SCHEMA_TYPE_NAME,
-            filepath: filepath.replace(/\.[a-zA-Z0-9]+$/, "")
-        } : undefined
-    }).map((message:Message) => {
-        if (message.text.includes(CONTEXT_SCHEMA_TYPE_NAME)) {
-            message.content = `${CONTEXT_SCHEMA_TYPE_NAME} at (${filepath})`
-        }
-        return message;
-    });
-
     return {
         module: {
             filepath: filepath,
             context: context,
             contextFilepath: contextFilepath,
-            config: instance,
-            hasContextSchema: hasContextSchema
+            config: instance
         },
-        errors: [...errorsModuleTypes, ...errorsLoaderTypes]
+        errors: []
     }
 }
 
@@ -81,30 +61,33 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 }
 
 
-async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ModuleConfig }> {
+async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ModuleConfig<HasContext<unknown>, unknown> }> {
     try {
+        //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
+        if (!Tooling.hasDefaultExport(filepath, "SherpaJS.New.module")) {
+            return {
+                errors: [{
+                    level: Level.ERROR,
+                    text: "Module config file has no default export.",
+                    content: "Ensure you are default exporting using \"SherpaJS.New.module\".",
+                    file: { filepath: filepath }
+                }]
+            };
+        }
         return {
-            errors: [],
-            instance: await Tooling.getDefaultExport(filepath) as ModuleConfig
+            errors: Tooling.typeCheck(filepath, "Module Config"),
+            instance: await Tooling.getDefaultExport(filepath) as ModuleConfig<HasContext<unknown>, unknown>
         }
     } catch (e) {
         return {
             errors: [{
                 level: Level.ERROR,
-                text: "Module config file could not be processed.",
-                content: `Ensure module config has default export.`,
+                text: "Module config file could not be loaded.",
+                content: e.message,
                 file: { filepath: filepath }
             }]
         };
     }
-}
-
-
-function getHasContextSchema(filepath:string):boolean {
-    let exportedVariables = Tooling.getExportedVariableNames(filepath);
-    let exportedSchema    = exportedVariables.includes(CONTEXT_SCHEMA_TYPE_NAME);
-    let isTypescript      = Files.getExtension(filepath) == "TS";
-    return exportedSchema && isTypescript;
 }
 
 
