@@ -18,6 +18,7 @@ export class OriginURL extends URL {
 
     constructor(input: string, base?:string|OriginURL|URL) {
         super(input, base ? base : "http://0.0");
+        this.pathname = this.pathname.endsWith("/") ? this.pathname.slice(0, -1) : this.pathname;
     }
 
 }
