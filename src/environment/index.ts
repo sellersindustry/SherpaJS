@@ -45,13 +45,13 @@ export {
     __internal__,
     LocalServer,
     Headers,
-    Parameters
+    Parameters,
+    Method,
+    BodyType
 }
 
 
 export type {
-    Method,
-    BodyType,
     Body,
     IRequest as Request,
     IRequest,
