@@ -60,7 +60,7 @@ export class Parameters {
         let params = new Parameters();
         new OriginURL(url).pathname.split("/").filter((o) => o != "").forEach((value:string, index:number) => {
             if (segments[index].isDynamic) {
-                params.append(segments[index].name, value);
+                params.append(segments[index].name, value, false);
             }
         });
         return params;
