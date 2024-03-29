@@ -46,7 +46,8 @@ export {
     Headers,
     Parameters,
     Method,
-    BodyType
+    BodyType,
+    ContextSchema
 }
 
 
@@ -56,8 +57,7 @@ export type {
     IRequest,
     IResponse,
     Options as ResponseOptions,
-    Context,
-    ContextSchema
+    Context
 }
 
 
