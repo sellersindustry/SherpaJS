@@ -162,7 +162,7 @@ async function getRouteFileByModule(filepath:string, segments:Segment[]):Promise
         let { errors, route } = await getRouteStructure(entry, moduleLoader.context, filepath, segments, false);
         return {
             errors: [
-                ...Tooling.typeCheckBasic(filepath, "Module Loader"),
+                ...Tooling.typeCheck(filepath, "Module Loader"),
                 ...errors
             ],
             route

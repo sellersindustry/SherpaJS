@@ -16,7 +16,7 @@ import fs from "fs";
 import { BuildOptions } from "../../models.js";
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
-import { TypeValidation, Schema } from "./ts-validation.js";
+import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
 import { EnvironmentVariables } from "../../models.js";
 import { getEnvironmentVariables } from "./dot-env.js";
@@ -94,16 +94,8 @@ export class Tooling {
     }
 
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static typeCheckBasic(filepath:string, fileTypeName:string):Message[] {
-        //! FIXME
-        // throw new Error("Type Check basic not implemented");
-        return [];
-    }
-
-
-    static typeCheck(filepath:string, fileTypeName:string, functionName:string, schema:Schema):Message[] {
-        return new TypeValidation(filepath, fileTypeName, functionName, schema).apply();
+    static typeCheck(filepath:string, fileTypeName:string):Message[] {
+        return new TypeValidation(filepath, fileTypeName).apply();
     }
 
 

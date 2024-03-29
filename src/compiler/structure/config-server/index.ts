@@ -24,10 +24,7 @@ export async function getServerStructure(entry:string):Promise<{ errors:Message[
     let { instance, errors: errorsInstance } = await getInstance(filepath);
     if (!instance) return { errors: errorsInstance };
 
-    let errorsTypes = Tooling.typeCheck(filepath, "Server config", "SherpaJS.New.server", {
-        filepath: Files.join(Files.getRootDirectory(), "src/compiler/models"),
-        name: "ServerConfig",
-    });
+    let errorsTypes = Tooling.typeCheck(filepath, "Server config");
 
     return {
         server: {
@@ -74,7 +71,7 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
             };
         }
         return {
-            errors: Tooling.typeCheckBasic(filepath, "Server Config"),
+            errors: Tooling.typeCheck(filepath, "Server Config"),
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
         }
     } catch (e) {

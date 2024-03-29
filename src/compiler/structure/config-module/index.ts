@@ -75,7 +75,7 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
             };
         }
         return {
-            errors: Tooling.typeCheckBasic(filepath, "Module Config"),
+            errors: Tooling.typeCheck(filepath, "Module Config"),
             instance: await Tooling.getDefaultExport(filepath) as ModuleConfig<HasContext<unknown>, unknown>
         }
     } catch (e) {
