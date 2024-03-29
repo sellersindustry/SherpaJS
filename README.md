@@ -43,10 +43,10 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and agnost
 
 
 ## Community Modules
-| Module | Description | Developer |
-|---|---|---|
-| [Static Flags](https://github.com/sellersindustry/SherpaJS-static-flags) | Create static flags of booleans, strings, or numbers | [Sellers Industries](https://github.com/sellersindustry) |
-| [Events](https://github.com/sellersindustry/SherpaJS-events) | Create event sending endpoints for analytics platforms like PostHog using [Metadapter Events](https://github.com/sellersindustry/metadapter-event) | [Sellers Industries](https://github.com/sellersindustry) |
+| Module | Description |
+|---|---|
+| [Static Flags](https://github.com/sellersindustry/SherpaJS-static-flags) | Create static flags of booleans, strings, or numbers |
+| [Events](https://github.com/sellersindustry/SherpaJS-events) | Create event sending endpoints for analytics platforms like PostHog using [Metadapter Events](https://github.com/sellersindustry/metadapter-event) |
 
 <br>
 <br>
@@ -188,8 +188,8 @@ The configuration provided to the server must match the TypeScript object as fol
 ```typescript
 export type Context = unknown;
 
-export type ServerConfig = {
-    context?: Context;
+export type ServerConfig<Schema=Context> = {
+    context: Schema;
 };
 ```
 
@@ -199,6 +199,19 @@ export type ServerConfig = {
 import { SherpaJS } from "sherpa-core";
 
 export default SherpaJS.New.server({
+    context: {
+        serverSecret: "foo",
+        allowThingy: true
+    }
+});
+```
+
+```typescript
+// sherpa.server.ts
+import { SherpaJS } from "sherpa-core";
+
+type ConfigExample = { serverSecret:string, allowThingy:boolean };
+export default SherpaJS.New.server<ConfigExample>({
     context: {
         serverSecret: "foo",
         allowThingy: true
@@ -220,15 +233,23 @@ will also automatically be included in your build.
 
 
 ### Deploy a Server
-SherpaJS can compile to various different web platforms, with more to come later. [Want to support a new framework? Submit a Ticket](https://github.com/sellersindustry/SherpaJS/issues). See the [build command](#build-command) to compile to each platform.
+SherpaJS can compile to various different web platforms, with more to come
+later. [Want to support a new framework? Submit a Ticket](https://github.com/sellersindustry/SherpaJS/issues).
+See the [build command](#build-command) to compile to each platform.
 
 
 #### Vercel Serverless
-Building to Vercel will generate a Vercel serverless server in the `.vercel` directory relative to your output. When your SherpaJS server repository is deployed Vercel this folder will automatically be deployed. Ensure your build command is set to build SherpaJS with the Vercel bundler.
+Building to Vercel will generate a Vercel serverless server in the `.vercel`
+directory relative to your output. When your SherpaJS server repository is
+deployed Vercel this folder will automatically be deployed. Ensure your build
+command is set to build SherpaJS with the Vercel bundler.
 
 
 #### Local Server
-Building to local server will generate a NodeJS server, that utilizes the built in HTTP service. This server will be located at the `.sherpa/index.js` relative to your output. By default the port number is `3000` but you can provide an different port number with an argument `node ./.sherpa/index.js 5000`.
+Building to local server will generate a NodeJS server, that utilizes the built
+in HTTP service. This server will be located at the `.sherpa/index.js` relative
+to your output. By default the port number is `3000` but you can provide an
+different port number with an argument `node ./.sherpa/index.js 5000`.
 
 
 <br>
@@ -362,40 +383,27 @@ modularity, and reusability, simplifying development and accelerating
 time-to-market for your web applications.
 
 Modules are loaded in the same endpoint file (`index.ts`) as a regular endpoint,
-but instead of export HTTP methods you export a loaded module. Simply use the
-module loader provided `SherpaJS.Load.module`.
+but instead of export HTTP methods you export a loaded module. Simply import the
+module and use the `load` method, while providing the context.
 
-Provide the loader an entry point for the module, this should be the root
-directory of the module. This entry point can either be a relative directory
-or a NPM package name. Optionally you can also provide context to the module.
-The module your loading may require a context with specific properties so
-please adhere to the modules requirements.
+This entry point can either be a relative directory (in which case you must
+specify the `sherpa.module` file) or a NPM package name.
 
 ```typescript
 // index.ts
-import { SherpaJS } from "sherpa-core";
+import StaticFlags from "sherpajs-static-flags";
 
-export default SherpaJS.Load.module({
-    entry: "../modules/pass-primary-1",
-    context: {
-        test: "Hello World"
-    }
+export default StaticFlags.load({
+    test: "Hello World"
 });
 ```
 
-You can also provide the module loader with context schema as exported by the
-module. This is completely optional and we will verify the schema regardless
-but it could be helpful.
 ```typescript
 // index.ts
-import { SherpaJS } from "sherpa-core";
-import { ContextSchema } from "../modules/pass-primary-1/sherpa.module.ts";
+import ExampleModule from "../../modules/sherpa.module";
 
-export default SherpaJS.Load.module<ContextSchema>({
-    entry: "../modules/pass-primary-1",
-    context: {
-        test: "Hello World"
-    }
+export default ExampleModule.load({
+    test: "Hello World"
 });
 ```
 
@@ -554,9 +562,6 @@ resources are accessible by servers implementing your module.
 	"scripts": {
 		"build": "sherpa build -b Vercel",
 		"dev": "sherpa build -b local && node ./.sherpa/index.js"
-	},
-	"dependencies": {
-		"sherpa-core": "^1.0.4"
 	}
 }
 ```
@@ -565,23 +570,41 @@ resources are accessible by servers implementing your module.
 Install SherpaJS with `npm install sherpa-core`.
 
 #### Step 3
-Then create a module configuration file in the root directory of your modules named `sherpa.module.ts`. This file will default export a [module configuration](#module-configuration).
+Then create a module configuration file in the root directory of your modules
+named `sherpa.module.ts`. This file will default export
+a [module configuration](#module-configuration).
 
-Optionally you can export a type named `ContextSchema`. This type acts
-as a validation of properties when your module is [loaded](#module-endpoint). 
 
 ```typescript
 // sherpa.module.ts
-import { SherpaJS } from "sherpa-core";
+import { SherpaJS, ContextSchema } from "sherpa-core";
 
 export default SherpaJS.New.module({
-    name: "example-module"
+    name: "example-module",
+    interface: ContextSchema<{ foo: boolean, bar: string }>
 });
-
-export type ContextSchema = {
-    test: boolean
-};
 ```
+
+Alteratively, you can export any `interface` class with a constructor that
+takes the context as a parameter sets `this.context` within your class. You
+can attach additional methods onto this, that can be used to interact with your
+module.
+
+```typescript
+// sherpa.module.ts
+import { SherpaJS, ContextSchema } from "sherpa-core";
+
+export default SherpaJS.New.module({
+    name: "pass-primary-1",
+    interface: class example {
+        context:{ foo: number, bar: string };
+        constructor(context:{ foo: number, bar: string }) {
+            this.context = context;
+        }
+    }
+});
+```
+
 
 #### Step 4
 To create endpoints for a new module in SherpaJS, you'll create a new
@@ -640,42 +663,66 @@ the entry point for your Sherpa module.
 
 #### Config File
 The file must located at `sherpa.module.ts` and have a default export of the
-config and use the `SherpaJS.New.module` function as follows:
+config and use the `SherpaJS.New.module` function as follows. You can export
+a class using `ContextSchema`, that acts as a wrapper for validating the
+context when the module is [loaded](#module-endpoint). 
 
 ```typescript
-import SherpaJS from "sherpa-core";
+// sherpa.module.ts
+import { SherpaJS, ContextSchema } from "sherpa-core";
 
 export default SherpaJS.New.module({
-    name: "example-name"
+    name: "pass-primary-1",
+    interface: ContextSchema<{ foo: boolean, bar:  }>
 });
 ```
 
-Optionally you can export a type named `ContextSchema`. This type acts
-as a validation of properties when your module is [loaded](#module-endpoint). 
+Alteratively, you can export any `interface` class with a constructor that
+takes the context as a parameter sets `this.context` within your class. You
+can attach additional methods onto this, that can be used to interact with your
+module.
+
+```typescript
+// sherpa.module.ts
+import { SherpaJS } from "sherpa-core";
+
+export default SherpaJS.New.module({
+    name: "pass-primary-1",
+    interface: class example {
+        context:{ foo: number, bar: string };
+        constructor(context:{ foo: number, bar: string }) {
+            this.context = context;
+        }
+    }
+});
+```
+
+You can also export any additional attributes that you need, because `sherpa.module.ts`
+should be the main script defined in your `package.json`.
 
 
 #### Config Structure
- - **Name:** The name of the module
+ - **Name:** The name of the module.
+ - **Interface:** Class that has `constructor(context:[TYPE])` and
+    property `context:[TYPE]`.
 
 The configuration provided to the module creator must match the TypeScript object as follows:
 ```typescript
 export type ModuleConfig = {
     name: string;
+    interface: Class;
 };
 ```
 
 #### Example Config
 ```typescript
 // sherpa.module.ts
-import SherpaJS from "sherpa-core";
+import { SherpaJS, ContextSchema } from "sherpa-core";
 
 export default SherpaJS.New.module({
-    name: "example-name"
+    name: "pass-primary-1",
+    interface: ContextSchema<{ foo: boolean, bar:  }>
 });
-
-export type ContextSchema = {
-    value: number
-}
 ```
 
 
@@ -697,18 +744,7 @@ Any help is very much appreciated. Build some useful modules and [submit them to
 <br>
 
 
-### TODO
- - deploy example server to vercel...
- - Update Website
- - Inform People
-
-
-<br>
-
-
 ### Proposed Features
- - Fix linter, remove the linter and move each to it's perspective location
- - How do you handle Environment files?
  - Build Test Harness to test standard endpoint features, bug detection, (and later Vercel Deployment).
  - Support more than Text and JSON body payloads
  - Auto reloading development server.

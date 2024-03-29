@@ -22,7 +22,7 @@ import { Options } from "./io/response/index.js";
 import { LocalServer } from "./local-server/index.js";
 import { RequestTransform } from "./io/request/transformer.js";
 import { ResponseTransform } from "./io/response/transformer.js";
-import { Context, Method } from "../compiler/models.js";
+import { Context, ContextSchema, Method } from "../compiler/models.js";
 import { Handler } from "./handler/index.js";
 
 
@@ -56,7 +56,8 @@ export type {
     IRequest,
     IResponse,
     Options as ResponseOptions,
-    Context
+    Context,
+    ContextSchema
 }
 
 
