@@ -14,7 +14,7 @@
 import { Parameters } from "./io/parameters/index.js";
 import { Headers } from "./io/headers/index.js";
 import { Body, BodyType } from "./io/model.js";
-import { New, Load } from "./instantiate/index.js";
+import { New } from "./instantiate/index.js";
 import { IResponse } from "./io/response/interface.js";
 import { Response } from "./io/response/index.js";
 import { IRequest } from "./io/request/interface.js";
@@ -27,8 +27,7 @@ import { Handler } from "./handler/index.js";
 
 
 const SherpaJS = {
-    New,
-    Load
+    New
 }
 
 

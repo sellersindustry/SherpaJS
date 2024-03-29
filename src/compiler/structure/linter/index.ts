@@ -14,7 +14,7 @@
 import { Files } from "../../utilities/files/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
-import { LoadModule, SUPPORTED_FILE_EXTENSIONS, VALID_EXPORTS } from "../../models.js";
+import { SUPPORTED_FILE_EXTENSIONS, VALID_EXPORTS } from "../../models.js";
 import {
     DirectoryStructureFile as DirStructFile,
     DirectoryStructure as DirStruct,
@@ -61,7 +61,9 @@ function validateFileName(file:DirStructFile):Message[] {
 
 async function validateExports(file:DirStructFile):Promise<Message[]> {
     if (Tooling.hasDefaultExport(file.filepath)) {
-        return await validateExportsModule(file);
+        //! FIXME
+        return [];
+        // return await validateExportsModule(file);
     }
     return validateExportsEndpoints(file);
 }
@@ -92,36 +94,36 @@ function validateExportsEndpoints(file:DirStructFile):Message[] {
 }
 
 
-async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
-    try {
-        let moduleLoader = await Tooling.getDefaultExport(file.filepath) as LoadModule;
-        if (!moduleLoader["entry"] || typeof moduleLoader["entry"] !== "string") {
-            return [{
-                level: Level.ERROR,
-                text: `Module loader failed to define a module "entry" point.`,
-                file: { filepath: file.filepath }
-            }];
-        }
+// async function validateExportsModule(file:DirStructFile):Promise<Message[]> {
+//     try {
+//         let moduleLoader = await Tooling.getDefaultExport(file.filepath) as HasContext<unknown>;
+//         if (!moduleLoader["entry"] || typeof moduleLoader["entry"] !== "string") {
+//             return [{
+//                 level: Level.ERROR,
+//                 text: `Module loader failed to define a module "entry" point.`,
+//                 file: { filepath: file.filepath }
+//             }];
+//         }
 
-        let entry = Tooling.resolve(moduleLoader.entry, Files.getDirectory(file.filepath));
-        if (!entry) {
-            return [{
-                level: Level.ERROR,
-                text: `Unable to resolve module "${moduleLoader.entry}".`,
-                file: { filepath: file.filepath }
-            }];
-        }
+//         let entry = Tooling.resolve(moduleLoader.entry, Files.getDirectory(file.filepath));
+//         if (!entry) {
+//             return [{
+//                 level: Level.ERROR,
+//                 text: `Unable to resolve module "${moduleLoader.entry}".`,
+//                 file: { filepath: file.filepath }
+//             }];
+//         }
 
-        return [];
-    } catch {
-        return [{
-            level: Level.ERROR,
-            text: "Failed to load module loader.",
-            content: "Ensure a module loader are default exported.",
-            file: { filepath: file.filepath }
-        }];
-    }
-}
+//         return [];
+//     } catch {
+//         return [{
+//             level: Level.ERROR,
+//             text: "Failed to load module loader.",
+//             content: "Ensure a module loader are default exported.",
+//             file: { filepath: file.filepath }
+//         }];
+//     }
+// }
 
 
 function validateSegments(structure:DirStructTree, filepath:string):Message[] {

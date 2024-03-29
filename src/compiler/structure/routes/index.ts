@@ -12,16 +12,17 @@
 
 import fs from "fs";
 import { Level, Message } from "../../utilities/logger/model.js";
-import { Context, Method, LoadModule, ModuleStructure, Route, Segment, VALID_EXPORTS } from "../../models.js";
+import { Context, Method, ModuleStructure, Route, Segment, VALID_EXPORTS, ContextSchema, HasContext } from "../../models.js";
 import { getModuleStructure } from "../config-module/index.js";
 import { getDirectoryStructure } from "../directory-structure/index.js";
 import { lint } from "../linter/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { DirectoryStructureTree as DirStructTree } from "../directory-structure/model.js";
 import { Files } from "../../utilities/files/index.js";
+import parseImports from "parse-imports";
 
 
-export async function getRouteStructure(entry:string, context:Context|undefined, contextFilepath:string, segments:Segment[]=[], isRoot:boolean=true):Promise<{ errors:Message[], route?:Route }> {
+export async function getRouteStructure(entry:string, context:Context, contextFilepath:string, segments:Segment[]=[], isRoot:boolean=true):Promise<{ errors:Message[], route?:Route }> {
     let errors:Message[] = [];
 
     let { module, errors: errorsModule } = await getModule(entry, context, contextFilepath, isRoot);
@@ -30,18 +31,22 @@ export async function getRouteStructure(entry:string, context:Context|undefined,
         return { errors };
     }
 
+    //! INCLUDE IN GET DIR STRUCT - NOW Routes Structure
     let errorsHasRoutesDir = hasRoutesDir(entry);
+    errors.push(...errorsHasRoutesDir);
     if (errorsHasRoutesDir.length > 0) {
-        errors.push(...errorsHasRoutesDir);
         return { errors };
     }
+    //! INCLUDE IN GET DIR STRUCT - NOW Routes Structure
 
-    let filepath        = getRoutesDirectory(entry);
-    let fileStructure   = getDirectoryStructure(filepath);
-    let errorsStructure = await lint(fileStructure, filepath);
+    //! FIXME - RESTRUCTURE
+    let routesFilepath  = getRoutesDirectory(entry);
+    let routesStructure = getDirectoryStructure(routesFilepath);
+    let errorsStructure = await lint(routesStructure, routesFilepath);
     errors.push(...errorsStructure);
+    //! FIXME - RESTRUCTURE
 
-    let { route, errors: errorsRoutes } = await getRoute(module, filepath, segments, fileStructure.tree);
+    let { route, errors: errorsRoutes } = await getRoute(module, routesFilepath, segments, routesStructure.tree);
     errors.push(...errorsRoutes);
     return { errors, route };
 }
@@ -63,9 +68,9 @@ function getModuleByRoot(entry:string, context:Context|undefined, contextFilepat
             context: context,
             contextFilepath: contextFilepath,
             config: {
-                name: "."
-            },
-            hasContextSchema: false
+                name: ".",
+                interface: ContextSchema
+            }
         }
     }
 }
@@ -73,13 +78,7 @@ function getModuleByRoot(entry:string, context:Context|undefined, contextFilepat
 
 async function getModuleByConfig(entry:string, context:Context|undefined, contextFilepath:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
     let { module, errors } = await getModuleStructure(entry, context, contextFilepath);
-    if (!module) {
-        return { errors };
-    }
-    return {
-        errors: errors,
-        module
-    }
+    return (!module) ? { errors } : { errors, module }
 }
 
 
@@ -120,37 +119,67 @@ async function getRouteFile(module:ModuleStructure, filepath:string, segments:Se
     if (Tooling.hasDefaultExport(filepath)) {
         return await getRouteFileByModule(filepath, segments);
     }
-    return getRouteFileByMethods(module, filepath, segments);
+    return getRouteFileByEndpoint(module, filepath, segments);
 }
 
 
 async function getRouteFileByModule(filepath:string, segments:Segment[]):Promise<{ errors:Message[], route?:Route }> {
     try {
-        let moduleLoader = await Tooling.getDefaultExport(filepath) as LoadModule;
-        let entry        = Tooling.resolve(moduleLoader.entry, Files.getDirectory(filepath));
-        if (!entry) {
+        let buffer = fs.readFileSync(filepath, "utf8");
+        let match  = buffer.match(/export\s+default\s+(?<exported>[a-zA-Z0-9]+)\s?\.\s?load\s?\(/);
+        if (!match) {
             return {
                 errors: [{
                     level: Level.ERROR,
-                    text: "Preflight Cross-Check has failed.",
-                    content: "Entry for module loader is not defined."
+                    text: "Module load has no default export.",
+                    content: "Ensure you are default exporting using \"[module].load\".",
+                    file: { filepath }
                 }]
             }
         }
-        return await getRouteStructure(entry, moduleLoader.context, filepath, segments, false);
-    } catch {
+
+        let importedName = match.groups["exported"];
+        let importedFile:string|undefined;
+        for (const _import of await parseImports(buffer)) {
+            if (_import.importClause.default == importedName) {
+                importedFile = _import.moduleSpecifier.value;
+            }
+        }
+
+        if (!importedFile) {
+            return {
+                errors: [{
+                    level: Level.ERROR,
+                    text: `Module "${importedName}" is not imported as default.`,
+                    content: "Ensure you are importing the default export \"Sherpa.New.module\" from \"sherpa.module.ts\".",
+                    file: { filepath }
+                }]
+            }
+        }
+        
+        let moduleLoader      = await Tooling.getDefaultExport(filepath) as HasContext<unknown>;
+        let entry             = Files.resolve(importedFile, Files.getDirectory(filepath));
+        let { errors, route } = await getRouteStructure(entry, moduleLoader.context, filepath, segments, false);
+        return {
+            errors: [
+                ...Tooling.typeCheckBasic(filepath, "Module Loader"),
+                ...errors
+            ],
+            route
+        }
+    } catch (e) {
         return {
             errors: [{
                 level: Level.ERROR,
-                text: "Preflight Cross-Check has failed.",
-                content: "Module loader file has failed to compile."
+                text: "Module Load Preflight Cross-Check has failed.",
+                content: e.message
             }]
         };
     }
 }
 
 
-function getRouteFileByMethods(module:ModuleStructure, filepath:string, segments:Segment[]):{ errors:Message[], route?:Route } {
+function getRouteFileByEndpoint(module:ModuleStructure, filepath:string, segments:Segment[]):{ errors:Message[], route?:Route } {
     let exports  = Tooling.getExportedVariableNames(filepath).filter(o => VALID_EXPORTS.includes(o));
     let _methods = exports.filter(o => (Object.values(Method) as string[]).includes(o));
     let methods  =  _methods.map(o => Method[o as keyof typeof Method]);

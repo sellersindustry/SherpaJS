@@ -72,6 +72,16 @@ export class Files {
     }
 
 
+
+    public static resolve(filepath:string, resolveDir:string):string|undefined {
+        let npm = Files.join(resolveDir, "../../../node_modules", filepath);
+        if (Files.exists(npm)) {
+            return npm;
+        }
+        return Files.getDirectory(Files.join(resolveDir, filepath));
+    }
+
+
 }
 
 

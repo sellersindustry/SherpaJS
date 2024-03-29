@@ -17,7 +17,6 @@ import { BuildOptions } from "../../models.js";
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
 import { TypeValidation, Schema } from "./ts-validation.js";
-import { Files } from "../files/index.js";
 import { Message } from "../logger/model.js";
 import { EnvironmentVariables } from "../../models.js";
 import { getEnvironmentVariables } from "./dot-env.js";
@@ -47,9 +46,10 @@ export class Tooling {
     }
 
 
-    static hasDefaultExport(filepath:string):boolean {
+    static hasDefaultExport(filepath:string, wrapper?:string):boolean {
+        let regex  = new RegExp(`export\\s+default\\s+${wrapper ? `${wrapper.replaceAll(".", "\\s?\\.\\s?")}\\s?` : ""}`);
         let buffer = fs.readFileSync(filepath, "utf8");
-        return buffer.match(/export\s+default\s+/) != null;
+        return buffer.match(regex) != null;
     } 
 
 
@@ -94,21 +94,16 @@ export class Tooling {
     }
 
 
-    static typeCheck(filepath:string, fileTypeName:string, functionName:string, schema:Schema):Message[] {
-        return new TypeValidation(filepath, fileTypeName, functionName, schema).apply();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static typeCheckBasic(filepath:string, fileTypeName:string):Message[] {
+        //! FIXME
+        // throw new Error("Type Check basic not implemented");
+        return [];
     }
 
 
-    public static resolve(path:string, resolveDir:string=""):string|null {
-        let local = Files.join(resolveDir, path);
-        let npm   = Files.join(resolveDir, "../../../node_modules", path);
-        if (Files.exists(local)) {
-            return local;
-        }
-        if (Files.exists(npm)) {
-            return npm;
-        }
-        return null;
+    static typeCheck(filepath:string, fileTypeName:string, functionName:string, schema:Schema):Message[] {
+        return new TypeValidation(filepath, fileTypeName, functionName, schema).apply();
     }
 
 

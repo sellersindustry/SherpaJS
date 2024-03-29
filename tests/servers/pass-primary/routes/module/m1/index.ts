@@ -1,10 +1,7 @@
-import { SherpaJS } from "../../../../../../src/environment";
+import PassPrimary1 from "../../../../../modules/pass-primary-1/sherpa.module";
 
-export default SherpaJS.Load.module({
-    entry: "../../../../../modules/pass-primary-1",
-    context: {
-        test: "Hello World"
-    }
-});
 
+export default PassPrimary1.load({
+    test: "Hello World"
+})
 

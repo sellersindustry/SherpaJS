@@ -62,25 +62,27 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 
 async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ServerConfig }> {
     try {
-        if (!Tooling.hasDefaultExport(filepath)) {
+        //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
+        if (!Tooling.hasDefaultExport(filepath, "SherpaJS.New.server")) {
             return {
                 errors: [{
                     level: Level.ERROR,
                     text: "Server config file has no default export.",
+                    content: "Ensure you are exporting using \"SherpaJS.New.server\".",
                     file: { filepath: filepath }
                 }]
             };
         }
         return {
-            errors: [],
+            errors: Tooling.typeCheckBasic(filepath, "Server Config"),
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
         }
     } catch (e) {
         return {
             errors: [{
                 level: Level.ERROR,
-                text: "Server config file could not be processed.",
-                content: `Ensure server config has default export.`,
+                text: "Server config file could not be loaded.",
+                content: e.message,
                 file: { filepath: filepath }
             }]
         };
