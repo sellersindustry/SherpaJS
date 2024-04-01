@@ -4,6 +4,8 @@
 ![NPM Version](https://img.shields.io/npm/v/sherpa-core)
 [![Node.js Package](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml)
 
+> [!TIP]
+> **The documenation is a bit of a mess right now, to get an overview really quick just checkout the [server example](https://github.com/sellersindustry/SherpaJS-template-server).**
 
 > [!IMPORTANT]
 > This project is in early development, so it is possible for you to run into issues. If you run into any issues please just create a new issue and link your code. Feel free to debug or update the code!
@@ -16,7 +18,7 @@
 > [Development Notes](#development)
 
 
-SherpaJS empowers developers to effortlessly construct <ins>**modular and agnostic serverless web framework**</ins>. Developers can easily build serverless web server using a directory-based structure, inspired by NextJS and even import pre-built modules at endpoints. SherpaJS servers can then be compiled to a variety of different web platforms including Vercel Serverless and local Server (with more to come later).
+SherpaJS empowers developers to effortlessly construct <ins>**modular and agnostic serverless applications**</ins>. Developers can easily build serverless web server using a directory-based structure, inspired by NextJS and even import pre-built modules at endpoints. SherpaJS servers can then be compiled to a variety of different web platforms including Vercel Serverless and local Server (with more to come later).
 
 
 <br>
@@ -60,6 +62,7 @@ npm install sherpa-core -g
 This command will globally install the SherpaJS core package, enabling you to utilize its features across your system. Once installed, you can easily run the SherpaJS command-line interface (CLI) using the following command:
 ```bash
 sherpa
+npx sherpa
 ```
 This command initializes the SherpaJS CLI, allowing you to efficiently manage and configure your modular microservice endpoints. [Learn about CLI Commands](#commands).
 
@@ -164,7 +167,7 @@ applications with SherpaJS. Happy coding! ⚓
 <br>
 
 
-### Server Config
+### Server Configuration
 Sherpa servers are configured using a `sherpa.server.ts` file, where you define
 the structure and behavior of your server. This configuration file serves as
 the entry point for your Sherpa server.
