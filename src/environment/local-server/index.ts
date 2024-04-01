@@ -46,7 +46,7 @@ export class LocalServer {
 
         this.server = createServer(this.handleRequest.bind(this));
         this.server.listen(this.port, () => {
-            console.log(`SherpaJS Server is listening on port "${this.port}".`);
+            console.log(`SherpaJS Server is started at "http://localhost:${this.port}".`);
         });
     }
 
