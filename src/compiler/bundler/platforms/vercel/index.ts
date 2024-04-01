@@ -50,7 +50,7 @@ export class Vercel extends Bundler {
 
     private getBuffer(endpoint:Endpoint) {
         return `
-            import { __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/src/environment/index.js"))}";
+            import { __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js"))}";
             import * as endpoint from "${Files.unix(endpoint.filepath)}";
             import import_context from "${Files.unix(endpoint.module.contextFilepath)}";
 
