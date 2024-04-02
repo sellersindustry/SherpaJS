@@ -8,9 +8,6 @@
 	"bin": {
 		"sherpa": "./dist/src/cli/index.js"
 	},
-	"files": [
-		"./dist/"
-	],
 	"scripts": {
 		"build": "tsc --build --force tsconfig.json",
 		"prepare": "npm run build",

@@ -49,7 +49,13 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
-        console.log(Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js")));
+        console.log(fs.readdirSync(Files.unix(Files.join(Files.getRootDirectory(), "dist"))));
+        console.log(fs.readdirSync(Files.unix(Files.join(Files.getRootDirectory()))));
+        console.log(fs.readdirSync(Files.unix(Files.join(Files.getRootDirectory(), "../"))));
+        console.log(fs.readdirSync(Files.unix(Files.join(Files.getRootDirectory(), "../../"))));
+        console.log(fs.readdirSync(Files.unix(Files.join(Files.getRootDirectory(), "../../../"))));
+        console.log(fs.readdirSync(Files.unix(Files.join(Files.getRootDirectory(), "../../../../"))));
+
         return `
             import { __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js"))}";
             import * as endpoint from "${Files.unix(endpoint.filepath)}";
