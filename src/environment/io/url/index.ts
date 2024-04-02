@@ -11,25 +11,7 @@
  */
 
 
-// import { URL } from "node:url";
-// import { URL } from "url-parse";
-
-//! REMOVE EXTA DEPS THAT WE ADDED AFTER FIXING
-
 export class OriginURL extends URL {
-
-    // hash: string;
-    // host: string;
-    // hostname: string;
-    // href: string;
-    // readonly origin: string;
-    // password: string;
-    // pathname: string;
-    // port: string;
-    // protocol: string;
-    // search: string;
-    // readonly searchParams: URLSearchParams;
-    // username: string;
 
     constructor(input: string, base?:string|OriginURL|URL) {
         super(input, base ? base : "http://0.0");
@@ -37,7 +19,6 @@ export class OriginURL extends URL {
     }
 
 }
-
 
 
 // Paul said, "John's baptism was a baptism of repentance. He told the people

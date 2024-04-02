@@ -49,9 +49,9 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
-        //! FIXME - If has Vercel ENV Var use "sherpa-core" otherwise use other one
+        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core" : Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js"));
         return `
-            import { __internal__ as SherpaJS } from "sherpa-core";
+            import { __internal__ as SherpaJS } from "${sherpaCorePath}";
             import * as endpoint from "${Files.unix(endpoint.filepath)}";
             import import_context from "${Files.unix(endpoint.module.contextFilepath)}";
 
