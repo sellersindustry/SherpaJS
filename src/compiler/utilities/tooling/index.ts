@@ -80,7 +80,6 @@ export class Tooling {
             outfile: props.output,
             define: this.getESBuildEnvironmentVariables(props.options)
         });
-        console.log(fs.readFileSync(props.output, "utf8"));
     }
 
 
