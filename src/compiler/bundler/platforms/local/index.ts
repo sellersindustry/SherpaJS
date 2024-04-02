@@ -36,8 +36,9 @@ export class Local extends Bundler {
 
 
     private getBuffer() {
+        console.log(Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js")));
         return `
-            import { LocalServer, __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/src/environment/index.js"))}";
+            import { LocalServer, __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js"))}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
