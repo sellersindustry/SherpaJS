@@ -85,7 +85,7 @@ export class Tooling {
 
     private static getESBuildEnvironmentVariables(options:BuildOptions):{ [key:string]:string } {
         let variables = this.getEnvironmentVariables(options);
-        return { "process.env": JSON.stringify(variables) };
+        return { global: "window", "process.env": JSON.stringify(variables) };
     }
 
 
