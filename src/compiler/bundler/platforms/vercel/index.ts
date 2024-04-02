@@ -49,7 +49,7 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
-        console.log(Files.unix(Files.join(Files.getDirectory(import.meta.url), "../../../../../environment/index.js")));
+        //! FIXME - If has Vercel ENV Var use "sherpa-core" otherwise use other one
         return `
             import { __internal__ as SherpaJS } from "sherpa-core";
             import * as endpoint from "${Files.unix(endpoint.filepath)}";
