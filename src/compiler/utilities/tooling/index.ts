@@ -68,7 +68,6 @@ export class Tooling {
 
 
     static async build(props:{ buffer:string, output:string, resolve?:string, options?:BuildOptions, esbuild?:Partial<ESBuildOptions> }) {
-        console.log("Running build...");
         await build({
             ...DEFAULT_ESBUILD_TARGET,
             ...props.options?.developer?.bundler?.esbuild,
@@ -81,6 +80,7 @@ export class Tooling {
             outfile: props.output,
             define: this.getESBuildEnvironmentVariables(props.options)
         });
+        console.log(fs.readFileSync("props.output", "utf8"));
     }
 
 
