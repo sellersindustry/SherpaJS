@@ -30,6 +30,7 @@ export type Message = {
 export type MessageFile = {
     filepath:string;
     line?:number;
+    character?:number;
     properties?:string[];
 }
 
