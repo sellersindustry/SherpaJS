@@ -12,7 +12,7 @@
 
 
 import fs from "fs";
-import { BuildOptions, EnvironmentVariables } from "../../models.js";
+import { BuildOptions, EnvironmentVariables } from "../../../models.js";
 
 
 export function getEnvironmentVariables(options:BuildOptions):EnvironmentVariables {

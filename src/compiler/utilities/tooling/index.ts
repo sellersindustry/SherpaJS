@@ -19,7 +19,7 @@ import { build, BuildOptions as ESBuildOptions } from "esbuild";
 import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
 import { EnvironmentVariables } from "../../models.js";
-import { getEnvironmentVariables } from "./dot-env.js";
+import { getEnvironmentVariables } from "./dot-env/index.js";
 
 
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
