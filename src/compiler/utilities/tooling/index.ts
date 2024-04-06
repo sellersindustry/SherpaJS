@@ -20,6 +20,7 @@ import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
 import { EnvironmentVariables } from "../../models.js";
 import { getEnvironmentVariables } from "./dot-env/index.js";
+import { getDefaultExportInvokedJSModule } from "./default-export/index.js";
 
 
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
@@ -40,6 +41,7 @@ export class Tooling {
 
 
     static getExportedVariableNames(filepath:string):string[] {
+        getDefaultExportInvokedJSModule("-", "-"); //! FIXME
         let project    = new TSMorphProject();
         let sourceFile = project.addSourceFileAtPath(filepath);
         return Array.from(sourceFile.getExportedDeclarations().keys());
