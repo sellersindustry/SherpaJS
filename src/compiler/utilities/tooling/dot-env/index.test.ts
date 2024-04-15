@@ -67,7 +67,6 @@ describe("Tooling Dot Environment", () => {
 
 
 	test("Simple Environment File", () => {
-		console.log(Files.join(DIRNAME, "./tests/test1.env"));
 		process.env.Test12 = "Example12";
 		let envVars = getEnvironmentVariables({
 			input: "--",

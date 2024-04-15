@@ -4,10 +4,11 @@ import { Level, Message } from "../../logger/model.js";
 import parseImports from "parse-imports";
 
 
-enum JSModuleType { package, file }
-type JSModule = {
-    type: JSModuleType;
+export enum ExportLoaderType { package, file }
+export type ExportLoaderModule = {
+    type: ExportLoaderType;
     namespace: string;
+    binding: string;
     filepath: string;
 };
 
@@ -69,14 +70,15 @@ type JSModule = {
  * @param prototype optional, the dot method calls on the namespace
  * @returns Promise<{ errors:Message[], module?:Module }>
  */
-export async function getExportedLoader(filepath:string, fileTypeName:string, namespace?:string, prototype?:string):Promise<{ errors:Message[], module?:JSModule }> {
-    
+export async function getExportedLoader(filepath:string, fileTypeName:string, namespace?:string, prototype?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
+    let autoDetectNamespace = namespace == undefined;
+
     let buffer = getBuffer(filepath);
     if (!buffer) {
         return {
             errors: [{
                 level: Level.ERROR,
-                text: `${fileTypeName} file not found`,
+                text: `${fileTypeName} file not found.`,
                 file: { filepath }
             }]
         };
@@ -107,7 +109,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, na
         };
     }
 
-    let module = await getModule(buffer, namespace);
+    let module = await getModule(buffer, namespace, autoDetectNamespace);
     if (!module) {
         return {
             errors: [{
@@ -118,7 +120,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, na
             }]
         };
     }
-
+    namespace = module.binding;
 
     if (!hasDefaultExportedNamespace(buffer, characterIndex, namespace)) {
         return {
@@ -144,7 +146,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, na
     }
 
 
-    if (!hasDefaultExportedFunction(buffer, characterIndex, namespace, prototype)) {
+    if (!hasDefaultExportedInvoke(buffer, characterIndex, namespace, prototype)) {
         return {
             errors: [{
                 level: Level.ERROR,
@@ -159,47 +161,51 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, na
 }
 
 
-function hasDefaultExportedFunction(buffer:string, characterIndex:number, namespace:string, prototype?:string):boolean {
-    let regex = new RegExp(`export\\s+default\\s+${namespace}\\s?${prototype ? `\\.\\s?${prototype.split(".").join("\\s?\\.\\s?")}` : ""}\\s?\\(`);
+function hasDefaultExportedInvoke(buffer:string, characterIndex:number, namespace:string, prototype?:string):boolean {
+    let regex = new RegExp(`default\\s+${namespace}\\s?${prototype ? `\\.\\s*${prototype.split(".").join("\\s*\\.\\s*")}` : "(\\s*\\.\\s*[a-zA-Z0-9_]+)*"}\\s*\\(`);
     return buffer.slice(characterIndex).match(regex) != null;
 }
 
 
 function hasDefaultExportedPrototype(buffer:string, characterIndex:number, namespace:string, prototype?:string):boolean {
-    let regex = new RegExp(`export\\s+default\\s+${namespace}\\s?${prototype ? `\\.\\s?${prototype.split(".").join("\\s?\\.\\s?")}` : ""}`);
+    let regex = new RegExp(`default\\s+${namespace}\\s?${prototype ? `\\.\\s*${prototype.split(".").join("\\s*\\.\\s*")}` : ""}`);
     return buffer.slice(characterIndex).match(regex) != null;
 }
 
 
 function hasDefaultExportedNamespace(buffer:string, characterIndex:number, namespace:string):boolean {
-    let regex = new RegExp(`export\\s+default\\s+${namespace}`);
+    let regex = new RegExp(`default\\s+${namespace}`);
     return buffer.slice(characterIndex).match(regex) != null;
 }
 
 
-async function getModule(buffer:string, namespace:string):Promise<JSModule|undefined> {
+async function getModule(buffer:string, namespace:string, useBinding:boolean):Promise<ExportLoaderModule|undefined> {
     for (let _import of await parseImports(buffer)) {
         if (!_import.moduleSpecifier.value) {
             return;
         }
 
         let isPackage = _import.moduleSpecifier.type == "package";
-        let type      = isPackage ? JSModuleType.package : JSModuleType.file;
+        let type      = isPackage ? ExportLoaderType.package : ExportLoaderType.file;
         
         if (_import.importClause?.default == namespace) {
             return {
                 type: type,
                 filepath: _import.moduleSpecifier.value,
-                namespace: namespace
+                namespace: namespace,
+                binding: namespace
             };
         }
 
-        let namedImport = _import.importClause?.named.filter(o => o.specifier == namespace);
+        let namedImport = _import.importClause?.named.filter(o => useBinding ? o.binding == namespace : o.specifier == namespace);
+        console.log(useBinding, namespace);
+        console.log(_import.importClause?.named);
         if (namedImport && namedImport.length > 0) {
             return {
                 type: type,
                 filepath: _import.moduleSpecifier.value,
-                namespace: namedImport[0].binding
+                namespace: namedImport[0].specifier,
+                binding: namedImport[0].binding,
             }
         }
     }
@@ -208,19 +214,19 @@ async function getModule(buffer:string, namespace:string):Promise<JSModule|undef
 
 
 function getNamespaceByExport(buffer:string, characterIndex:number):string|undefined {
-    let match = buffer.slice(characterIndex).match(/export\s+default\s+(?<exported>[a-zA-Z0-9_]+)/);
-    return match ? match["exported"] : undefined;
+    let match = buffer.slice(characterIndex).match(/default\s+(?<exported>[a-zA-Z0-9_]+)/);
+    return match ? match.groups["exported"] : undefined;
 }
 
 
 function getCharacterIndex(exports:readonly ExportSpecifier[]):number {
-    let _exports = exports.filter(o => o.n == "default").length;
-    return _exports > 0 ? _exports[0].s : -1;
+    let _exports = exports.filter(o => o.n == "default");
+    return _exports.length > 0 ? _exports[0].s : -1;
 }
 
 
 function getBuffer(filepath:string):string|undefined {
-    if (fs.existsSync(filepath)) {
+    if (!fs.existsSync(filepath)) {
         return undefined;
     }
     try {
