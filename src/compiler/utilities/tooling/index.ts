@@ -20,7 +20,7 @@ import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
 import { EnvironmentVariables } from "../../models.js";
 import { getEnvironmentVariables } from "./dot-env/index.js";
-import { getDefaultExportInvokedJSModule } from "./default-export/index.js";
+import { getExportedLoader } from "./exported-loader/index.js";
 
 
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
@@ -41,14 +41,15 @@ export class Tooling {
 
 
     static getExportedVariableNames(filepath:string):string[] {
-        getDefaultExportInvokedJSModule("-", "-"); //! FIXME
+        getExportedLoader("-", "-"); //! FIXME - Build New Tooling for this...
         let project    = new TSMorphProject();
         let sourceFile = project.addSourceFileAtPath(filepath);
         return Array.from(sourceFile.getExportedDeclarations().keys());
     }
 
 
-    static hasDefaultExport(filepath:string, wrapper?:string):boolean {
+    static hasExportedLoader(filepath:string, wrapper?:string):boolean {
+        //! FIXME - Implement
         let regex  = new RegExp(`export\\s+default\\s+${wrapper ? `${wrapper.replaceAll(".", "\\s?\\.\\s?")}\\s?` : ""}`);
         let buffer = fs.readFileSync(filepath, "utf8");
         return buffer.match(regex) != null;
@@ -80,19 +81,11 @@ export class Tooling {
                 loader: "ts",
             },
             outfile: props.output,
-            define: this.getESBuildEnvironmentVariables(props.options)
+            define: {
+                "global": "window",
+                "process.env": JSON.stringify(getEnvironmentVariables(props.options))
+            }
         });
-    }
-
-
-    private static getESBuildEnvironmentVariables(options:BuildOptions):{ [key:string]:string } {
-        let variables = this.getEnvironmentVariables(options);
-        return { global: "window", "process.env": JSON.stringify(variables) };
-    }
-
-
-    static getEnvironmentVariables(options:BuildOptions):EnvironmentVariables {
-        return getEnvironmentVariables(options);
     }
 
 

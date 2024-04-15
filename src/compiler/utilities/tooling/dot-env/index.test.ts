@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
 import { Files } from "../../../utilities/files/index";
 import { BundlerType } from "../../../models";
 import { getEnvironmentVariables } from "./index";
-import { pathExistsSync } from "fs-extra";
+
+
+const DIRNAME = Files.unix(Files.getDirectory(import.meta.url));
 
 
 describe("Tooling Dot Environment", () => {
@@ -67,10 +67,8 @@ describe("Tooling Dot Environment", () => {
 
 
 	test("Simple Environment File", () => {
+		console.log(Files.join(DIRNAME, "./tests/test1.env"));
 		process.env.Test12 = "Example12";
-		console.log(import.meta.url);
-		console.log(Files.join(Files.getDirectory(import.meta.url), "./tests/test1.env"));
-		console.log(fs.existsSync(Files.join(Files.getDirectory(import.meta.url), "./tests/test1.env")));
 		let envVars = getEnvironmentVariables({
 			input: "--",
 			output: "--",
@@ -80,7 +78,9 @@ describe("Tooling Dot Environment", () => {
 					variables: {
 						"FOO": "BAR"
 					},
-					files: [ path.join(path.dirname(import.meta.url), "./tests/test1.env") ]
+					files: [
+						Files.join(DIRNAME, "./tests/test1.env")
+					]
 				}
 			}
 		});
@@ -102,8 +102,8 @@ describe("Tooling Dot Environment", () => {
 						"SINGLE_VARIABLE": "OVERRIDE"
 					},
 					files: [
-						path.join(path.dirname(import.meta.url), "./tests/test1.env"),
-						path.join(path.dirname(import.meta.url), "./tests/test2.env")
+						Files.join(DIRNAME, "./tests/test1.env"),
+						Files.join(DIRNAME, "./tests/test2.env")
 					]
 				}
 			}
@@ -123,7 +123,7 @@ describe("Tooling Dot Environment", () => {
 			developer: {
 				environment: {
 					files: [
-						path.join(path.dirname(import.meta.url), "./tests/test3.env")
+						Files.join(DIRNAME, "./tests/test3.env")
 					]
 				}
 			}

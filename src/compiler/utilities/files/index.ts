@@ -68,7 +68,10 @@ export class Files {
 
 
     public static unix(filepath:string):string {
-        return filepath.replace(/^[A-Za-z]:/, '').replace(/\\/g, '/');
+        return filepath
+            .replace("file://", "")
+            .replace(/^\/?[A-Za-z]:/, "")
+            .replace(/\\/g, "/");
     }
 
 

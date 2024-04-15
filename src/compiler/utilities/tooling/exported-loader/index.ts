@@ -69,7 +69,7 @@ type JSModule = {
  * @param prototype optional, the dot method calls on the namespace
  * @returns Promise<{ errors:Message[], module?:Module }>
  */
-export async function getDefaultExportInvokedJSModule(filepath:string, fileTypeName:string, namespace?:string, prototype?:string):Promise<{ errors:Message[], module?:JSModule }> {
+export async function getExportedLoader(filepath:string, fileTypeName:string, namespace?:string, prototype?:string):Promise<{ errors:Message[], module?:JSModule }> {
     
     let buffer = getBuffer(filepath);
     if (!buffer) {

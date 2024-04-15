@@ -60,7 +60,7 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ServerConfig }> {
     try {
         //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
-        if (!Tooling.hasDefaultExport(filepath, "SherpaJS.New.server")) {
+        if (!Tooling.hasExportedLoader(filepath, "SherpaJS.New.server")) {
             return {
                 errors: [{
                     level: Level.ERROR,
