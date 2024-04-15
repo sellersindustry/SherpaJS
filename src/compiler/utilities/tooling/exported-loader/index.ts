@@ -1,3 +1,16 @@
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Mon Apr 15 2024
+ *   file: index.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Exported Loaders
+ *
+ */
+
+
 import fs from "fs";
 import { ExportSpecifier, parse } from "es-module-lexer";
 import { Level, Message } from "../../logger/model.js";
@@ -18,7 +31,7 @@ export type ExportLoaderModule = {
  * information. The default export must be a invoked function and inline with
  * the export. For example...
  * 
- * **Valid Example** - namespace = SherpaJS, prototype = "module.load", the
+ * **Valid Example** - prototype = SherpaJS.module.load
  * renamed namespace will be auto-detected as SherpaJS = foo
  * ```typescript
  * import { foo as SherpaJS } from "sherpa-core"
@@ -26,21 +39,13 @@ export type ExportLoaderModule = {
  * ```
  * 
  * 
- * **Valid Example** - namespace = undefined, prototype = "load", the
- * namespace will be auto-detected
- * ```typescript
- * import foo from "example-module"
- * export default foo.load()
- * ```
- * 
- * 
- * **Valid Example** - namespace = SherpaJS, prototype = "module.load"
+ * **Valid Example** - prototype = SherpaJS.module.load
  * ```typescript
  * export default SherpaJS.module.load()
  * ```
  * 
  * 
- * **Valid Example** - namespace = SherpaJS, prototype = undefined
+ * **Valid Example** - prototype = SherpaJS
  * ```typescript
  * export default SherpaJS()
  * ```
@@ -70,8 +75,10 @@ export type ExportLoaderModule = {
  * @param prototype optional, the dot method calls on the namespace
  * @returns Promise<{ errors:Message[], module?:Module }>
  */
-export async function getExportedLoader(filepath:string, fileTypeName:string, namespace?:string, prototype?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
-    let autoDetectNamespace = namespace == undefined;
+export async function getExportedLoader(filepath:string, fileTypeName:string, prototype?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
+    let autoDetectNamespace = prototype == undefined;
+    let namespace = prototype ? prototype.split(".")[0] : undefined;
+    prototype = prototype && prototype.split(".").length > 1 ? prototype.split(".").slice(1).join(".") : undefined;
 
     let buffer = getBuffer(filepath);
     if (!buffer) {
@@ -198,8 +205,6 @@ async function getModule(buffer:string, namespace:string, useBinding:boolean):Pr
         }
 
         let namedImport = _import.importClause?.named.filter(o => useBinding ? o.binding == namespace : o.specifier == namespace);
-        console.log(useBinding, namespace);
-        console.log(_import.importClause?.named);
         if (namedImport && namedImport.length > 0) {
             return {
                 type: type,
@@ -237,4 +242,5 @@ function getBuffer(filepath:string):string|undefined {
 }
 
 
-
+// The mind governed by the flesh is death, but the mind governed by the Spirit is life and peace.
+// - Romans 8:6

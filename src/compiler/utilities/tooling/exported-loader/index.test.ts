@@ -58,7 +58,7 @@ describe("Tooling Export Loader", () => {
 
     test("Namespace Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS", "New.module");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
         expect(res.errors).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.file);
@@ -70,7 +70,7 @@ describe("Tooling Export Loader", () => {
 
     test("Invalid Namespace Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS2", "New.module");
+		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
         expect(res.errors).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
         expect(res.errors[0].text).toEqual("-- has invalid default export module.");
@@ -79,7 +79,7 @@ describe("Tooling Export Loader", () => {
 
     test("Invalid Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS", "New");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
         expect(res.errors).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
         expect(res.errors[0].text).toEqual("-- has invalid default export module (invoke).");
@@ -100,7 +100,7 @@ describe("Tooling Export Loader", () => {
 
     test("Namespace Alias Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS", "New.module");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
         expect(res.errors).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.file);
@@ -112,7 +112,7 @@ describe("Tooling Export Loader", () => {
 
     test("Invalid Alias Namespace Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS2", "New.module");
+		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
         expect(res.errors).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
         expect(res.errors[0].text).toEqual("-- has invalid default export module.");
@@ -121,7 +121,7 @@ describe("Tooling Export Loader", () => {
 
     test("Invalid Alias Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS", "New");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
         expect(res.errors).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
         expect(res.errors[0].text).toEqual("-- has invalid default export module (invoke).");
