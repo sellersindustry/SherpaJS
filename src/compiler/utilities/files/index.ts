@@ -61,9 +61,7 @@ export class Files {
 
 
     public static getRootDirectory() {
-        return Files.join(Files.getDirectory(import.meta.url)
-            .replace("file:///", "")
-            .replace("file://", ""), "../../../../../");
+        return this.join(this.getDirectory(this.unix(import.meta.url)), "../../../../../");
     }
 
 
