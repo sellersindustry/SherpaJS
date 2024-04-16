@@ -117,6 +117,7 @@ async function getRoute(module:ModuleStructure, filepath:string, segments:Segmen
 
 async function getRouteFile(module:ModuleStructure, filepath:string, segments:Segment[]):Promise<{ errors:Message[], route?:Route }> {
     if (await Tooling.hasExportedLoader(filepath)) {
+        //! FIXME - Prevent duplicated executeion
         return await getRouteFileByModule(filepath, segments);
     }
     return getRouteFileByEndpoint(module, filepath, segments);
@@ -125,6 +126,7 @@ async function getRouteFile(module:ModuleStructure, filepath:string, segments:Se
 
 async function getRouteFileByModule(filepath:string, segments:Segment[]):Promise<{ errors:Message[], route?:Route }> {
     try {
+        //! FIXME - Load using Tooling.getExportedLoader()
         let buffer = fs.readFileSync(filepath, "utf8");
         let match  = buffer.match(/export\s+default\s+(?<exported>[a-zA-Z0-9]+)\s?\.\s?load\s?\(/);
         if (!match) {
