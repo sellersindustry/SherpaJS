@@ -18,11 +18,11 @@ import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
 import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
-import { EnvironmentVariables } from "../../models.js";
 import { getEnvironmentVariables } from "./dot-env/index.js";
-import { getExportedLoader } from "./exported-loader/index.js";
+import { ExportLoaderModule, getExportedLoader } from "./exported-loader/index.js";
 
 
+export type { ExportLoaderModule };
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
     format: "cjs",
     target: "es2022",
@@ -41,15 +41,20 @@ export class Tooling {
 
 
     static getExportedVariableNames(filepath:string):string[] {
-        getExportedLoader("-", "-"); //! FIXME - Build New Tooling for this...
+        //! FIXME - Build New Tooling for this...
         let project    = new TSMorphProject();
         let sourceFile = project.addSourceFileAtPath(filepath);
         return Array.from(sourceFile.getExportedDeclarations().keys());
     }
 
 
+    static async getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
+        return await getExportedLoader(filepath, fileTypeName, prototype, source);
+    }
+
+
     static hasExportedLoader(filepath:string, wrapper?:string):boolean {
-        //! FIXME - Implement
+        //! FIXME - remove me
         let regex  = new RegExp(`export\\s+default\\s+${wrapper ? `${wrapper.replaceAll(".", "\\s?\\.\\s?")}\\s?` : ""}`);
         let buffer = fs.readFileSync(filepath, "utf8");
         return buffer.match(regex) != null;

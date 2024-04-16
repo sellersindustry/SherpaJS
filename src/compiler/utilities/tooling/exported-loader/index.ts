@@ -73,9 +73,10 @@ export type ExportLoaderModule = {
  * @param fileTypeName error message descriptor
  * @param namespace optional, if not give assumes any namespace and auto-detect
  * @param prototype optional, the dot method calls on the namespace
+ * @param source optional, verifies the namespace is imported from a partical namespace
  * @returns Promise<{ errors:Message[], module?:Module }>
  */
-export async function getExportedLoader(filepath:string, fileTypeName:string, prototype?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
+export async function getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
     let autoDetectNamespace = prototype == undefined;
     let namespace = prototype ? prototype.split(".")[0] : undefined;
     prototype = prototype && prototype.split(".").length > 1 ? prototype.split(".").slice(1).join(".") : undefined;
@@ -159,6 +160,17 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
                 level: Level.ERROR,
                 text:  `${fileTypeName} has invalid default export module (invoke).`,
                 content: `Ensure you are default exporting using "${namespace}${prototype ? "." : ""}${prototype}(...)".`,
+                file: { filepath }
+            }]
+        };
+    }
+
+    if (source && !buffer.split("\n").includes("// @SherpaJS IgnoreInvalidSource") && module.filepath != source) {
+        return {
+            errors: [{
+                level: Level.ERROR,
+                text:  `${fileTypeName} does not import from "${source}"`,
+                content: `Ensure you are importing "${namespace}" from "${source}"`,
                 file: { filepath }
             }]
         };

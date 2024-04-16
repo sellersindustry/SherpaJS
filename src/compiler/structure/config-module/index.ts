@@ -62,18 +62,11 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 
 
 async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ModuleConfig<HasContext<unknown>, unknown> }> {
+    let { module, errors } = await Tooling.getExportedLoader(filepath, "Module Config", "SherpaJS.New.module", "sherpa-core");
+    if (!module) {
+        return { errors };
+    }
     try {
-        //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
-        if (!Tooling.hasExportedLoader(filepath, "SherpaJS.New.module")) {
-            return {
-                errors: [{
-                    level: Level.ERROR,
-                    text: "Module config file has no default export.",
-                    content: "Ensure you are default exporting using \"SherpaJS.New.module\".",
-                    file: { filepath: filepath }
-                }]
-            };
-        }
         return {
             errors: Tooling.typeCheck(filepath, "Module Config"),
             instance: await Tooling.getDefaultExport(filepath) as ModuleConfig<HasContext<unknown>, unknown>

@@ -91,8 +91,8 @@ describe("Tooling Export Loader", () => {
 		let res  = await getExportedLoader(file, "--");
         expect(res.errors).toHaveLength(0);
         expect(res).toHaveProperty("module");
-        expect(res.module?.type).toEqual(ExportLoaderType.file);
-        expect(res.module?.filepath).toEqual("../../../../../../index");
+        expect(res.module?.type).toEqual(ExportLoaderType.package);
+        expect(res.module?.filepath).toEqual("sherpa-core");
         expect(res.module?.namespace).toEqual("SherpaJS");
         expect(res.module?.binding).toEqual("Example");
     });
@@ -103,8 +103,20 @@ describe("Tooling Export Loader", () => {
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
         expect(res.errors).toHaveLength(0);
         expect(res).toHaveProperty("module");
-        expect(res.module?.type).toEqual(ExportLoaderType.file);
-        expect(res.module?.filepath).toEqual("../../../../../../index");
+        expect(res.module?.type).toEqual(ExportLoaderType.package);
+        expect(res.module?.filepath).toEqual("sherpa-core");
+        expect(res.module?.namespace).toEqual("SherpaJS");
+        expect(res.module?.binding).toEqual("Example");
+    });
+
+
+    test("Namespace Alias Declared with Source", async () => {
+        let file = Files.join(DIRNAME, "./tests/test5.ts");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "sherpa-core");
+        expect(res.errors).toHaveLength(0);
+        expect(res).toHaveProperty("module");
+        expect(res.module?.type).toEqual(ExportLoaderType.package);
+        expect(res.module?.filepath).toEqual("sherpa-core");
         expect(res.module?.namespace).toEqual("SherpaJS");
         expect(res.module?.binding).toEqual("Example");
     });
@@ -128,4 +140,23 @@ describe("Tooling Export Loader", () => {
     });
 
 
+    test("Invalid Source", async () => {
+        let file = Files.join(DIRNAME, "./tests/test5.ts");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "not-the-source");
+        expect(res.errors).toHaveLength(1);
+        expect(res).not.toHaveProperty("module");
+        expect(res.errors[0].text).toEqual("-- does not import from \"not-the-source\"");
+    });
+
+
+    test("Ignore Invalid Source Comment Flag", async () => {
+        let file = Files.join(DIRNAME, "./tests/test6.ts");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "sherpa-core");
+        expect(res.errors).toHaveLength(0);
+        expect(res).toHaveProperty("module");
+        expect(res.module?.namespace).toEqual("SherpaJS");
+        expect(res.module?.binding).toEqual("Example");
+    });
+
+    
 });

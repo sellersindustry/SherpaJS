@@ -58,18 +58,12 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 
 
 async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ServerConfig }> {
+    let { module, errors } = await Tooling.getExportedLoader(filepath, "Server Config", "SherpaJS.New.server", "sherpa-core");
+    if (!module) {
+        return { errors };
+    }
+    //! FIXME - Ensure sherpa-core is imported
     try {
-        //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
-        if (!Tooling.hasExportedLoader(filepath, "SherpaJS.New.server")) {
-            return {
-                errors: [{
-                    level: Level.ERROR,
-                    text: "Server config file has no default export.",
-                    content: "Ensure you are exporting using \"SherpaJS.New.server\".",
-                    file: { filepath: filepath }
-                }]
-            };
-        }
         return {
             errors: Tooling.typeCheck(filepath, "Server Config"),
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
