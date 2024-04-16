@@ -1,3 +1,4 @@
+// @SherpaJS IgnoreInvalidSource
 import { ContextSchema } from "../../../src/compiler/models";
 import { SherpaJS } from "../../../src/environment/index";
 
