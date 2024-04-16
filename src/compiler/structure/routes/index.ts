@@ -116,7 +116,7 @@ async function getRoute(module:ModuleStructure, filepath:string, segments:Segmen
 
 
 async function getRouteFile(module:ModuleStructure, filepath:string, segments:Segment[]):Promise<{ errors:Message[], route?:Route }> {
-    if (Tooling.hasExportedLoader(filepath)) {
+    if (await Tooling.hasExportedLoader(filepath)) {
         return await getRouteFileByModule(filepath, segments);
     }
     return getRouteFileByEndpoint(module, filepath, segments);

@@ -12,7 +12,6 @@
 
 
 import vm from "vm";
-import fs from "fs";
 import { BuildOptions } from "../../models.js";
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
@@ -53,11 +52,8 @@ export class Tooling {
     }
 
 
-    static hasExportedLoader(filepath:string, wrapper?:string):boolean {
-        //! FIXME - remove me
-        let regex  = new RegExp(`export\\s+default\\s+${wrapper ? `${wrapper.replaceAll(".", "\\s?\\.\\s?")}\\s?` : ""}`);
-        let buffer = fs.readFileSync(filepath, "utf8");
-        return buffer.match(regex) != null;
+    static async hasExportedLoader(filepath:string):Promise<boolean> {
+        return (await this.getExportedLoader(filepath, "N/A")).module != undefined;
     } 
 
 

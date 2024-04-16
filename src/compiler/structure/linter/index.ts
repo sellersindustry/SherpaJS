@@ -60,7 +60,7 @@ function validateFileName(file:DirStructFile):Message[] {
 
 
 async function validateExports(file:DirStructFile):Promise<Message[]> {
-    if (Tooling.hasExportedLoader(file.filepath)) {
+    if (await Tooling.hasExportedLoader(file.filepath)) {
         //! FIXME
         return [];
         // return await validateExportsModule(file);
