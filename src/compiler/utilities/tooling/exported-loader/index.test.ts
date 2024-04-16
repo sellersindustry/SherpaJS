@@ -44,7 +44,7 @@ describe("Tooling Export Loader", () => {
     });
 
 
-    test("Namespace Auto Detect", async () => {
+    test("Prototype Auto Detect", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res.errors).toHaveLength(0);
@@ -56,7 +56,28 @@ describe("Tooling Export Loader", () => {
     });
 
 
-    test("Namespace Declared", async () => {
+    test("Prototype Namespace Auto Detect", async () => {
+        let file = Files.join(DIRNAME, "./tests/test5.ts");
+		let res  = await getExportedLoader(file, "--", ".New.module");
+        expect(res.errors).toHaveLength(0);
+        expect(res).toHaveProperty("module");
+        expect(res.module?.type).toEqual(ExportLoaderType.package);
+        expect(res.module?.filepath).toEqual("sherpa-core");
+        expect(res.module?.namespace).toEqual("SherpaJS");
+        expect(res.module?.binding).toEqual("Example");
+    });
+
+
+    test("Invalid Prototype Namespace Auto Detect", async () => {
+        let file = Files.join(DIRNAME, "./tests/test5.ts");
+		let res  = await getExportedLoader(file, "--", ".load");
+        expect(res).not.toHaveProperty("module");
+        expect(res.errors).toHaveLength(1);
+        expect(res.errors[0].text).toEqual("-- has invalid default export module (prototype).");
+    });
+
+
+    test("Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
         expect(res.errors).toHaveLength(0);
@@ -68,21 +89,21 @@ describe("Tooling Export Loader", () => {
     });
 
 
-    test("Invalid Namespace Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test4.ts");
-		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
-        expect(res.errors).toHaveLength(1);
-        expect(res).not.toHaveProperty("module");
-        expect(res.errors[0].text).toEqual("-- has invalid default export module.");
-    });
-
-
     test("Invalid Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
         expect(res.errors).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
         expect(res.errors[0].text).toEqual("-- has invalid default export module (invoke).");
+    });
+
+
+    test("Invalid Prototype (Namespace) Declared", async () => {
+        let file = Files.join(DIRNAME, "./tests/test4.ts");
+		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
+        expect(res.errors).toHaveLength(1);
+        expect(res).not.toHaveProperty("module");
+        expect(res.errors[0].text).toEqual("-- has invalid default export module.");
     });
 
 

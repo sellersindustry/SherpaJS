@@ -40,7 +40,6 @@ export class Tooling {
 
 
     static getExportedVariableNames(filepath:string):string[] {
-        //! FIXME - Build New Tooling for this...
         let project    = new TSMorphProject();
         let sourceFile = project.addSourceFileAtPath(filepath);
         return Array.from(sourceFile.getExportedDeclarations().keys());
@@ -54,7 +53,7 @@ export class Tooling {
 
     static async hasExportedLoader(filepath:string):Promise<boolean> {
         return (await this.getExportedLoader(filepath, "N/A")).module != undefined;
-    } 
+    }
 
 
     static async getDefaultExport(filepath:string):Promise<unknown> {

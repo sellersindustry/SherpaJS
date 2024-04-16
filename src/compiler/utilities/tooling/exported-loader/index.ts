@@ -44,6 +44,12 @@ export type ExportLoaderModule = {
  * export default SherpaJS.module.load()
  * ```
  * 
+ * **Valid Example** - prototype = .module.load
+ * Will allow any prefix to be used but must call .module.load()
+ * ```typescript
+ * export default SherpaJS.module.load()
+ * ```
+ * 
  * 
  * **Valid Example** - prototype = SherpaJS
  * ```typescript
@@ -77,7 +83,7 @@ export type ExportLoaderModule = {
  * @returns Promise<{ errors:Message[], module?:Module }>
  */
 export async function getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
-    let autoDetectNamespace = prototype == undefined;
+    let autoDetectNamespace = prototype == undefined || prototype.startsWith(".");
     let namespace = prototype ? prototype.split(".")[0] : undefined;
     prototype = prototype && prototype.split(".").length > 1 ? prototype.split(".").slice(1).join(".") : undefined;
 
@@ -165,7 +171,8 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
         };
     }
 
-    if (source && !buffer.split("\n").includes("// @SherpaJS IgnoreInvalidSource") && module.filepath != source) {
+    if (source && !hasIgnoreInvalidSourceFlag(buffer) && module.filepath != source) {
+        console.log(buffer.split("\n"));
         return {
             errors: [{
                 level: Level.ERROR,
@@ -177,6 +184,11 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
     }
 
     return { errors: [], module };
+}
+
+
+function hasIgnoreInvalidSourceFlag(buffer:string):boolean {
+    return buffer.split("\n").filter(o => o.includes("// @SherpaJS IgnoreInvalidSource")).length > 0;
 }
 
 

@@ -62,7 +62,6 @@ async function getInstance(filepath:string):Promise<{ errors:Message[], instance
     if (!module) {
         return { errors };
     }
-    //! FIXME - Ensure sherpa-core is imported
     try {
         return {
             errors: Tooling.typeCheck(filepath, "Server Config"),
