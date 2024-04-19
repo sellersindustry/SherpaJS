@@ -13,6 +13,8 @@
 
 import fs from "fs";
 import path from "path";
+import { getDirectoryStructure } from "./directory-structure/index.js";
+import { DirectoryStructure } from "./directory-structure/model.js";
 
 
 export class Files {
@@ -80,6 +82,11 @@ export class Files {
             return npm;
         }
         return Files.getDirectory(Files.join(resolveDir, filepath));
+    }
+
+
+    public static getDirectoryStructure(filepath:string):DirectoryStructure {
+        return getDirectoryStructure(filepath);
     }
 
 

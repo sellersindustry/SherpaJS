@@ -12,8 +12,8 @@ describe("Tooling Export Loader", () => {
         let file = Files.join(DIRNAME, "./tests/foo.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
-        expect(res.errors).toHaveLength(1);
-        expect(res.errors[0].text).toEqual("-- file not found.");
+        expect(res.logs).toHaveLength(1);
+        expect(res.logs[0].text).toEqual("-- file not found.");
     });
 
 
@@ -21,8 +21,8 @@ describe("Tooling Export Loader", () => {
         let file = Files.join(DIRNAME, "./tests/test1.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
-        expect(res.errors).toHaveLength(1);
-        expect(res.errors[0].text).toEqual("-- has no default export.");
+        expect(res.logs).toHaveLength(1);
+        expect(res.logs[0].text).toEqual("-- has no default export.");
     });
 
 
@@ -30,8 +30,8 @@ describe("Tooling Export Loader", () => {
         let file = Files.join(DIRNAME, "./tests/test2.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
-        expect(res.errors).toHaveLength(1);
-        expect(res.errors[0].text).toEqual("-- has invalid default export module.");
+        expect(res.logs).toHaveLength(1);
+        expect(res.logs[0].text).toEqual("-- has invalid default export module.");
     });
 
 
@@ -39,15 +39,15 @@ describe("Tooling Export Loader", () => {
         let file = Files.join(DIRNAME, "./tests/test3.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
-        expect(res.errors).toHaveLength(1);
-        expect(res.errors[0].text).toEqual("-- has invalid default export module.");
+        expect(res.logs).toHaveLength(1);
+        expect(res.logs[0].text).toEqual("-- has invalid default export module.");
     });
 
 
     test("Prototype Auto Detect", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.file);
         expect(res.module?.filepath).toEqual("../../../../../../index");
@@ -59,7 +59,7 @@ describe("Tooling Export Loader", () => {
     test("Prototype Namespace Auto Detect", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", ".New.module");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.package);
         expect(res.module?.filepath).toEqual("sherpa-core");
@@ -72,15 +72,15 @@ describe("Tooling Export Loader", () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", ".load");
         expect(res).not.toHaveProperty("module");
-        expect(res.errors).toHaveLength(1);
-        expect(res.errors[0].text).toEqual("-- has invalid default export module (prototype).");
+        expect(res.logs).toHaveLength(1);
+        expect(res.logs[0].text).toEqual("-- has invalid default export module (prototype).");
     });
 
 
     test("Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.file);
         expect(res.module?.filepath).toEqual("../../../../../../index");
@@ -92,25 +92,25 @@ describe("Tooling Export Loader", () => {
     test("Invalid Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
-        expect(res.errors).toHaveLength(1);
+        expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
-        expect(res.errors[0].text).toEqual("-- has invalid default export module (invoke).");
+        expect(res.logs[0].text).toEqual("-- has invalid default export module (invoke).");
     });
 
 
     test("Invalid Prototype (Namespace) Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
-        expect(res.errors).toHaveLength(1);
+        expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
-        expect(res.errors[0].text).toEqual("-- has invalid default export module.");
+        expect(res.logs[0].text).toEqual("-- has invalid default export module.");
     });
 
 
     test("Namespace Alias Auto Detect", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.package);
         expect(res.module?.filepath).toEqual("sherpa-core");
@@ -122,7 +122,7 @@ describe("Tooling Export Loader", () => {
     test("Namespace Alias Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.package);
         expect(res.module?.filepath).toEqual("sherpa-core");
@@ -134,7 +134,7 @@ describe("Tooling Export Loader", () => {
     test("Namespace Alias Declared with Source", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "sherpa-core");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.type).toEqual(ExportLoaderType.package);
         expect(res.module?.filepath).toEqual("sherpa-core");
@@ -146,34 +146,34 @@ describe("Tooling Export Loader", () => {
     test("Invalid Alias Namespace Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
-        expect(res.errors).toHaveLength(1);
+        expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
-        expect(res.errors[0].text).toEqual("-- has invalid default export module.");
+        expect(res.logs[0].text).toEqual("-- has invalid default export module.");
     });
 
 
     test("Invalid Alias Prototype Declared", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
-        expect(res.errors).toHaveLength(1);
+        expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
-        expect(res.errors[0].text).toEqual("-- has invalid default export module (invoke).");
+        expect(res.logs[0].text).toEqual("-- has invalid default export module (invoke).");
     });
 
 
     test("Invalid Source", async () => {
         let file = Files.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "not-the-source");
-        expect(res.errors).toHaveLength(1);
+        expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
-        expect(res.errors[0].text).toEqual("-- does not import from \"not-the-source\"");
+        expect(res.logs[0].text).toEqual("-- does not import from \"not-the-source\"");
     });
 
 
     test("Ignore Invalid Source Comment Flag", async () => {
         let file = Files.join(DIRNAME, "./tests/test6.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "sherpa-core");
-        expect(res.errors).toHaveLength(0);
+        expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
         expect(res.module?.namespace).toEqual("SherpaJS");
         expect(res.module?.binding).toEqual("Example");

@@ -11,11 +11,10 @@
  */
 
 
-
 import {
-    HasContext,
+    ModuleInterface,
     ModuleConfig,
-    ModuleConfigLoader, ServerConfig
+    ModuleLoader, ServerConfig
 } from "../../compiler/models.js";
 
 
@@ -27,7 +26,7 @@ export class New {
     }
 
 
-    static module<Interface extends HasContext<Schema>, Schema>(config:ModuleConfig<Interface, Schema>):ModuleConfigLoader<Interface, Schema> {
+    static module<Interface extends ModuleInterface<Schema>, Schema>(config:ModuleConfig<Interface, Schema>):ModuleLoader<Interface, Schema> {
         return {
             ...config,
             load: (context:Schema) => {

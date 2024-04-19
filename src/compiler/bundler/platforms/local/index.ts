@@ -42,7 +42,7 @@ export class Local extends Bundler {
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
             let server  = new LocalServer(port);
-            ${this.endpoints.map((endpoint:Endpoint, index:number) => {
+            ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
                     import * as endpoint_${index} from "${Files.unix(endpoint.filepath)}";
                     import import_context_${index} from "${Files.unix(endpoint.module.contextFilepath)}";

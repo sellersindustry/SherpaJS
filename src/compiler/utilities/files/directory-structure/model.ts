@@ -10,22 +10,25 @@
  *
  */
 
+
+export type DirectoryStructure = {
+    list: DirectoryStructureFile[];
+    tree: DirectoryStructureTree;
+}
+
+
 export type DirectoryStructureFile = {
-    filename: string;
-    filepath: string;
-    segments: string[];
+    filename:string;
+    filepath:{
+        absolute:string;
+        relative:string;
+    };
 }
 
 
 export type DirectoryStructureTree = {
     files: DirectoryStructureFile[];
     directories: { [key:string]:DirectoryStructureTree };
-}
-
-
-export type DirectoryStructure = {
-    tree: DirectoryStructureTree;
-    list: DirectoryStructureFile[];
 }
 
 

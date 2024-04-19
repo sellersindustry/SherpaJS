@@ -31,7 +31,7 @@ export class Vercel extends Bundler {
         await super.build();
         this.makeDirectory();
         this.writeRootConfig();
-        for (let endpoint of this.endpoints) {
+        for (let endpoint of this.endpoints.list) {
             let route = RequestUtilities.getDynamicURL(endpoint.segments);
             let path  = this.getDirectory(route, "index.func");
             this.writeEndpointConfig(path);
@@ -108,7 +108,7 @@ export class Vercel extends Bundler {
     private getRootConfig():Record<string, unknown> {
         return {
             version: 3,
-            routes: this.endpoints.filter((endpoint) => {
+            routes: this.endpoints.list.filter((endpoint) => {
                 return endpoint.segments.filter((segment) => segment.isDynamic).length > 0
             }).map((endpoint) => {
                 let { source: src, destination: dest } = this.pathParamRedirects(endpoint.segments)

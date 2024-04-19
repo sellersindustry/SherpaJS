@@ -22,7 +22,7 @@ import { Options } from "./io/response/index.js";
 import { LocalServer } from "./local-server/index.js";
 import { RequestTransform } from "./io/request/transformer.js";
 import { ResponseTransform } from "./io/response/transformer.js";
-import { Context, ContextSchema, Method } from "../compiler/models.js";
+import { Context, CreateModuleInterface, Method } from "../compiler/models.js";
 import { Handler } from "./handler/index.js";
 
 
@@ -47,7 +47,7 @@ export {
     Parameters,
     Method,
     BodyType,
-    ContextSchema
+    CreateModuleInterface as ContextSchema
 }
 
 

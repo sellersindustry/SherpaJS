@@ -46,7 +46,7 @@ export class Tooling {
     }
 
 
-    static async getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
+    static async getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ logs:Message[], module?:ExportLoaderModule }> {
         return await getExportedLoader(filepath, fileTypeName, prototype, source);
     }
 

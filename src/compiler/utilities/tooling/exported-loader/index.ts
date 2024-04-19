@@ -82,7 +82,7 @@ export type ExportLoaderModule = {
  * @param source optional, verifies the namespace is imported from a partical namespace
  * @returns Promise<{ errors:Message[], module?:Module }>
  */
-export async function getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ errors:Message[], module?:ExportLoaderModule }> {
+export async function getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ logs:Message[], module?:ExportLoaderModule }> {
     let autoDetectNamespace = prototype == undefined || prototype.startsWith(".");
     let namespace = prototype ? prototype.split(".")[0] : undefined;
     prototype = prototype && prototype.split(".").length > 1 ? prototype.split(".").slice(1).join(".") : undefined;
@@ -90,7 +90,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
     let buffer = getBuffer(filepath);
     if (!buffer) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text: `${fileTypeName} file not found.`,
                 file: { filepath }
@@ -102,7 +102,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
     let characterIndex = getCharacterIndex(exports);
     if (characterIndex == -1) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text: `${fileTypeName} has no default export.`,
                 content: `Ensure you are default exporting the required properties.`,
@@ -114,7 +114,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
     namespace = namespace ? namespace : getNamespaceByExport(buffer, characterIndex);
     if (!namespace) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text: `${fileTypeName} has invalid default export module.`,
                 content: `Namespace was not found.`,
@@ -126,7 +126,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
     let module = await getModule(buffer, namespace, autoDetectNamespace);
     if (!module) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text: `${fileTypeName} has invalid default export module.`,
                 content: `Namespace import was not found.`,
@@ -138,7 +138,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
 
     if (!hasDefaultExportedNamespace(buffer, characterIndex, namespace)) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text:  `${fileTypeName} has invalid default export module (namespace).`,
                 content: `Ensure you are default exporting using "${namespace}${prototype ? "." : ""}${prototype}(...)".`,
@@ -150,7 +150,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
 
     if (!hasDefaultExportedPrototype(buffer, characterIndex, namespace, prototype)) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text:  `${fileTypeName} has invalid default export module (prototype).`,
                 content: `Ensure you are default exporting using "${namespace}${prototype ? "." : ""}${prototype}(...)".`,
@@ -162,7 +162,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
 
     if (!hasDefaultExportedInvoke(buffer, characterIndex, namespace, prototype)) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text:  `${fileTypeName} has invalid default export module (invoke).`,
                 content: `Ensure you are default exporting using "${namespace}${prototype ? "." : ""}${prototype}(...)".`,
@@ -172,9 +172,8 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
     }
 
     if (source && !hasIgnoreInvalidSourceFlag(buffer) && module.filepath != source) {
-        console.log(buffer.split("\n"));
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text:  `${fileTypeName} does not import from "${source}"`,
                 content: `Ensure you are importing "${namespace}" from "${source}"`,
@@ -183,7 +182,7 @@ export async function getExportedLoader(filepath:string, fileTypeName:string, pr
         };
     }
 
-    return { errors: [], module };
+    return { logs: [], module };
 }
 
 
