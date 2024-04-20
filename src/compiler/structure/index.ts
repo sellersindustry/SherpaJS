@@ -24,6 +24,7 @@ import {
     ModuleConfigFile, ModuleInterface, Segment,
     ServerConfigFile, EndpointStructure
 } from "../models.js"
+import { Logger } from "../utilities/logger/index.js";
 
 
 type Structure = {
@@ -164,10 +165,11 @@ async function getEndpointFileByModule(filepath:string, segments:Segment[]):Prom
     let entry      = Files.resolve(module.filepath, Files.getDirectory(filepath));
     let components = await getComponents(entry, moduleLoader.context, filepath, segments, false);
     let typeErrors = Tooling.typeCheck(filepath, "Module Loader");
-    return {
-        ...components,
-        logs: [...components.logs, ...typeErrors]
-    };
+    logs.push(...components.logs, ...typeErrors);
+    if (Logger.hasError(logs)) {
+        return { logs };
+    }
+    return { ...components, logs };
 }
 
 

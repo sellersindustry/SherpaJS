@@ -101,3 +101,7 @@ function validateSegmentName(segment:string, filepath?:string):Message[] {
     }];
 }
 
+
+// Who is it that overcomes the world? Only the one who believes that Jesus
+// is the Son of God.
+// - 1 John 5:5
