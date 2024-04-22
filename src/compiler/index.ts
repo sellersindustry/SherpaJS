@@ -11,13 +11,13 @@
  */
 
 import fs from "fs";
-import path from "path";
 import { green, red } from "colorette";
 import { getStructure } from "./structure/index.js";
 import { Logger } from "./utilities/logger/index.js";
 import { NewBundler } from "./bundler/index.js";
 import { BuildOptions, BundlerType } from "./models.js";
 import { Level, Message } from "./utilities/logger/model.js";
+import { Path } from "./utilities/path/index.js";
 
 
 export { BundlerType };
@@ -68,7 +68,7 @@ export class Compiler {
 
 
     private static validateFilepath(filepath:string, name:string):Message[] {
-        if (!path.isAbsolute(filepath)) {
+        if (!Path.isAbsolute(filepath)) {
             return [{
                 level: Level.ERROR,
                 text: `${name} path is not an absolute path.`,

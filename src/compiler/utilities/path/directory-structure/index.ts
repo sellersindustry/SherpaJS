@@ -12,7 +12,7 @@
 
 
 import fs from "fs";
-import { Files } from "../index.js";
+import { Path } from "../index.js";
 import {
     DirectoryStructure as DirStruct,
     DirectoryStructureFile as File,
@@ -36,8 +36,8 @@ function getDirectoryStructureTree(dirAbsolute:string, dirRelative:string):Tree 
             return {
                 ...directories,
                 [dirname]: getDirectoryStructureTree(
-                    Files.join(dirAbsolute, dirname),
-                    Files.join(dirRelative, dirname)
+                    Path.join(dirAbsolute, dirname),
+                    Path.join(dirRelative, dirname)
                 )
             };
         }, {})
@@ -47,13 +47,13 @@ function getDirectoryStructureTree(dirAbsolute:string, dirRelative:string):Tree 
 
 function getFiles(dirAbsolute:string, dirRelative:string):File[] {
     return fs.readdirSync(dirAbsolute).filter((filename:string) => {
-        return fs.statSync(Files.join(dirAbsolute, filename)).isFile();
+        return fs.statSync(Path.join(dirAbsolute, filename)).isFile();
     }).map((filename) => {
         return {
             filename: filename,
             filepath: {
-                absolute: Files.join(dirAbsolute, filename),
-                relative: Files.join(dirRelative, filename)
+                absolute: Path.join(dirAbsolute, filename),
+                relative: Path.join(dirRelative, filename)
             }
         }
     });
@@ -62,7 +62,7 @@ function getFiles(dirAbsolute:string, dirRelative:string):File[] {
 
 function getDirectories(dirAbsolute:string):string[] {
     return fs.readdirSync(dirAbsolute).filter((dirname:string) => {
-        return fs.statSync(Files.join(dirAbsolute, dirname)).isDirectory();
+        return fs.statSync(Path.join(dirAbsolute, dirname)).isDirectory();
     });
 }
 

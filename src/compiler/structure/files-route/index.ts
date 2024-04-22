@@ -11,8 +11,8 @@
  */
 
 import fs from "fs";
-import { Files } from "../../utilities/files/index.js";
-import { DirectoryStructure, DirectoryStructureFile, DirectoryStructureTree } from "../../utilities/files/directory-structure/model.js";
+import { Path } from "../../utilities/path/index.js";
+import { DirectoryStructure, DirectoryStructureFile, DirectoryStructureTree } from "../../utilities/path/directory-structure/model.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 import { SUPPORTED_FILE_EXTENSIONS } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
@@ -22,7 +22,7 @@ const REGEX_SEGMENT = /^([a-zA-Z0-9-]+)|(\[[a-zA-Z0-9-]+\])$/;
 
 
 export function getRouteFiles(entry:string):{ logs:Message[], files?:DirectoryStructure } {
-    let directory = Files.join(entry, "routes");
+    let directory = Path.join(entry, "routes");
 
     if (!fs.existsSync(directory)) {
         return { 
@@ -34,7 +34,7 @@ export function getRouteFiles(entry:string):{ logs:Message[], files?:DirectorySt
         };
     }
     
-    let files = Files.getDirectoryStructure(directory);
+    let files = Path.getDirectoryStructure(directory);
     let logs  = getDiagnostics(files, directory);
 
     if (Logger.hasError(logs)) {
@@ -57,7 +57,7 @@ function getDiagnostics(structure:DirectoryStructure, filepath:string):Message[]
 
 
 function validateFileType(file:DirectoryStructureFile):Message[] {
-    let extension = Files.getExtension(file.filepath.absolute);
+    let extension = Path.getExtension(file.filepath.absolute);
     if (SUPPORTED_FILE_EXTENSIONS.includes(extension))
         return [];
     return [{
@@ -69,7 +69,7 @@ function validateFileType(file:DirectoryStructureFile):Message[] {
 
 
 function validateFileName(file:DirectoryStructureFile):Message[] {
-    if (Files.getName(file.filename) == "index")
+    if (Path.getName(file.filename) == "index")
         return [];
     return [{
         level: Level.ERROR,
@@ -82,7 +82,7 @@ function validateFileName(file:DirectoryStructureFile):Message[] {
 function validateSegments(structure:DirectoryStructureTree, filepath:string):Message[] {
     let errors:Message[] = [];
     for (let segmentName of Object.keys(structure.directories)) {
-        let _filepath = Files.join(filepath, segmentName);
+        let _filepath = Path.join(filepath, segmentName);
         errors.push(...validateSegmentName(segmentName, _filepath));
         errors.push(...validateSegments(structure.directories[segmentName], _filepath));
     }

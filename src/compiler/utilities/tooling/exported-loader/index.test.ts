@@ -1,15 +1,15 @@
-import { Files } from "../../files";
+import { Path } from "../../path/index";
 import { ExportLoaderType, getExportedLoader } from "./index";
 
 
-const DIRNAME = Files.unix(Files.getDirectory(import.meta.url));
+const DIRNAME = Path.getDirectory(import.meta.url);
 
 
 describe("Tooling Export Loader", () => {
 
 
 	test("Non-Existent File", async () => {
-        let file = Files.join(DIRNAME, "./tests/foo.ts");
+        let file = Path.join(DIRNAME, "./tests/foo.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
         expect(res.logs).toHaveLength(1);
@@ -18,7 +18,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("No Default Export", async () => {
-        let file = Files.join(DIRNAME, "./tests/test1.ts");
+        let file = Path.join(DIRNAME, "./tests/test1.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
         expect(res.logs).toHaveLength(1);
@@ -27,7 +27,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("No Import Module (1)", async () => {
-        let file = Files.join(DIRNAME, "./tests/test2.ts");
+        let file = Path.join(DIRNAME, "./tests/test2.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
         expect(res.logs).toHaveLength(1);
@@ -36,7 +36,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("No Import Module (2)", async () => {
-        let file = Files.join(DIRNAME, "./tests/test3.ts");
+        let file = Path.join(DIRNAME, "./tests/test3.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res).not.toHaveProperty("module");
         expect(res.logs).toHaveLength(1);
@@ -45,7 +45,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Prototype Auto Detect", async () => {
-        let file = Files.join(DIRNAME, "./tests/test4.ts");
+        let file = Path.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
@@ -57,7 +57,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Prototype Namespace Auto Detect", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", ".New.module");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
@@ -69,7 +69,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Invalid Prototype Namespace Auto Detect", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", ".load");
         expect(res).not.toHaveProperty("module");
         expect(res.logs).toHaveLength(1);
@@ -78,7 +78,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Prototype Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test4.ts");
+        let file = Path.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
@@ -90,7 +90,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Invalid Prototype Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test4.ts");
+        let file = Path.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
         expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
@@ -99,7 +99,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Invalid Prototype (Namespace) Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test4.ts");
+        let file = Path.join(DIRNAME, "./tests/test4.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
         expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
@@ -108,7 +108,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Namespace Alias Auto Detect", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
@@ -120,7 +120,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Namespace Alias Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
@@ -132,7 +132,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Namespace Alias Declared with Source", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "sherpa-core");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");
@@ -144,7 +144,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Invalid Alias Namespace Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS2.New.module");
         expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
@@ -153,7 +153,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Invalid Alias Prototype Declared", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New");
         expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
@@ -162,7 +162,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Invalid Source", async () => {
-        let file = Files.join(DIRNAME, "./tests/test5.ts");
+        let file = Path.join(DIRNAME, "./tests/test5.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "not-the-source");
         expect(res.logs).toHaveLength(1);
         expect(res).not.toHaveProperty("module");
@@ -171,7 +171,7 @@ describe("Tooling Export Loader", () => {
 
 
     test("Ignore Invalid Source Comment Flag", async () => {
-        let file = Files.join(DIRNAME, "./tests/test6.ts");
+        let file = Path.join(DIRNAME, "./tests/test6.ts");
 		let res  = await getExportedLoader(file, "--", "SherpaJS.New.module", "sherpa-core");
         expect(res.logs).toHaveLength(0);
         expect(res).toHaveProperty("module");

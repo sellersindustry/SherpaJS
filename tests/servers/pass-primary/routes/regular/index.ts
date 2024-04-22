@@ -1,7 +1,7 @@
-import { Context, Response } from "../../../../../src/environment/index";
+import { Response } from "../../../../../src/environment/index";
 
 
-export function GET(request:Request, context:Context) {
+export function GET(request:Request, context:unknown) {
     return Response.JSON({ 
         request: request,
         context: context
@@ -9,7 +9,7 @@ export function GET(request:Request, context:Context) {
 }
 
 
-export function POST(request:Request, context:Context) {
+export function POST(request:Request, context:unknown) {
     return Response.JSON({ 
         request: request,
         context: context
@@ -17,7 +17,7 @@ export function POST(request:Request, context:Context) {
 }
 
 
-export function PUT(request:Request, context:Context) {
+export function PUT(request:Request, context:unknown) {
     return Response.JSON({ 
         request: request,
         context: context
@@ -25,7 +25,7 @@ export function PUT(request:Request, context:Context) {
 }
 
 
-export function PATCH(request:Request, context:Context) {
+export function PATCH(request:Request, context:unknown) {
     return Response.JSON({ 
         request: request,
         context: context
@@ -33,7 +33,7 @@ export function PATCH(request:Request, context:Context) {
 }
 
 
-export function DELETE(request:Request, context:Context) {
+export function DELETE(request:Request, context:unknown) {
     return Response.JSON({ 
         request: request,
         context: context

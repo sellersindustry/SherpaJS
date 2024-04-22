@@ -1,9 +1,9 @@
-import { Files } from "../../../utilities/files/index";
+import { Path } from "../../../utilities/path/index";
 import { BundlerType } from "../../../models";
 import { getEnvironmentVariables } from "./index";
 
 
-const DIRNAME = Files.unix(Files.getDirectory(import.meta.url));
+const DIRNAME = Path.getDirectory(import.meta.url);
 
 
 describe("Tooling Dot Environment", () => {
@@ -78,7 +78,7 @@ describe("Tooling Dot Environment", () => {
 						"FOO": "BAR"
 					},
 					files: [
-						Files.join(DIRNAME, "./tests/test1.env")
+						Path.join(DIRNAME, "./tests/test1.env")
 					]
 				}
 			}
@@ -101,8 +101,8 @@ describe("Tooling Dot Environment", () => {
 						"SINGLE_VARIABLE": "OVERRIDE"
 					},
 					files: [
-						Files.join(DIRNAME, "./tests/test1.env"),
-						Files.join(DIRNAME, "./tests/test2.env")
+						Path.join(DIRNAME, "./tests/test1.env"),
+						Path.join(DIRNAME, "./tests/test2.env")
 					]
 				}
 			}
@@ -122,7 +122,7 @@ describe("Tooling Dot Environment", () => {
 			developer: {
 				environment: {
 					files: [
-						Files.join(DIRNAME, "./tests/test3.env")
+						Path.join(DIRNAME, "./tests/test3.env")
 					]
 				}
 			}

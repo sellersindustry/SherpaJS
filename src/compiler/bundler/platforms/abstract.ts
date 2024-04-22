@@ -15,7 +15,7 @@ import fs from "fs";
 import { remove } from "fs-extra";
 import { BuildOptions, EndpointStructure } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
-import { Files } from "../../utilities/files/index.js";
+import { Path } from "../../utilities/path/index.js";
 import { Message } from "../../utilities/logger/model.js";
 
 
@@ -35,7 +35,7 @@ export abstract class Bundler {
 
 
     getFilepath():string {
-        return Files.join(this.options.output, ".sherpa");
+        return Path.join(this.options.output, ".sherpa");
     }
 
 
@@ -48,7 +48,7 @@ export abstract class Bundler {
 
     async clean() {
         try {
-            if (Files.exists(this.getFilepath())) {
+            if (fs.existsSync(this.getFilepath())) {
                 await remove(this.getFilepath());
             }
         } catch (error) {
@@ -68,7 +68,7 @@ export abstract class Bundler {
 
 
     private makeBuildManifest() {
-        let filepath = Files.join(this.getFilepath(), "sherpa.manifest.json");
+        let filepath = Path.join(this.getFilepath(), "sherpa.manifest.json");
         let data = {
             created: new Date().toISOString(),
             options: this.options,

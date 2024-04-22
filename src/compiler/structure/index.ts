@@ -12,8 +12,8 @@
 
 
 import { getEndpoint as getEndpointFileByDeclaration } from "./endpoint/index.js";
-import { DirectoryStructureTree } from "../utilities/files/directory-structure/model.js";
-import { Files } from "../utilities/files/index.js";
+import { DirectoryStructureTree } from "../utilities/path/directory-structure/model.js";
+import { Path } from "../utilities/path/index.js";
 import { Level, Message } from "../utilities/logger/model.js"
 import { Tooling } from "../utilities/tooling/index.js";
 import { getModuleConfig } from "./config-module/index.js";
@@ -162,7 +162,7 @@ async function getEndpointFileByModule(filepath:string, segments:Segment[]):Prom
         };
     }
 
-    let entry      = Files.resolve(module.filepath, Files.getDirectory(filepath));
+    let entry      = Path.resolve(module.filepath, Path.getDirectory(filepath));
     let components = await getComponents(entry, moduleLoader.context, filepath, segments, false);
     let typeErrors = Tooling.typeCheck(filepath, "Module Loader");
     logs.push(...components.logs, ...typeErrors);
