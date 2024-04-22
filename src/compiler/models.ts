@@ -114,7 +114,7 @@ export enum BundlerType {
 }
 
 
-export type EnvironmentVariables = { [key:string]:string };
+export type EnvironmentVariables = { [key:string]:string|number|boolean };
 
 
 export type BuildOptions = {
