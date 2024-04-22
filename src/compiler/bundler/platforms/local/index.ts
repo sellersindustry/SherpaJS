@@ -13,7 +13,7 @@
 
 import { Endpoint } from "../../../models.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
-import { Files } from "../../../utilities/files/index.js";
+import { Path } from "../../../utilities/path/index.js";
 import { Bundler } from "../abstract.js";
 import { RequestUtilities } from "../../../../environment/io/request/utilities.js";
 
@@ -25,7 +25,7 @@ export class Local extends Bundler {
         await super.build();
         await Tooling.build({
             buffer:  this.getBuffer(),
-            output:  Files.join(this.getFilepath(), "index.js"),
+            output:  Path.join(this.getFilepath(), "index.js"),
             resolve: this.options.input,
             options: this.options,
             esbuild: {
@@ -37,15 +37,15 @@ export class Local extends Bundler {
 
     private getBuffer() {
         return `
-            import { LocalServer, __internal__ as SherpaJS } from "${Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js"))}";
+            import { LocalServer, __internal__ as SherpaJS } from "${Path.unix(Path.join(Path.getRootDirectory(), "dist/index.js"))}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
             let server  = new LocalServer(port);
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
-                    import * as endpoint_${index} from "${Files.unix(endpoint.filepath)}";
-                    import import_context_${index} from "${Files.unix(endpoint.module.contextFilepath)}";
+                    import * as endpoint_${index} from "${Path.unix(endpoint.filepath)}";
+                    import import_context_${index} from "${Path.unix(endpoint.module.contextFilepath)}";
 
                     let context_${index} = import_context_${index}.context;
                     let segments_${index} = ${JSON.stringify(endpoint.segments)};

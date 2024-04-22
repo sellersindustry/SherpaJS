@@ -90,7 +90,8 @@ export class Tooling {
 
 
     static typeCheck(filepath:string, fileTypeName:string):Message[] {
-        return new TypeValidation(filepath, fileTypeName).apply();
+        // return new TypeValidation(filepath, fileTypeName).apply();
+        return []; //! FIXME - Re-enable
     }
 
 

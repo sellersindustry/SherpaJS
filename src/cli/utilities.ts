@@ -11,13 +11,14 @@
  */
 
 
+import fs from "fs";
 import path from "path";
-import { Files } from "../compiler/utilities/files/index.js";
+import { Path } from "../compiler/utilities/path/index.js";
 
 
 export function getEnvironmentFiles(input:string):string[] {
-    let envFilepath = Files.join(input, ".env");
-    if (Files.exists(envFilepath)) {
+    let envFilepath = Path.join(input, ".env");
+    if (fs.existsSync(envFilepath)) {
         return [envFilepath];
     }
     return [];
@@ -28,7 +29,7 @@ export function getAbsolutePath(filepath:string|undefined, fallback:string):stri
     if (!filepath) {
         filepath = fallback;
     }
-    return path.resolve(filepath);
+    return Path.unix(path.resolve(filepath));
 }
 
 

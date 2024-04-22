@@ -12,9 +12,10 @@
 
 
 import fs from "fs";
+import path from "path";
 import { Bundler } from "../abstract.js";
 import { Endpoint, Segment } from "../../../models.js";
-import { Files } from "../../../utilities/files/index.js";
+import { Path } from "../../../utilities/path/index.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
 import { RequestUtilities } from "../../../../environment/io/request/utilities.js";
 
@@ -23,7 +24,7 @@ export class Vercel extends Bundler {
 
 
     getFilepath():string {
-        return Files.join(this.options.output, ".vercel");
+        return Path.join(this.options.output, ".vercel");
     }
 
 
@@ -32,13 +33,13 @@ export class Vercel extends Bundler {
         this.makeDirectory();
         this.writeRootConfig();
         for (let endpoint of this.endpoints.list) {
-            let route = RequestUtilities.getDynamicURL(endpoint.segments);
-            let path  = this.getDirectory(route, "index.func");
-            this.writeEndpointConfig(path);
+            let route    = RequestUtilities.getDynamicURL(endpoint.segments);
+            let filepath = this.getDirectory(route, "index.func");
+            this.writeEndpointConfig(filepath);
             await Tooling.build({
                 buffer:  this.getBuffer(endpoint),
-                output:  Files.join(path, "index.js"),
-                resolve: Files.getDirectory(endpoint.filepath),
+                output:  Path.join(filepath, "index.js"),
+                resolve: path.resolve(Path.getDirectory(endpoint.filepath)),
                 options: this.options,
                 esbuild: { 
                     platform: "node",
@@ -49,11 +50,11 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
-        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core" : Files.unix(Files.join(Files.getRootDirectory(), "dist/index.js"));
+        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core" : Path.unix(Path.join(Path.getRootDirectory(), "dist/index"));
         return `
             import { __internal__ as SherpaJS } from "${sherpaCorePath}";
-            import * as endpoint from "${Files.unix(endpoint.filepath)}";
-            import import_context from "${Files.unix(endpoint.module.contextFilepath)}";
+            import * as endpoint from "${Path.unix(endpoint.filepath).replace("index.ts", "index")}";
+            import import_context from "${Path.unix(endpoint.module.contextFilepath).replace("index.ts", "index")}";
 
             let context  = import_context.context;
             let segments = ${JSON.stringify(endpoint.segments)};
@@ -75,7 +76,7 @@ export class Vercel extends Bundler {
 
 
     private makeDirectory(...path:string[]):string {
-        let directory = Files.join(this.options.output, ".vercel/output/functions", ...path);
+        let directory = Path.join(this.options.output, ".vercel/output/functions", ...path);
         if (!fs.existsSync(directory)) {
             fs.mkdirSync(directory, { recursive: true });
         }
@@ -85,7 +86,7 @@ export class Vercel extends Bundler {
 
     private writeEndpointConfig(path:string) {
         let buffer   = JSON.stringify(this.getEndpointConfig(), null, 3);
-        let filepath = Files.join(path, ".vc-config.json");
+        let filepath = Path.join(path, ".vc-config.json");
         fs.writeFileSync(filepath, buffer);
     }
 
@@ -100,7 +101,7 @@ export class Vercel extends Bundler {
 
     private writeRootConfig() {
         let buffer   = JSON.stringify(this.getRootConfig(), null, 3);
-        let filepath = Files.join(this.options.output, ".vercel/output/config.json");
+        let filepath = Path.join(this.options.output, ".vercel/output/config.json");
         fs.writeFileSync(filepath, buffer);
     }
 

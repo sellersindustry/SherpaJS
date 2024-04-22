@@ -16,7 +16,7 @@ import {
     ModuleConfigFile, SUPPORTED_FILE_EXTENSIONS,
     ModuleConfig, Context, ModuleInterface
 } from "../../models.js";
-import { Files } from "../../utilities/files/index.js";
+import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 
@@ -46,7 +46,7 @@ export async function getModuleConfig(entry:string, context:Context, contextFile
 
 
 function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
-    let filepath = Files.getFilepathVariableExtension(
+    let filepath = Path.resolveExtension(
         entry,
         FILENAME_CONFIG_MODULE,
         SUPPORTED_FILE_EXTENSIONS
