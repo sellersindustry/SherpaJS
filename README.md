@@ -580,11 +580,11 @@ a [module configuration](#module-configuration).
 
 ```typescript
 // sherpa.module.ts
-import { SherpaJS, ContextSchema } from "sherpa-core";
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
 
 export default SherpaJS.New.module({
     name: "example-module",
-    interface: ContextSchema<{ foo: boolean, bar: string }>
+    interface: CreateModuleInterface<{ foo: boolean, bar: string }>
 });
 ```
 
@@ -595,11 +595,11 @@ module.
 
 ```typescript
 // sherpa.module.ts
-import { SherpaJS, ContextSchema } from "sherpa-core";
+import { SherpaJS, ModuleInterface } from "sherpa-core";
 
 export default SherpaJS.New.module({
     name: "pass-primary-1",
-    interface: class example {
+    interface: class example implements ModuleInterface {
         context:{ foo: number, bar: string };
         constructor(context:{ foo: number, bar: string }) {
             this.context = context;
@@ -672,11 +672,11 @@ context when the module is [loaded](#module-endpoint).
 
 ```typescript
 // sherpa.module.ts
-import { SherpaJS, ContextSchema } from "sherpa-core";
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
 
 export default SherpaJS.New.module({
     name: "pass-primary-1",
-    interface: ContextSchema<{ foo: boolean, bar:  }>
+    interface: CreateModuleInterface<{ foo: boolean, bar:  }>
 });
 ```
 
@@ -687,11 +687,11 @@ module.
 
 ```typescript
 // sherpa.module.ts
-import { SherpaJS } from "sherpa-core";
+import { SherpaJS, ModuleInterface } from "sherpa-core";
 
 export default SherpaJS.New.module({
     name: "pass-primary-1",
-    interface: class example {
+    interface: class example implements ModuleInterface {
         context:{ foo: number, bar: string };
         constructor(context:{ foo: number, bar: string }) {
             this.context = context;
@@ -720,11 +720,11 @@ export type ModuleConfig = {
 #### Example Config
 ```typescript
 // sherpa.module.ts
-import { SherpaJS, ContextSchema } from "sherpa-core";
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
 
 export default SherpaJS.New.module({
     name: "pass-primary-1",
-    interface: ContextSchema<{ foo: boolean, bar:  }>
+    interface: CreateModuleInterface<{ foo: boolean, bar:  }>
 });
 ```
 

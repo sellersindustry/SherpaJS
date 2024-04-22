@@ -1,3 +1,4 @@
+// @SherpaJS IgnoreInvalidSource
 import { SherpaJS } from "../../../index";
 
 

@@ -13,44 +13,49 @@
 
 import {
     FILENAME_CONFIG_MODULE,
-    ModuleStructure, SUPPORTED_FILE_EXTENSIONS,
-    ModuleConfig, Context, HasContext
+    ModuleConfigFile, SUPPORTED_FILE_EXTENSIONS,
+    ModuleConfig, Context, ModuleInterface
 } from "../../models.js";
 import { Files } from "../../utilities/files/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 
 
-export async function getModuleStructure(entry:string, context:Context, contextFilepath:string):Promise<{ errors:Message[], module?:ModuleStructure }> {
-    let { filepath, errors: errorsFilepath } = getFilepath(entry);
-    if (!filepath) return { errors: errorsFilepath };
+export async function getModuleConfig(entry:string, context:Context, contextFilepath:string):Promise<{ logs:Message[], module?:ModuleConfigFile }> {
+    let logs:Message[] = [];
 
-    let { instance, errors: errorsInstance } = await getInstance(filepath);
-    if (!instance) return { errors: errorsInstance };
+    let { filepath, logs: logsFilepath } = getFilepath(entry);
+    logs.push(...logsFilepath);
+    if (!filepath) return {
+        logs: logsFilepath };
+
+    let { instance, logs: logsInstance } = await getInstance(filepath);
+    if (!instance) return { logs: logsInstance };
 
     return {
         module: {
+            entry: entry,
             filepath: filepath,
             context: context,
             contextFilepath: contextFilepath,
-            config: instance
+            instance: instance
         },
-        errors: []
+        logs: []
     }
 }
 
 
-function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
+function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Files.getFilepathVariableExtension(
         entry,
         FILENAME_CONFIG_MODULE,
         SUPPORTED_FILE_EXTENSIONS
     );
     if (filepath) {
-        return { filepath, errors: [] };
+        return { filepath, logs: [] };
     }
     return {
-        errors: [{
+        logs: [{
             level: Level.ERROR,
             text: "Module config file could not be found.",
             content: `Must have module config, "${FILENAME_CONFIG_MODULE}" `
@@ -61,26 +66,19 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 }
 
 
-async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ModuleConfig<HasContext<unknown>, unknown> }> {
+async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:ModuleConfig<ModuleInterface<unknown>, unknown> }> {
+    let { module, logs } = await Tooling.getExportedLoader(filepath, "Module Config", "SherpaJS.New.module", "sherpa-core");
+    if (!module) {
+        return { logs };
+    }
     try {
-        //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
-        if (!Tooling.hasDefaultExport(filepath, "SherpaJS.New.module")) {
-            return {
-                errors: [{
-                    level: Level.ERROR,
-                    text: "Module config file has no default export.",
-                    content: "Ensure you are default exporting using \"SherpaJS.New.module\".",
-                    file: { filepath: filepath }
-                }]
-            };
-        }
         return {
-            errors: Tooling.typeCheck(filepath, "Module Config"),
-            instance: await Tooling.getDefaultExport(filepath) as ModuleConfig<HasContext<unknown>, unknown>
+            logs: Tooling.typeCheck(filepath, "Module Config"),
+            instance: await Tooling.getDefaultExport(filepath) as ModuleConfig<ModuleInterface<unknown>, unknown>
         }
     } catch (e) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text: "Module config file could not be loaded.",
                 content: e.message,

@@ -11,42 +11,46 @@
  */
 
 
-import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerStructure } from "../../models.js";
+import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerConfigFile } from "../../models.js";
 import { Files } from "../../utilities/files/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 
 
-export async function getServerStructure(entry:string):Promise<{ errors:Message[], server?:ServerStructure }> {
-    let { filepath, errors: errorsFilepath } = getFilepath(entry);
-    if (!filepath) return { errors: errorsFilepath };
+export async function getServerConfig(entry:string):Promise<{ logs:Message[], server?:ServerConfigFile }> {
+    let logs:Message[] = [];
+    
+    let { filepath, logs: logsFilepath } = getFilepath(entry);
+    logs.push(...logsFilepath);
+    if (!filepath) return { logs };
 
-    let { instance, errors: errorsInstance } = await getInstance(filepath);
-    if (!instance) return { errors: errorsInstance };
+    let { instance, logs: logsInstance } = await getInstance(filepath);
+    logs.push(...logsInstance);
+    if (!instance) return { logs };
 
     let errorsTypes = Tooling.typeCheck(filepath, "Server config");
 
     return {
         server: {
             filepath: filepath,
-            config: instance
+            instance: instance
         },
-        errors: errorsTypes
+        logs: errorsTypes
     }
 }
 
 
-function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
+function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Files.getFilepathVariableExtension(
         entry,
         FILENAME_CONFIG_SERVER,
         SUPPORTED_FILE_EXTENSIONS
     );
     if (filepath) {
-        return { filepath, errors: [] };
+        return { filepath, logs: [] };
     }
     return {
-        errors: [{
+        logs: [{
             level: Level.ERROR,
             text: "Server config file could not be found.",
             content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
@@ -57,26 +61,19 @@ function getFilepath(entry:string):{ errors:Message[], filepath?:string } {
 }
 
 
-async function getInstance(filepath:string):Promise<{ errors:Message[], instance?:ServerConfig }> {
+async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:ServerConfig }> {
+    let { module, logs } = await Tooling.getExportedLoader(filepath, "Server Config", "SherpaJS.New.server", "sherpa-core");
+    if (!module) {
+        return { logs };
+    }
     try {
-        //! FIXME - ENSURE IMPORT OF OF SHERPAJS from sherpa-core
-        if (!Tooling.hasDefaultExport(filepath, "SherpaJS.New.server")) {
-            return {
-                errors: [{
-                    level: Level.ERROR,
-                    text: "Server config file has no default export.",
-                    content: "Ensure you are exporting using \"SherpaJS.New.server\".",
-                    file: { filepath: filepath }
-                }]
-            };
-        }
         return {
-            errors: Tooling.typeCheck(filepath, "Server Config"),
+            logs: Tooling.typeCheck(filepath, "Server Config"),
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
         }
     } catch (e) {
         return {
-            errors: [{
+            logs: [{
                 level: Level.ERROR,
                 text: "Server config file could not be loaded.",
                 content: e.message,

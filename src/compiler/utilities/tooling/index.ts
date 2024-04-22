@@ -12,16 +12,16 @@
 
 
 import vm from "vm";
-import fs from "fs";
 import { BuildOptions } from "../../models.js";
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
 import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
-import { EnvironmentVariables } from "../../models.js";
-import { getEnvironmentVariables } from "./dot-env.js";
+import { getEnvironmentVariables } from "./dot-env/index.js";
+import { ExportLoaderModule, getExportedLoader } from "./exported-loader/index.js";
 
 
+export type { ExportLoaderModule };
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
     format: "cjs",
     target: "es2022",
@@ -46,11 +46,14 @@ export class Tooling {
     }
 
 
-    static hasDefaultExport(filepath:string, wrapper?:string):boolean {
-        let regex  = new RegExp(`export\\s+default\\s+${wrapper ? `${wrapper.replaceAll(".", "\\s?\\.\\s?")}\\s?` : ""}`);
-        let buffer = fs.readFileSync(filepath, "utf8");
-        return buffer.match(regex) != null;
-    } 
+    static async getExportedLoader(filepath:string, fileTypeName:string, prototype?:string, source?:string):Promise<{ logs:Message[], module?:ExportLoaderModule }> {
+        return await getExportedLoader(filepath, fileTypeName, prototype, source);
+    }
+
+
+    static async hasExportedLoader(filepath:string):Promise<boolean> {
+        return (await this.getExportedLoader(filepath, "N/A")).module != undefined;
+    }
 
 
     static async getDefaultExport(filepath:string):Promise<unknown> {
@@ -78,19 +81,11 @@ export class Tooling {
                 loader: "ts",
             },
             outfile: props.output,
-            define: this.getESBuildEnvironmentVariables(props.options)
+            define: {
+                "global": "window",
+                "process.env": JSON.stringify(getEnvironmentVariables(props.options))
+            }
         });
-    }
-
-
-    private static getESBuildEnvironmentVariables(options:BuildOptions):{ [key:string]:string } {
-        let variables = this.getEnvironmentVariables(options);
-        return { global: "window", "process.env": JSON.stringify(variables) };
-    }
-
-
-    static getEnvironmentVariables(options:BuildOptions):EnvironmentVariables {
-        return getEnvironmentVariables(options);
     }
 
 

@@ -27,31 +27,32 @@ export type { BuildOptions };
 export class Compiler {
 
 
-    public static async build(options:BuildOptions, verbose:boolean=true):Promise<{ success:boolean, errors:Message[] }> {
-        let errorsBuildOptions = this.validateBuildOptions(options);
-        if (errorsBuildOptions.length) {
-            return this.display({ errors: errorsBuildOptions, verbose, success: false });
+    public static async build(options:BuildOptions, verbose:boolean=true):Promise<{ success:boolean, logs:Message[] }> {
+        let errorsOptions = this.validateBuildOptions(options);
+        if (errorsOptions.length) {
+            return this.display({ logs: errorsOptions, verbose, success: false });
         }
 
-        let { errors, route, endpoints } = await getStructure(options.input);
-        if (!endpoints || !route) {
-            errors.push({
+        let { logs, endpoints, server } = await getStructure(options.input);
+        if (!endpoints || !server) {
+            logs.push({
                 level: Level.ERROR,
                 text: "Failed to generate endpoints."
             });
-            return this.display({ errors, verbose, success: false });
+            return this.display({ logs, verbose, success: false });
         }
+        
         try {
-            await NewBundler(route,  endpoints, options, errors).build();
+            await NewBundler(endpoints, options, logs).build();
         } catch (error) {
-            errors.push({
+            logs.push({
                 level: Level.ERROR,
                 text: "Failed to bundle SherpaJS Server",
                 content: error.message
             });
-            return this.display({ errors, verbose, success: false });
+            return this.display({ logs, verbose, success: false });
         }
-        return this.display({ errors, verbose, success: true });
+        return this.display({ logs, verbose, success: true });
     }
 
 
@@ -85,13 +86,13 @@ export class Compiler {
     }
 
 
-    private static display(output:{ errors:Message[], success:boolean, verbose:boolean }):{ success:boolean, errors:Message[] } {
+    private static display(output:{ logs:Message[], success:boolean, verbose:boolean }):{ success:boolean, logs:Message[] } {
         if (output.verbose) {
-            if (output.errors.length == 0) {
+            if (output.logs.length == 0) {
                 console.log("No Build Logs.")
             } else {
                 console.log("============ Build Logs ============")
-                Logger.display(output.errors);
+                Logger.display(output.logs);
                 console.log("");
             }
             if (output.success) {
@@ -100,7 +101,7 @@ export class Compiler {
                 console.log(red("SherpaJS Failed to Build Server.") + " See logs for more information.")
             }
         }
-        return { errors: output.errors, success: output.success };
+        return { logs: output.logs, success: output.success };
     }
 
 

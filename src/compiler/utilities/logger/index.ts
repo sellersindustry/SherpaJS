@@ -57,6 +57,11 @@ export class Logger {
     }
 
 
+    public static hasError(messages:Message[]):boolean {
+        return messages.some(message => message.level == Level.ERROR);
+    }
+
+
     private static levelToString(level:Level=Level.INFO):string {
         if (level == Level.ERROR) {
             return red(`[ERROR]`);

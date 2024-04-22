@@ -13,6 +13,8 @@
 
 import fs from "fs";
 import path from "path";
+import { getDirectoryStructure } from "./directory-structure/index.js";
+import { DirectoryStructure } from "./directory-structure/model.js";
 
 
 export class Files {
@@ -61,14 +63,15 @@ export class Files {
 
 
     public static getRootDirectory() {
-        return Files.join(Files.getDirectory(import.meta.url)
-            .replace("file:///", "")
-            .replace("file://", ""), "../../../../../");
+        return this.join(this.getDirectory(this.unix(import.meta.url)), "../../../../../");
     }
 
 
     public static unix(filepath:string):string {
-        return filepath.replace(/^[A-Za-z]:/, '').replace(/\\/g, '/');
+        return filepath
+            .replace("file://", "")
+            .replace(/^\/?[A-Za-z]:/, "")
+            .replace(/\\/g, "/");
     }
 
 
@@ -79,6 +82,11 @@ export class Files {
             return npm;
         }
         return Files.getDirectory(Files.join(resolveDir, filepath));
+    }
+
+
+    public static getDirectoryStructure(filepath:string):DirectoryStructure {
+        return getDirectoryStructure(filepath);
     }
 
 

@@ -13,7 +13,7 @@
 
 import fs from "fs";
 import { remove } from "fs-extra";
-import { BuildOptions, Endpoint, Route } from "../../models.js";
+import { BuildOptions, EndpointStructure } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 import { Files } from "../../utilities/files/index.js";
 import { Message } from "../../utilities/logger/model.js";
@@ -23,13 +23,11 @@ export abstract class Bundler {
 
 
     protected options:BuildOptions;
-    protected route:Route;
-    protected endpoints:Endpoint[];
+    protected endpoints:EndpointStructure;
     protected errors:Message[]|undefined;
 
 
-    constructor(route:Route, endpoints:Endpoint[], options:BuildOptions, errors?:Message[]) {
-        this.route     = route;
+    constructor(endpoints:EndpointStructure, options:BuildOptions, errors?:Message[]) {
         this.endpoints = endpoints;
         this.options   = options;
         this.errors    = errors;
@@ -74,7 +72,6 @@ export abstract class Bundler {
         let data = {
             created: new Date().toISOString(),
             options: this.options,
-            route: this.route,
             endpoints: this.endpoints,
             errors: this.errors
         };

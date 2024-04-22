@@ -15,10 +15,11 @@ import { BuildOptions as ESBuildOptions } from "esbuild";
 
 
 export const CONTEXT_SCHEMA_TYPE_NAME  = "ContextSchema";
-export const SUPPORTED_FILE_EXTENSIONS = ["JS", "CJS", "TS"];
+export const SUPPORTED_FILE_EXTENSIONS = ["JS", "TS"];
 export const FILENAME_CONFIG_MODULE    = "sherpa.module";
 export const FILENAME_CONFIG_SERVER    = "sherpa.server";
-export const VALID_EXPORTS             = ["GET", "POST", "PATCH", "DELETE", "PUT"];
+export const EXPORT_VARIABLES_METHODS  = ["GET", "POST", "PATCH", "DELETE", "PUT"];
+export const EXPORT_VARIABLES          = [...EXPORT_VARIABLES_METHODS];
 
 
 export type Context = unknown;
@@ -31,44 +32,45 @@ export type ServerConfig<T=Context> = (T extends undefined ? {
 });
 
 
-export type ServerStructure = {
+export type ServerConfigFile = {
     filepath:string;
-    config:ServerConfig;
+    instance:ServerConfig;
 };
 
 
-export class ContextSchema<Schema> implements HasContext<Schema> {
+export interface ModuleInterface<Schema> {
+    context:Schema;
+}
+
+
+export class CreateModuleInterface<Schema> implements ModuleInterface<Schema> {
     context:Schema;
     constructor(context:Schema) { this.context = context; }
 }
 
 
-export interface HasContext<Schema> {
-    context:Schema;
-}
-
-
-export type Instantiable<Interface extends HasContext<Schema>, Schema> = {
+export type InstantiableModuleInterface<Interface extends ModuleInterface<Schema>, Schema> = {
     new (context:Schema):Interface;
 };
 
 
-export type ModuleConfig<Interface extends HasContext<Schema>, Schema> = {
+export type ModuleConfig<Interface extends ModuleInterface<Schema>, Schema> = {
     name:string;
-    interface:Instantiable<Interface, Schema>;
+    interface:InstantiableModuleInterface<Interface, Schema>;
 };
 
 
-export type ModuleConfigLoader<Interface extends HasContext<Schema>, Schema> = ModuleConfig<Interface, Schema> & {
+export type ModuleLoader<Interface extends ModuleInterface<Schema>, Schema> = ModuleConfig<Interface, Schema> & {
     load:(context:Schema) => Interface;
 };
 
 
-export type ModuleStructure = {
+export type ModuleConfigFile = {
+    entry:string;
     filepath:string;
+    instance:ModuleConfig<ModuleInterface<unknown>, unknown>;
     context:Context;
     contextFilepath:string;
-    config:ModuleConfig<HasContext<unknown>, unknown>;
 };
 
 
@@ -87,16 +89,22 @@ export type Segment = {
 }
 
 
-export type Route = {
-    [key:string]:Route|Endpoint;
-}
-
-
 export type Endpoint = {
     filepath:string;
     methods:Method[];
-    module:ModuleStructure;
+    module:ModuleConfigFile;
     segments:Segment[];
+}
+
+
+export type EndpointTree = {
+    [key:string]:EndpointTree|Endpoint;
+}
+
+
+export type EndpointStructure = {
+    list:Endpoint[];
+    tree:EndpointTree;
 }
 
 
