@@ -58,7 +58,7 @@ export class Response {
 
     static JSON<T extends { toJSON():Record<string, unknown> }>(JSON:T|Record<string, unknown>, options?:Partial<Options>):IResponse {
         let _options    = Response.defaultOptions(BodyType.JSON, options);
-        let _isCallable = JSON.toJSON && typeof (JSON as any).toJSON === "function";
+        let _isCallable = JSON.toJSON && typeof (JSON as Record<string, unknown>).toJSON === "function";
         return {
             status: _options.status,
             statusText: Response.getStatusText(_options.status),
