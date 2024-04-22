@@ -24,7 +24,7 @@ import { ExportLoaderModule, getExportedLoader } from "./exported-loader/index.j
 
 export type { ExportLoaderModule };
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
-    format: "cjs",
+    format: "esm",
     target: "es2022",
     platform: "node",
     bundle: true,
@@ -60,6 +60,7 @@ export class Tooling {
     static async getDefaultExport(filepath:string):Promise<unknown> {
         let result = await build({
             ...DEFAULT_ESBUILD_TARGET,
+            format: "cjs",
             entryPoints: [filepath],
             write: false
         });

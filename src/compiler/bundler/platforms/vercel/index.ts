@@ -12,7 +12,6 @@
 
 
 import fs from "fs";
-import path from "path";
 import { Bundler } from "../abstract.js";
 import { Endpoint, Segment } from "../../../models.js";
 import { Path } from "../../../utilities/path/index.js";

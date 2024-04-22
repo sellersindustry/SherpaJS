@@ -13,7 +13,7 @@
 
 import { Context, Method } from "../../compiler/models.js";
 import { IResponse } from "../io/response/interface.js";
-import { IRequest } from "../io/request/interface";
+import { IRequest } from "../io/request/interface.js";
 import { Response } from "../io/response/index.js";
 
 

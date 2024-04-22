@@ -3,10 +3,13 @@
 	"author": "Sellers Industries",
 	"version": "0.0.0",
 	"description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
-	"main": "./dist/index.js",
+	"exports": "./dist/index.js",
 	"type": "module",
 	"bin": {
 		"sherpa": "./dist/src/cli/index.js"
+	},
+	"engines": {
+		"node": ">=16"
 	},
 	"scripts": {
 		"build": "tsc --build --force tsconfig.json",
