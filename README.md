@@ -84,6 +84,7 @@ sherpa [options] [command]
 
 #### Commands:
  - `build [options]` Build SherpaJS Server
+ - `clean [options]` Remove SherpaJS Build Directories
  - `help [command]` display help for command
 
 
@@ -101,6 +102,21 @@ sherpa build [options]
  - `-o`, `--output <path>` path to server output, defaults to input directory
   - `-b`, `--bundler <type>` platform bundler ("**Vercel**", "*local**", *default: "local"*)
  - `--dev` enable development mode, does not minify output
+ - `-h`, `--help` display help for command
+
+
+
+<br>
+
+
+### Clean Command
+Remove SherpaJS Build Directories.
+```bash
+sherpa clean [options]
+```
+
+#### Options:
+ - `-i`, `--input <path>` path to SherpaJS build directories, defaults to current directory
  - `-h`, `--help` display help for command
 
 

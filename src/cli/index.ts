@@ -53,6 +53,14 @@ CLI.command("build")
     });
 
 
+CLI.command("clean")
+    .description("Remove SherpaJS Build Directories")
+    .option("-i, --input <path>", "path to SherpaJS build directories, defaults to current directory")
+    .action((options) => {
+        Compiler.clean(getAbsolutePath(options.input, process.cwd()));
+    });
+
+
 CLI.parse();
 
 

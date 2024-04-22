@@ -30,5 +30,13 @@ export function NewBundler(endpoints:EndpointStructure, options:BuildOptions, er
 }
 
 
+export function clean(filepath:string) {
+    let endpoints = { list: [], tree: {} };
+    let options   = { bundler: BundlerType.local, input: filepath, output: filepath };
+    new Vercel(endpoints, options).clean();
+    new Local(endpoints, options).clean();
+}
+
+
 // A cheerful heart is good medicine, but a crushed spirit dries up the bones.
 // - Proverbs 17:22
