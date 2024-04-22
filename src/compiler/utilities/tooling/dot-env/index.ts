@@ -20,6 +20,7 @@ export function getEnvironmentVariables(options:BuildOptions):EnvironmentVariabl
         ...process.env as EnvironmentVariables,
         ...getFiles(options).map(filepath => parseFile(filepath)).reduce((a, b) => { return { ...a, ...b } }, {}),
         ...options.developer?.environment?.variables,
+        "SHERPA_PLATFORM": options.bundler.toString()
     });
 }
 
