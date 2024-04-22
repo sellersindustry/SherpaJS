@@ -78,7 +78,7 @@ export class Logger {
     private static fileToString(file?:MessageFile):string {
         if (!file) return "";
         let properties = file.properties ? file.properties.join(".") + " " : "";
-        let path       = file.filepath + (file.line ? ":" + file.line : "");
+        let path       = file.filepath + (file.line ? ":" + file.line : (file.character) ? ":" + file.character : "");
         return dim(`at ${properties}(${path})`);
     }
 

@@ -58,7 +58,7 @@ export class TypeValidation {
     private processDiagnostics(diagnostic:readonly ts.Diagnostic[]):Message[] {
         return diagnostic.filter(diagnostic => {
             return !diagnostic.messageText.toString().includes("--target"); // NOTE: Remove warning about targeting ES2022
-        }).map(diagnostic => {
+        }).map((diagnostic):Message => {
             let position = this.getLineNumber(diagnostic.start);
             let message = diagnostic.messageText.toString();
             if (diagnostic.relatedInformation && diagnostic.relatedInformation.length > 0) {
