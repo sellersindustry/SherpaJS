@@ -16,6 +16,7 @@ import {
     ModuleConfigFile, SUPPORTED_FILE_EXTENSIONS,
     ModuleConfig, Context, ModuleInterface
 } from "../../models.js";
+import fs from "fs";
 import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
@@ -32,6 +33,8 @@ export async function getModuleConfig(entry:string, context:Context, contextFile
     let { instance, logs: logsInstance } = await getInstance(filepath);
     if (!instance) return { logs: logsInstance };
 
+    logs.push(...lint(entry));
+
     return {
         module: {
             entry: entry,
@@ -40,7 +43,7 @@ export async function getModuleConfig(entry:string, context:Context, contextFile
             contextFilepath: contextFilepath,
             instance: instance
         },
-        logs: []
+        logs
     }
 }
 
@@ -86,6 +89,57 @@ async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:
             }]
         };
     }
+}
+
+
+function lint(entry:string):Message[] {
+    return [
+        ...lintPackageJSON(entry)
+    ];
+}
+
+
+function lintPackageJSON(entry:string):Message[] {
+    try {
+        let logs:Message[] = [];
+        let filepath       = Path.join(entry, "package.json");
+        if (!fs.existsSync(filepath)) {
+            return [];
+        }
+
+        let packageJSON = JSON.parse(fs.readFileSync(filepath, "utf8"));
+        if (packageJSON.type !== "module") {
+            logs.push({
+                level: Level.WARN,
+                text: `package.json is not configured properly.`,
+                content: `Ensure the "type" attribute is set to "module".`,
+                file: { filepath: filepath }
+            });
+        }
+        logs.push(...lintPackageExports(filepath, entry, packageJSON));
+        
+        return logs;
+    } catch {
+        return [];
+    }
+}
+
+
+function lintPackageExports(filepath:string, entry:string, packageJSON:Record<string, unknown>):Message[] {
+    let exportObject    = packageJSON.exports;
+    let exportFilepaths = typeof exportObject === "string" ? [exportObject] : Array.isArray(exportObject) ? exportObject : [];
+    for (let exportFilepath of exportFilepaths) {
+        let expectedFilepath = Path.resolveExtension(entry, "sherpa.module", SUPPORTED_FILE_EXTENSIONS);
+        if (expectedFilepath == Path.join(entry, exportFilepath)) {
+            return [];
+        }
+    }
+    return [{
+        level: Level.WARN,
+        text: `package.json is not configured properly.`,
+        content: `Ensure the "exports" attribute contains the "sherpa.module" file.`,
+        file: { filepath: filepath }
+    }];
 }
 
 
