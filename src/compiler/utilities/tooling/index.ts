@@ -66,7 +66,7 @@ export class Tooling {
         });
 
         let code    = result.outputFiles[0].text;
-        let context = vm.createContext({ process, module: { exports: {} }});
+        let context = vm.createContext({ process, module: { exports: {} }, require: () => { return {}; }});
         vm.runInContext(code, context);
         return context.module.exports.default;
     }
