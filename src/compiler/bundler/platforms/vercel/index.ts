@@ -39,7 +39,7 @@ export class Vercel extends Bundler {
             await Tooling.build({
                 buffer:  this.getBuffer(endpoint),
                 output:  Path.join(filepath, "index.js"),
-                resolve: path.resolve(Path.getDirectory(endpoint.filepath)),
+                resolve: Path.getDirectory(endpoint.filepath),
                 options: this.options,
                 esbuild: { 
                     platform: "node",
@@ -50,11 +50,11 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
-        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core" : Path.unix(Path.join(Path.getRootDirectory(), "dist/index"));
+        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core" : Path.join(Path.getRootDirectory(), "dist/index.js");
         return `
             import { __internal__ as SherpaJS } from "${sherpaCorePath}";
-            import * as endpoint from "${Path.unix(endpoint.filepath).replace("index.ts", "index")}";
-            import import_context from "${Path.unix(endpoint.module.contextFilepath).replace("index.ts", "index")}";
+            import * as endpoint from "${endpoint.filepath}";
+            import import_context from "${endpoint.module.contextFilepath}";
 
             let context  = import_context.context;
             let segments = ${JSON.stringify(endpoint.segments)};

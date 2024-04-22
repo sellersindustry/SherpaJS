@@ -37,15 +37,15 @@ export class Local extends Bundler {
 
     private getBuffer() {
         return `
-            import { LocalServer, __internal__ as SherpaJS } from "${Path.unix(Path.join(Path.getRootDirectory(), "dist/index.js"))}";
+            import { LocalServer, __internal__ as SherpaJS } from "${Path.join(Path.getRootDirectory(), "dist/index.js")}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
             let server  = new LocalServer(port);
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
-                    import * as endpoint_${index} from "${Path.unix(endpoint.filepath)}";
-                    import import_context_${index} from "${Path.unix(endpoint.module.contextFilepath)}";
+                    import * as endpoint_${index} from "${endpoint.filepath}";
+                    import import_context_${index} from "${endpoint.module.contextFilepath}";
 
                     let context_${index} = import_context_${index}.context;
                     let segments_${index} = ${JSON.stringify(endpoint.segments)};

@@ -12,6 +12,7 @@
 
 
 import vm from "vm";
+import path from "path";
 import { BuildOptions } from "../../models.js";
 import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
@@ -77,10 +78,10 @@ export class Tooling {
             ...props.esbuild,
             stdin: {
                 contents: props.buffer,
-                resolveDir: props.resolve,
+                resolveDir: path.resolve(props.resolve),
                 loader: "ts",
             },
-            outfile: props.output,
+            outfile: path.resolve(props.output),
             define: {
                 "global": "window",
                 "process.env": JSON.stringify(getEnvironmentVariables(props.options))
@@ -90,8 +91,7 @@ export class Tooling {
 
 
     static typeCheck(filepath:string, fileTypeName:string):Message[] {
-        // return new TypeValidation(filepath, fileTypeName).apply();
-        return []; //! FIXME - Re-enable
+        return new TypeValidation(filepath, fileTypeName).apply();
     }
 
 
