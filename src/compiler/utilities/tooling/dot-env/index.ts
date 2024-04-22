@@ -16,11 +16,11 @@ import { BuildOptions, EnvironmentVariables } from "../../../models.js";
 
 
 export function getEnvironmentVariables(options:BuildOptions):EnvironmentVariables {
-    return {
+    return parseAll({
         ...process.env as EnvironmentVariables,
         ...getFiles(options).map(filepath => parseFile(filepath)).reduce((a, b) => { return { ...a, ...b } }, {}),
-        ...options.developer?.environment?.variables
-    };
+        ...options.developer?.environment?.variables,
+    });
 }
 
 
@@ -46,6 +46,27 @@ function getFiles(options:BuildOptions):string[] {
     return options.developer.environment.files.filter((filepath) => {
         return fs.existsSync(filepath);
     });
+}
+
+
+function parseAll(values:Record<string, string|number|boolean>):Record<string, string|number|boolean> {
+    return Object.fromEntries(Object.entries(values).map(([key, value]) => {
+        return [key, parse(value)];
+    }));
+}
+
+
+function parse(value:string|number|boolean):string|number|boolean {
+    if (typeof value === "number" || typeof value === "boolean") {
+        return value;
+    } else if (value == "true") {
+        return true;
+    } else if (value == "false") {
+        return false;
+    } else if (/^\d+$/.test(value)) {
+        return parseInt(value);
+    }
+    return value;
 }
 
 
