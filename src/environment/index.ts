@@ -22,7 +22,7 @@ import { Options } from "./io/response/index.js";
 import { LocalServer } from "./local-server/index.js";
 import { RequestTransform } from "./io/request/transformer.js";
 import { ResponseTransform } from "./io/response/transformer.js";
-import { Context, CreateModuleInterface, Method } from "../compiler/models.js";
+import { CreateModuleInterface, Method, ModuleInterface } from "../compiler/models.js";
 import { Handler } from "./handler/index.js";
 
 
@@ -47,7 +47,8 @@ export {
     Parameters,
     Method,
     BodyType,
-    CreateModuleInterface as ContextSchema
+    CreateModuleInterface,
+    ModuleInterface
 }
 
 
@@ -56,8 +57,7 @@ export type {
     IRequest as Request,
     IRequest,
     IResponse,
-    Options as ResponseOptions,
-    Context
+    Options as ResponseOptions
 }
 
 
