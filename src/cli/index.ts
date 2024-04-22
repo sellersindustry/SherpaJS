@@ -14,14 +14,14 @@
 
 import { Command, Option } from "commander";
 import { Compiler, BundlerType } from  "../compiler/index.js";
-import { getEnvironmentFiles, getAbsolutePath, getKeyValuePairs } from "./utilities.js";
+import { getEnvironmentFiles, getAbsolutePath, getKeyValuePairs, getVersion } from "./utilities.js";
 import { Logger } from "../compiler/utilities/logger/index.js";
 let CLI = new Command();
 
 
 CLI.name("sherpa")
     .description("Modular and agnostic serverless web framework, developed by Sellers Industries.")
-    .version(process.env.npm_package_version as string);
+    .version(getVersion());
 
 
 CLI.command("build")
@@ -59,6 +59,14 @@ CLI.command("build")
                 }
             }
         });
+    });
+
+
+CLI.command("clean")
+    .description("Remove SherpaJS Build Directories")
+    .option("-i, --input <path>", "path to SherpaJS build directories, defaults to current directory")
+    .action((options) => {
+        Compiler.clean(getAbsolutePath(options.input, process.cwd()));
     });
 
 

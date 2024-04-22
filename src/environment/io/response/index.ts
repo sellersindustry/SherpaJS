@@ -44,25 +44,26 @@ export class Response {
     }
 
 
-    static text(text:string, options?:Partial<Options>):IResponse {
+    static text<T extends { toString():string }>(text:T, options?:Partial<Options>):IResponse {
         let _options = Response.defaultOptions(BodyType.Text, options);
         return {
             status: _options.status,
             statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
-            body: text,
+            body: text.toString(),
             bodyType: BodyType.Text
         }
     }
 
 
-    static JSON(JSON:Record<string, unknown>, options?:Partial<Options>):IResponse {
-        let _options = Response.defaultOptions(BodyType.JSON, options);
+    static JSON<T extends { toJSON():Record<string, unknown> }>(JSON:T|Record<string, unknown>, options?:Partial<Options>):IResponse {
+        let _options    = Response.defaultOptions(BodyType.JSON, options);
+        let _isCallable = JSON.toJSON && typeof (JSON as Record<string, unknown>).toJSON === "function";
         return {
             status: _options.status,
             statusText: Response.getStatusText(_options.status),
             headers: _options.headers,
-            body: JSON,
+            body: _isCallable ? (JSON as { toJSON():Record<string, unknown> }).toJSON() : JSON,
             bodyType: BodyType.JSON
         }
     }

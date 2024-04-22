@@ -57,6 +57,16 @@ export function getKeyValuePairs(values:string[]|undefined):{ logs:Message[], va
 }
 
 
+export function getVersion():string|undefined {
+    try {
+        let filepath = Path.join(Path.getRootDirectory(), "package.json");
+        return JSON.parse(fs.readFileSync(filepath, "utf8")).version;
+    } catch (error) {
+        return undefined;
+    }
+}
+
+
 // If anyone acknowledges that Jesus is the Son of God, God lives in them and
 // they in God.
 // - 1 John 4:15

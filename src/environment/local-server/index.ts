@@ -15,6 +15,7 @@ import {
     IncomingMessage, ServerResponse,
     Server as HTTPServer, createServer
 } from "http";
+import { cyan, green, bold, magenta, gray, red } from "colorette"
 import { OriginURL } from "../io/url/index.js";
 
 
@@ -46,7 +47,7 @@ export class LocalServer {
 
         this.server = createServer(this.handleRequest.bind(this));
         this.server.listen(this.port, () => {
-            console.log(`SherpaJS Server is started at "http://localhost:${this.port}".`);
+            console.log(`${green("SherpaJS Server is started at")} ${cyan(`http://localhost:${bold(this.port)}`)}${green(".")}`);
         });
     }
 
@@ -93,7 +94,11 @@ export class LocalServer {
             return;
         }
 
+
+        let startTime = Date.now();
         await endpoint.handler(req, res);
+        let deltaTime = Date.now() - startTime;
+        console.log(`${magenta(req.method.toUpperCase())} ${req.url} ${res.statusCode} ${gray("in")} ${red(deltaTime)}${red("ms")}`);
     }
 
 
