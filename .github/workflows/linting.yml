@@ -1,4 +1,4 @@
-name: Jest Testing
+name: Linting
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    name: Run Jest tests
+    name: Run Linting
     runs-on: ubuntu-latest
 
     steps:
