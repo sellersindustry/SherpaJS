@@ -14,7 +14,8 @@
 
 import { Command, Option } from "commander";
 import { Compiler, BundlerType } from  "../compiler/index.js";
-import { getEnvironmentFiles, getAbsolutePath, getVersion } from "./utilities.js";
+import { getEnvironmentFiles, getAbsolutePath, getKeyValuePairs, getVersion } from "./utilities.js";
+import { Logger } from "../compiler/utilities/logger/index.js";
 let CLI = new Command();
 
 
@@ -28,12 +29,19 @@ CLI.command("build")
     .option("-i, --input <path>", "path to SherpaJS server, defaults to current directory")
     .option("-o, --output <path>", "path to server output, defaults to input directory")
     .option("--dev", "enable development mode, do not minify output")
+    .option("-v, --variable [keyvalue...]", "Specify optional environment variables as key=value pairs")
     .addOption(new Option("-b, --bundler <type>", "platform bundler")
         .choices(Object.values(BundlerType))
         .default(BundlerType.local))
     .action((options) => {
-        let input  = getAbsolutePath(options.input, process.cwd());
-        let output = getAbsolutePath(options.output, input);
+        let input     = getAbsolutePath(options.input, process.cwd());
+        let output    = getAbsolutePath(options.output, input);
+        let variables = getKeyValuePairs(options.variable);
+
+        if (Logger.hasError(variables.logs)) {
+            Logger.format(variables.logs);
+            Logger.exit();
+        }
 
         Compiler.build({
             input: input,
@@ -46,7 +54,8 @@ CLI.command("build")
                     }
                 },
                 environment: {
-                    files: getEnvironmentFiles(input)
+                    files: getEnvironmentFiles(input),
+                    variables: variables.values
                 }
             }
         });

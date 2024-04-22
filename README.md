@@ -100,7 +100,8 @@ sherpa build [options]
 #### Options:
  - `-i`, `--input <path>` path to SherpaJS server, defaults to current directory
  - `-o`, `--output <path>` path to server output, defaults to input directory
-  - `-b`, `--bundler <type>` platform bundler ("**Vercel**", "*local**", *default: "local"*)
+ - `-b`, `--bundler <type>` platform bundler ("**Vercel**", "*local**", *default: "local"*)
+ - `-v`, `--variable [key values...]` Specify optional environment variables as key=value pairs Ex. `foo=bar test="1234 HI"`
  - `--dev` enable development mode, does not minify output
  - `-h`, `--help` display help for command
 
