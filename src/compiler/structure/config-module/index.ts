@@ -17,7 +17,6 @@ import {
     ModuleConfig, Context, ModuleInterface
 } from "../../models.js";
 import fs from "fs";
-import path from "path";
 import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
