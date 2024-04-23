@@ -84,7 +84,7 @@ async function parseBodyLocal(req:LocalRequest, headers:Headers):Promise<{ body:
 
 export async function RequestVercel(req:VercelRequest, segments:Segment[]):Promise<IRequest> {
     let headers = new Headers(req.headers);
-    let { body, bodyType } = await this.parseBodyVercel(req, headers);
+    let { body, bodyType } = await parseBodyVercel(req, headers);
     return {
         url: new OriginURL(req.url).pathname,
         params: {
