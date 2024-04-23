@@ -1,6 +1,6 @@
-import { ContextSchema, SherpaJS as Example } from "sherpa-core";
+import { CreateModuleInterface, SherpaJS as Example } from "sherpa-core";
 
 export default Example.New.module({
     name: "",
-    interface: ContextSchema
+    interface: CreateModuleInterface
 });

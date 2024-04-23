@@ -192,7 +192,7 @@ function hasIgnoreInvalidSourceFlag(buffer:string):boolean {
 
 
 function hasDefaultExportedInvoke(buffer:string, characterIndex:number, namespace:string, prototype?:string):boolean {
-    let regex = new RegExp(`default\\s+${namespace}\\s?${prototype ? `\\.\\s*${prototype.split(".").join("\\s*\\.\\s*")}` : "(\\s*\\.\\s*[a-zA-Z0-9_]+)*"}\\s*\\(`);
+    let regex = new RegExp(`default\\s+${namespace}\\s?${prototype ? `\\.\\s*${prototype.split(".").join("\\s*\\.\\s*")}` : "(\\s*\\.\\s*[a-zA-Z0-9_]+)*"}\\s*(<\\s*[a-zA-Z0-9_]+\\s*>)?\\(`);
     return buffer.slice(characterIndex).match(regex) != null;
 }
 
