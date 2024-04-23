@@ -37,7 +37,8 @@ export class Local extends Bundler {
 
     private getBuffer() {
         return `
-            import { ServerLocal, Handler, RequestLocal, ResponseLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/internal/index.js")}";
+            import { ServerLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/server-local/index.js")}";
+            import { Handler, RequestLocal, ResponseLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/internal/index.js")}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;

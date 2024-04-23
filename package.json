@@ -12,6 +12,10 @@
 		"./internal": {
 			"import": "./dist/src/internal/index.js",
 			"types": "./dist/src/internal/index.d.js"
+		},
+		"./server-local": {
+			"import": "./dist/src/server-local/index.js",
+			"types": "./dist/src/server-local/index.d.js"
 		}
 	},
 	"type": "module",

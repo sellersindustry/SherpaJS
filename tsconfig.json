@@ -21,6 +21,7 @@
         "./src/compiler/index.ts",
         "./src/native/index.ts",
         "./src/internal/index.ts",
-        "./src/instantiate/index.ts"
+        "./src/instantiate/index.ts",
+        "./src/server-local/index.ts"
     ]
 }
