@@ -14,7 +14,7 @@
 import { Body, BodyType } from "../model.js";
 import { Headers } from "../headers/index.js";
 import { Parameters } from "../parameters/index.js";
-import { Method } from "../../../compiler/models.js";
+import { Method } from "../../compiler/models.js";
 
 
 export interface IRequest {

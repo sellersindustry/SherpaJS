@@ -11,7 +11,7 @@
  */
 
 
-import { Segment } from "../../../compiler/models.js";
+import { Segment } from "../../compiler/models.js";
 
 
 export class RequestUtilities {

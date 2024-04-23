@@ -12,9 +12,7 @@
 
 
 import { Context, Method } from "../../compiler/models.js";
-import { IResponse } from "../io/response/interface.js";
-import { IRequest } from "../io/request/interface.js";
-import { Response } from "../io/response/index.js";
+import { Response, IResponse, IRequest } from "../../native/index.js";
 
 
 type callback  = (request?:IRequest, context?:Context) => Promise<IResponse|undefined>|IResponse|undefined;

@@ -66,7 +66,7 @@ function validateExports(filepath:string, variables:string[]):Message[] {
 
 function getExportMethods(variables:string[]):Method[] {
     return variables.filter(variable => {
-        (Object.values(Method) as string[]).includes(variable)
+        return EXPORT_VARIABLES_METHODS.includes(variable)
     }).map(variable => Method[variable as keyof typeof Method]);
 }
 

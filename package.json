@@ -3,7 +3,21 @@
 	"author": "Sellers Industries",
 	"version": "0.0.0",
 	"description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
-	"exports": "./dist/index.js",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.js"
+		},
+		"./internal": {
+			"import": "./dist/src/internal/index.js",
+			"types": "./dist/src/internal/index.d.js"
+		},
+		"./server-local": {
+			"import": "./dist/src/server-local/index.js",
+			"types": "./dist/src/server-local/index.d.js"
+		}
+	},
 	"type": "module",
 	"bin": {
 		"sherpa": "./dist/src/cli/index.js"

@@ -15,7 +15,7 @@ import { Endpoint } from "../../../models.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
 import { Path } from "../../../utilities/path/index.js";
 import { Bundler } from "../abstract.js";
-import { RequestUtilities } from "../../../../environment/io/request/utilities.js";
+import { RequestUtilities } from "../../../../native/request/utilities.js";
 
 
 export class Local extends Bundler {
@@ -37,11 +37,12 @@ export class Local extends Bundler {
 
     private getBuffer() {
         return `
-            import { LocalServer, __internal__ as SherpaJS } from "${Path.join(Path.getRootDirectory(), "dist/index.js")}";
+            import { ServerLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/server-local/index.js")}";
+            import { Handler, RequestLocal, ResponseLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/internal/index.js")}";
 
             let portArg = process.argv[2];
             let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
-            let server  = new LocalServer(port);
+            let server  = new ServerLocal(port);
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
                     import * as endpoint_${index} from "${endpoint.filepath}";
@@ -51,9 +52,9 @@ export class Local extends Bundler {
                     let segments_${index} = ${JSON.stringify(endpoint.segments)};
                     let url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
                     server.addRoute(url_${index}, async (nativeRequest, nativeResponse) => {
-                        let req = await SherpaJS.RequestTransform.Local(nativeRequest, segments_${index});
-                        let res = await SherpaJS.Handler(endpoint_${index}, context_${index}, req);
-                        SherpaJS.ResponseTransform.Local(req, res, nativeResponse);
+                        let req = await RequestLocal(nativeRequest, segments_${index});
+                        let res = await Handler(endpoint_${index}, context_${index}, req);
+                        ResponseLocal(req, res, nativeResponse);
                     });
 
                 `;

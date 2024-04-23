@@ -16,7 +16,7 @@ import { Bundler } from "../abstract.js";
 import { Endpoint, Segment } from "../../../models.js";
 import { Path } from "../../../utilities/path/index.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
-import { RequestUtilities } from "../../../../environment/io/request/utilities.js";
+import { RequestUtilities } from "../../../../native/request/utilities.js";
 
 
 export class Vercel extends Bundler {
@@ -49,9 +49,9 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
-        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core" : Path.join(Path.getRootDirectory(), "dist/index.js");
+        let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core/internal" : Path.join(Path.getRootDirectory(), "dist/src/internal/index.js");
         return `
-            import { __internal__ as SherpaJS } from "${sherpaCorePath}";
+            import { Handler, RequestVercel, ResponseVercel } from "${sherpaCorePath}";
             import * as endpoint from "${endpoint.filepath}";
             import import_context from "${endpoint.module.contextFilepath}";
 
@@ -60,9 +60,9 @@ export class Vercel extends Bundler {
             let url      = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
 
             export default async function index(nativeRequest, event) {
-                let req = await SherpaJS.RequestTransform.Vercel(nativeRequest, segments);
-                let res = await SherpaJS.Handler(endpoint, context, req);
-                return SherpaJS.ResponseTransform.Vercel(req, res);
+                let req = await RequestVercel(nativeRequest, segments);
+                let res = await Handler(endpoint, context, req);
+                return ResponseVercel(req, res);
             }
         `;
     }

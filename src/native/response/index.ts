@@ -29,14 +29,14 @@ const DEFAULT_OPTIONS:Options = {
 }
 
 
-export class Response {
+export class ResponseBuilder {
 
 
     static new(options?:Partial<Options>):IResponse {
-        let _options = Response.defaultOptions(BodyType.None, options);
+        let _options = ResponseBuilder.defaultOptions(BodyType.None, options);
         return {
             status: _options.status,
-            statusText: Response.getStatusText(_options.status),
+            statusText: ResponseBuilder.getStatusText(_options.status),
             headers: _options.headers,
             body: undefined,
             bodyType: BodyType.None
@@ -45,10 +45,10 @@ export class Response {
 
 
     static text<T extends { toString():string }>(text:T, options?:Partial<Options>):IResponse {
-        let _options = Response.defaultOptions(BodyType.Text, options);
+        let _options = ResponseBuilder.defaultOptions(BodyType.Text, options);
         return {
             status: _options.status,
-            statusText: Response.getStatusText(_options.status),
+            statusText: ResponseBuilder.getStatusText(_options.status),
             headers: _options.headers,
             body: text.toString(),
             bodyType: BodyType.Text
@@ -57,11 +57,11 @@ export class Response {
 
 
     static JSON<T extends { toJSON():Record<string, unknown> }>(JSON:T|Record<string, unknown>, options?:Partial<Options>):IResponse {
-        let _options    = Response.defaultOptions(BodyType.JSON, options);
+        let _options    = ResponseBuilder.defaultOptions(BodyType.JSON, options);
         let _isCallable = JSON.toJSON && typeof (JSON as Record<string, unknown>).toJSON === "function";
         return {
             status: _options.status,
-            statusText: Response.getStatusText(_options.status),
+            statusText: ResponseBuilder.getStatusText(_options.status),
             headers: _options.headers,
             body: _isCallable ? (JSON as { toJSON():Record<string, unknown> }).toJSON() : JSON,
             bodyType: BodyType.JSON
@@ -70,13 +70,13 @@ export class Response {
 
 
     static redirect(redirect:string, options?:Partial<Options>):IResponse {
-        let _options = Response.defaultOptions(BodyType.None, options);
+        let _options = ResponseBuilder.defaultOptions(BodyType.None, options);
         if (!_options.headers.has("Location")) {
             _options.headers.set("Location", redirect);
         }
         return {
             status: 302,
-            statusText: Response.getStatusText(302),
+            statusText: ResponseBuilder.getStatusText(302),
             headers: _options.headers,
             body: undefined,
             bodyType: BodyType.None
@@ -90,7 +90,7 @@ export class Response {
             ...options
         };
         if (!_options.headers.has("Content-Type")) {
-            _options.headers.set("Content-Type", CONTENT_TYPE[bodyType]);
+            _options.headers.set("Content-Type", CONTENT_TYPE[bodyType] as string);
         }
         return _options;
     }

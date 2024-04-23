@@ -16,7 +16,7 @@ import {
     Server as HTTPServer, createServer
 } from "http";
 import { cyan, green, bold, magenta, gray, red } from "colorette"
-import { OriginURL } from "../io/url/index.js";
+import { OriginURL } from "../native/url/index.js";
 
 
 type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined;
@@ -26,7 +26,7 @@ type endpoint = {
 };
 
 
-export class LocalServer {
+export class ServerLocal {
 
     private port: number;
     private server: HTTPServer|null;
@@ -94,11 +94,11 @@ export class LocalServer {
             return;
         }
 
-
         let startTime = Date.now();
         await endpoint.handler(req, res);
         let deltaTime = Date.now() - startTime;
-        console.log(`${magenta(req.method.toUpperCase())} ${req.url} ${res.statusCode} ${gray("in")} ${red(deltaTime)}${red("ms")}`);
+        let method = req.method ? req.method.toUpperCase() : "UNKNOWN";
+        console.log(`${magenta(method)} ${req.url} ${res.statusCode} ${gray("in")} ${red(deltaTime)}${red("ms")}`);
     }
 
 
