@@ -179,5 +179,16 @@ describe("Tooling Export Loader", () => {
         expect(res.module?.binding).toEqual("Example");
     });
 
+
+    test("Type Generic", async () => {
+        let file = Path.join(DIRNAME, "./tests/test7.ts");
+		let res  = await getExportedLoader(file, "--", "SherpaJS.New.server", "sherpa-core");
+        expect(res.logs).toHaveLength(0);
+        expect(res).toHaveProperty("module");
+        expect(res.module?.namespace).toEqual("SherpaJS");
+        expect(res.module?.binding).toEqual("Example");
+    });
+
+
     
 });

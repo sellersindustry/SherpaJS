@@ -1,6 +1,6 @@
-import { ContextSchema, SherpaJS } from "../../../../../../index";
+import { CreateModuleInterface, SherpaJS } from "../../../../../../index";
 
 export default SherpaJS.New.module({
     name: "",
-    interface: ContextSchema
+    interface: CreateModuleInterface
 });
