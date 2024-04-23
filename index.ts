@@ -11,8 +11,15 @@
  */
 
 
-export * from "./src/environment/index.js";
-export type * from "./src/environment/index.js";
+export * from "./src/native/index.js";
+export type * from "./src/native/index.js";
+
+import { New } from "./src/instantiate/index.js";
+const SherpaJS = {
+    New
+};
+
+export { SherpaJS };
 
 
 // For God so loved the world that he gave his one and only Son, that whoever

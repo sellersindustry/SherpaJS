@@ -12,7 +12,7 @@
 
 
 
-import { Segment } from "../../../compiler/models.js";
+import { Segment } from "../../compiler/models.js";
 import { OriginURL } from "../url/index.js";
 
 

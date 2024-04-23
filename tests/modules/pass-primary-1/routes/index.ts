@@ -1,4 +1,4 @@
-import { Request, Response } from "../../../../src/environment/index";
+import { Request, Response } from "../../../../index.js";
 
 
 export function GET(request:Request, context:unknown) {

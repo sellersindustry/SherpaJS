@@ -1,4 +1,4 @@
-import { Response } from "../../../../../../../../src/environment/index";
+import { Response } from "../../../../../../../../index.js";
 
 
 export function GET() {

@@ -17,11 +17,13 @@ export enum BodyType {
     None = "None"
 }
 
+
 export const CONTENT_TYPE:Record<BodyType, string|undefined> = {
     [BodyType.JSON]: "application/json",
     [BodyType.Text]: "text/plain",
     [BodyType.None]: undefined
 }
+
 
 export type Body = Record<string, unknown>|string|undefined;
 

@@ -18,6 +18,9 @@
     "files": [
         "./index.ts",
         "./src/cli/index.ts",
-        "./src/compiler/index.ts"
+        "./src/compiler/index.ts",
+        "./src/native/index.ts",
+        "./src/internal/index.ts",
+        "./src/instantiate/index.ts"
     ]
 }

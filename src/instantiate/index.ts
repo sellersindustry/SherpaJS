@@ -15,7 +15,7 @@ import {
     ModuleInterface,
     ModuleConfig,
     ModuleLoader, ServerConfig
-} from "../../compiler/models.js";
+} from "../compiler/models.js";
 
 
 export class New {
