@@ -18,13 +18,6 @@ import { Message, Level, MessageFile } from "./model.js";
 export class Logger {
 
 
-    public static format(messages:Message[]) {
-        for (let message of messages) {
-            this.display(message);
-        }
-    }
-
-
     public static display(message:Message[]|Message) {
         if (Array.isArray(message)) {
             message.forEach((m) => this.display(m));
