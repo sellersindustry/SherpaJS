@@ -137,7 +137,7 @@ async function getEndpointFile(module:ModuleConfigFile, filepath:string, segment
     if (await Tooling.hasExportedLoader(filepath)) {
         return await getEndpointFileByModule(filepath, segments);
     }
-    return getEndpointFileByDeclaration(module, filepath, segments);
+    return await getEndpointFileByDeclaration(module, filepath, segments);
 }
 
 

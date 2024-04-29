@@ -12,7 +12,6 @@
 
 
 import fs from "fs";
-import { remove } from "fs-extra";
 import { BuildOptions, EndpointStructure } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 import { Path } from "../../utilities/path/index.js";
@@ -46,10 +45,17 @@ export abstract class Bundler {
     }
 
 
-    async clean() {
+    async clean():Promise<void> {
         try {
             if (fs.existsSync(this.getFilepath())) {
-                await remove(this.getFilepath());
+                return new Promise((resolve) => {
+                    fs.rm(this.getFilepath(), { recursive: true }, (error) => {
+                        if (error) {
+                            throw error;
+                        }
+                        resolve();
+                    });
+                });
             }
         } catch (error) {
             Logger.raise({

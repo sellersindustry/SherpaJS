@@ -45,7 +45,9 @@ export class TypeValidation {
     private getDiagnostics():readonly ts.Diagnostic[] {
         let program = ts.createProgram({
             rootNames: [this.filepath],
-            options: {},
+            options: {
+                noEmit: true
+            },
             host: {
                 ...ts.createCompilerHost({}),
                 writeFile: () => {}

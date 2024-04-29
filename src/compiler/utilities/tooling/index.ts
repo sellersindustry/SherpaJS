@@ -14,15 +14,15 @@
 import vm from "vm";
 import path from "path";
 import { BuildOptions } from "../../models.js";
-import { Project as TSMorphProject } from "ts-morph";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
 import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
 import { getEnvironmentVariables } from "./dot-env/index.js";
 import { ExportLoaderModule, getExportedLoader } from "./exported-loader/index.js";
+import { ExportedVariable, getExportedVariables } from "./exported-variables/index.js";
 
 
-export type { ExportLoaderModule };
+export type { ExportLoaderModule, ExportedVariable };
 export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
     format: "esm",
     target: "es2022",
@@ -40,10 +40,8 @@ export const DEFAULT_ESBUILD_TARGET:Partial<ESBuildOptions> = {
 export class Tooling {
 
 
-    static getExportedVariableNames(filepath:string):string[] {
-        let project    = new TSMorphProject();
-        let sourceFile = project.addSourceFileAtPath(filepath);
-        return Array.from(sourceFile.getExportedDeclarations().keys());
+    static async getExportedVariables(filepath:string):Promise<ExportedVariable[]> {
+        return await getExportedVariables(filepath);
     }
 
 
