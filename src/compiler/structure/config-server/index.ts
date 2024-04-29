@@ -28,7 +28,7 @@ export async function getServerConfig(entry:string):Promise<{ logs:Message[], se
     logs.push(...logsInstance);
     if (!instance) return { logs };
 
-    let errorsTypes = Tooling.typeCheck(filepath, "Server config");
+    let errorsTypes = await Tooling.typeValidation(filepath, "Server config");
 
     return {
         server: {
@@ -68,7 +68,7 @@ async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:
     }
     try {
         return {
-            logs: Tooling.typeCheck(filepath, "Server Config"),
+            logs: await Tooling.typeValidation(filepath, "Server Config"),
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
         }
     } catch (e) {

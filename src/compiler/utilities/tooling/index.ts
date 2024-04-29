@@ -15,8 +15,8 @@ import vm from "vm";
 import path from "path";
 import { BuildOptions } from "../../models.js";
 import { build, BuildOptions as ESBuildOptions } from "esbuild";
-import { TypeValidation } from "./ts-validation.js";
 import { Message } from "../logger/model.js";
+import { typeValidation } from "./type-validation/index.js";
 import { getEnvironmentVariables } from "./dot-env/index.js";
 import { ExportLoaderModule, getExportedLoader } from "./exported-loader/index.js";
 import { ExportedVariable, getExportedVariables } from "./exported-variables/index.js";
@@ -55,6 +55,11 @@ export class Tooling {
     }
 
 
+    static async typeValidation(filepath:string, fileTypeName:string):Promise<Message[]> {
+        return await typeValidation(filepath, fileTypeName);
+    }
+
+
     static async getDefaultExport(filepath:string):Promise<unknown> {
         let result = await build({
             ...DEFAULT_ESBUILD_TARGET,
@@ -86,11 +91,6 @@ export class Tooling {
                 "process.env": JSON.stringify(getEnvironmentVariables(props.options))
             }
         });
-    }
-
-
-    static typeCheck(filepath:string, fileTypeName:string):Message[] {
-        return new TypeValidation(filepath, fileTypeName).apply();
     }
 
 

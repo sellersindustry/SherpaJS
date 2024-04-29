@@ -164,7 +164,7 @@ async function getEndpointFileByModule(filepath:string, segments:Segment[]):Prom
 
     let entry      = Path.resolve(module.filepath, Path.getDirectory(filepath));
     let components = await getComponents(entry, moduleLoader.context, filepath, segments, false);
-    let typeErrors = Tooling.typeCheck(filepath, "Module Loader");
+    let typeErrors = await Tooling.typeValidation(filepath, "Module Loader");
     logs.push(...components.logs, ...typeErrors);
     if (Logger.hasError(logs)) {
         return { logs };
