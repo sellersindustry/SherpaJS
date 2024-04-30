@@ -11,10 +11,14 @@
  */
 
 
-import { FILENAME_CONFIG_SERVER, SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerConfigFile } from "../../models.js";
+import {
+    FILENAME_CONFIG_MODULE, FILENAME_CONFIG_SERVER,
+    SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerConfigFile
+} from "../../models.js";
 import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
+import { getModuleConfig } from "../config-module/index.js";
 
 
 export async function getServerConfig(entry:string):Promise<{ logs:Message[], server?:ServerConfigFile }> {
@@ -28,14 +32,15 @@ export async function getServerConfig(entry:string):Promise<{ logs:Message[], se
     logs.push(...logsInstance);
     if (!instance) return { logs };
 
-    let errorsTypes = await Tooling.typeValidation(filepath, "Server config");
+    logs.push(...await verifyModuleConfig(entry));
+    logs.push(...await Tooling.typeCheck(filepath, "Server config"));
 
     return {
         server: {
             filepath: filepath,
             instance: instance
         },
-        logs: errorsTypes
+        logs
     }
 }
 
@@ -81,6 +86,23 @@ async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:
             }]
         };
     }
+}
+
+
+async function verifyModuleConfig(entry:string):Promise<Message[]> {
+    if (hasModuleConfig(entry)) {
+        return (await getModuleConfig(entry, undefined, undefined)).logs;
+    }
+    return [];
+}
+
+
+function hasModuleConfig(entry:string):boolean {
+    return Path.resolveExtension(
+        entry,
+        FILENAME_CONFIG_MODULE,
+        SUPPORTED_FILE_EXTENSIONS
+    ) != undefined;
 }
 
 

@@ -106,6 +106,20 @@ sherpa build [options]
  - `-h`, `--help` display help for command
 
 
+<br>
+
+
+### Start Command
+Start SherpaJS Server Locally. Ensure you have created a [local build](#build-command).
+```bash
+sherpa start [options]
+```
+
+#### Options:
+ - `-i`, `--input <path>` path to SherpaJS server, defaults to current directory
+ - `-p`, `--port <number>` port number (default: "3000")
+ - `-h`, `--help` display help for command
+
 
 <br>
 
