@@ -1,0 +1,18 @@
+{
+	"name": "sherpa-core",
+	"author": "Sellers Industries",
+	"version": "0.0.0",
+	"description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
+	"type": "module",
+	"exports": "./sherpa.module.ts",
+	"scripts": {
+
+	},
+	"devDependencies": {
+
+	},
+	"license": "ISC",
+	"dependencies": {
+
+	}
+}

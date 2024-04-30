@@ -12,10 +12,14 @@
  */
 
 
+import fs from "fs";
+import { spawn } from "child_process";
 import { Command, Option } from "commander";
 import { Compiler, BundlerType } from  "../compiler/index.js";
 import { getEnvironmentFiles, getAbsolutePath, getKeyValuePairs, getVersion } from "./utilities.js";
 import { Logger } from "../compiler/utilities/logger/index.js";
+import { Path } from "../compiler/utilities/path/index.js";
+import { Level } from "../compiler/utilities/logger/model.js";
 let CLI = new Command();
 
 
@@ -39,7 +43,7 @@ CLI.command("build")
         let variables = getKeyValuePairs(options.variable);
 
         if (Logger.hasError(variables.logs)) {
-            Logger.format(variables.logs);
+            Logger.display(variables.logs);
             Logger.exit();
         }
 
@@ -67,6 +71,30 @@ CLI.command("clean")
     .option("-i, --input <path>", "path to SherpaJS build directories, defaults to current directory")
     .action((options) => {
         Compiler.clean(getAbsolutePath(options.input, process.cwd()));
+    });
+
+
+CLI.command("start")
+    .description("Start SherpaJS Server Locally")
+    .option("-i, --input <path>", "path to SherpaJS build directories, defaults to current directory")
+    .option("-p, --port <number>", "port number", (3000).toString())
+    .action((options) => {
+        let directory = getAbsolutePath(options.input, process.cwd());
+        let filepath  = Path.join(directory, "/.sherpa/index.js");
+
+        if (!fs.existsSync(filepath)) {
+            Logger.display({
+                level: Level.ERROR,
+                text: "SherpaJS build directory not found",
+                file: { filepath }
+            });
+            Logger.exit();
+        }
+
+        let server = spawn("node", [filepath, options.port]);
+        server.stdout.on("data", (data) => console.log(data.toString().replace("\n", "")));
+        server.stderr.on("data", (data) => console.log(data.toString().replace("\n", "")));
+        server.on("close", (data) => console.log(data.toString().replace("\n", "")));
     });
 
 

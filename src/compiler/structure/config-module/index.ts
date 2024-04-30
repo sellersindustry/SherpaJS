@@ -126,9 +126,7 @@ function lintPackageJSON(entry:string):Message[] {
 
 
 function lintPackageExports(filepath:string, entry:string, packageJSON:Record<string, unknown>):Message[] {
-    let exportObject    = packageJSON.exports;
-    let exportFilepaths = typeof exportObject === "string" ? [exportObject] : Array.isArray(exportObject) ? exportObject : [];
-    for (let exportFilepath of exportFilepaths) {
+    for (let exportFilepath of getAllExported(packageJSON.exports as string|string[]|Record<string, unknown>)) {
         let expectedFilepath = Path.resolveExtension(entry, "sherpa.module", SUPPORTED_FILE_EXTENSIONS);
         if (expectedFilepath == Path.join(entry, exportFilepath)) {
             return [];
@@ -140,6 +138,18 @@ function lintPackageExports(filepath:string, entry:string, packageJSON:Record<st
         content: `Ensure the "exports" attribute contains the "sherpa.module" file.`,
         file: { filepath: filepath }
     }];
+}
+
+
+function getAllExported(exports:string|string[]|Record<string, unknown>):string[] {
+    if (typeof exports === "string") {
+        return [exports];
+    } else if (Array.isArray(exports)) {
+        return exports;
+    } else if (typeof exports === "object") {
+        return Object.keys(exports).map(o => getAllExported(exports[o] as string|string[]|Record<string, unknown>)).flat(3);
+    }
+    return [];
 }
 
 
