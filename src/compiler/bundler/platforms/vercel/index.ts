@@ -49,6 +49,7 @@ export class Vercel extends Bundler {
 
 
     private getBuffer(endpoint:Endpoint) {
+        // FIXME - ADD VIEW RENDERER
         let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core/internal" : Path.join(Path.getRootDirectory(), "dist/src/internal/index.js");
         return `
             import { Handler, RequestVercel, ResponseVercel } from "${sherpaCorePath}";

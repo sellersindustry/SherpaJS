@@ -23,6 +23,7 @@ export abstract class Bundler {
 
     protected options:BuildOptions;
     protected endpoints:EndpointStructure;
+    protected views:({ html:string, originalFilepath:string, compiledFilepath?:string }|undefined)[];
     protected errors:Message[]|undefined;
 
 
@@ -42,6 +43,7 @@ export abstract class Bundler {
         await this.clean();
         this.makeBuildDirectory();
         this.makeBuildManifest();
+        this.makeBuildViews();
     }
 
 
@@ -82,6 +84,19 @@ export abstract class Bundler {
             errors: this.errors
         };
         fs.writeFileSync(filepath, JSON.stringify(data, null, 4));
+    }
+
+
+    private makeBuildViews() {
+        this.views = [];
+        for (let endpoint of this.endpoints.list) {
+            if (endpoint.viewFilepath) {
+                let html = fs.readFileSync(endpoint.viewFilepath, "utf8");
+                this.views.push({ html, originalFilepath: endpoint.viewFilepath });
+            } else {
+                this.views.push(undefined);
+            }
+        }
     }
 
     

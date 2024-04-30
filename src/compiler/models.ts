@@ -14,12 +14,13 @@
 import { BuildOptions as ESBuildOptions } from "esbuild";
 
 
-export const CONTEXT_SCHEMA_TYPE_NAME  = "ContextSchema";
-export const SUPPORTED_FILE_EXTENSIONS = ["JS", "TS"];
-export const FILENAME_CONFIG_MODULE    = "sherpa.module";
-export const FILENAME_CONFIG_SERVER    = "sherpa.server";
-export const EXPORT_VARIABLES_METHODS  = ["GET", "POST", "PATCH", "DELETE", "PUT"];
-export const EXPORT_VARIABLES          = [...EXPORT_VARIABLES_METHODS];
+export const CONTEXT_SCHEMA_TYPE_NAME       = "ContextSchema";
+export const SUPPORTED_FILE_EXTENSIONS_JS   = ["JS", "TS"];
+export const SUPPORTED_FILE_EXTENSIONS_VIEW = ["HTML"];
+export const FILENAME_CONFIG_MODULE         = "sherpa.module";
+export const FILENAME_CONFIG_SERVER         = "sherpa.server";
+export const EXPORT_VARIABLES_METHODS       = ["GET", "POST", "PATCH", "DELETE", "PUT"];
+export const EXPORT_VARIABLES               = [...EXPORT_VARIABLES_METHODS];
 
 
 export type Context = unknown;
@@ -91,6 +92,7 @@ export type Segment = {
 
 export type Endpoint = {
     filepath:string;
+    viewFilepath?:string;
     methods:Method[];
     module:ModuleConfigFile;
     segments:Segment[];

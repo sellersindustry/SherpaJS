@@ -22,7 +22,8 @@ import { getRouteFiles } from "./files-route/index.js";
 import {
     Context, CreateModuleInterface, Endpoint, EndpointTree,
     ModuleConfigFile, ModuleInterface, Segment,
-    ServerConfigFile, EndpointStructure
+    ServerConfigFile, EndpointStructure,
+    SUPPORTED_FILE_EXTENSIONS_JS
 } from "../models.js"
 import { Logger } from "../utilities/logger/index.js";
 
@@ -134,10 +135,18 @@ async function getEndpoints(module:ModuleConfigFile, dirTree:DirectoryStructureT
 
 
 async function getEndpointFile(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
-    if (await Tooling.hasExportedLoader(filepath)) {
+    let functionsFilepath = getFunctionsFilepath(filepath);
+    if (functionsFilepath && await Tooling.hasExportedLoader(functionsFilepath)) {
         return await getEndpointFileByModule(filepath, segments);
     }
     return await getEndpointFileByDeclaration(module, filepath, segments);
+}
+
+
+function getFunctionsFilepath(filepath:string):string|undefined {
+    let directory = Path.getDirectory(filepath);
+    let filename  = Path.getName(filepath);
+    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS_JS);
 }
 
 

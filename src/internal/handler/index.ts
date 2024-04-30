@@ -11,6 +11,7 @@
  */
 
 
+import fs from "fs";
 import { Context, Method } from "../../compiler/models.js";
 import { Response, IResponse, IRequest } from "../../native/index.js";
 
@@ -21,11 +22,16 @@ type endpoints = {
 };
 
 
-export async function Handler(endpoints:endpoints, context:Context, request:IRequest):Promise<IResponse> {
-    let callback = endpoints[request.method];
-    if (callback) {
+export async function Handler(endpoints:endpoints, view:string|undefined, context:Context, request:IRequest):Promise<IResponse> {
+    if (view && request.method == Method.GET) {
         try {
-            let response = await callback(request, context);
+            return Response.HTML(fs.readFileSync(view, "utf8"));
+        } catch (error) {
+            return Response.text(error.message, { status: 500 });
+        }
+    } else if (endpoints[request.method]) {
+        try {
+            let response = await endpoints[request.method](request, context);
             if (!response) {
                 return Response.new({ status: 200 });
             }
