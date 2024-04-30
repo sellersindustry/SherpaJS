@@ -11,7 +11,7 @@
  */
 
 
-import { Tooling } from "../../utilities/tooling/index.js";
+import { ExportedVariable, Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 import {
     EndpointTree, ModuleConfigFile, Segment,
@@ -19,9 +19,9 @@ import {
 } from "../../models.js";
 
 
-export function getEndpoint(module:ModuleConfigFile, filepath:string, segments:Segment[]):{ logs:Message[], endpoints?:EndpointTree } {
+export async function getEndpoint(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
     let logs:Message[] = [];
-    let variables      = Tooling.getExportedVariableNames(filepath);
+    let variables      = await Tooling.getExportedVariables(filepath);
 
     logs.push(...validateExports(filepath, variables));
     if (!hasExportMethodHandlers(variables)) return { logs };
@@ -40,10 +40,10 @@ export function getEndpoint(module:ModuleConfigFile, filepath:string, segments:S
 }
 
 
-function validateExports(filepath:string, variables:string[]):Message[] {
+function validateExports(filepath:string, variables:ExportedVariable[]):Message[] {
     let logs:Message[] = [];
     for (let variable of variables) {
-        if (!EXPORT_VARIABLES.includes(variable)) {
+        if (!EXPORT_VARIABLES.includes(variable.name)) {
             logs.push({
                 level: Level.WARN,
                 text: `Invalid Export "${variable}" will be ignored.`,
@@ -64,15 +64,15 @@ function validateExports(filepath:string, variables:string[]):Message[] {
 }
 
 
-function getExportMethods(variables:string[]):Method[] {
+function getExportMethods(variables:ExportedVariable[]):Method[] {
     return variables.filter(variable => {
-        return EXPORT_VARIABLES_METHODS.includes(variable)
-    }).map(variable => Method[variable as keyof typeof Method]);
+        return EXPORT_VARIABLES_METHODS.includes(variable.name);
+    }).map(variable => Method[variable.name as keyof typeof Method]);
 }
 
 
-function hasExportMethodHandlers(variables:string[]):boolean {
-    return variables.some((name) => EXPORT_VARIABLES_METHODS.includes(name));
+function hasExportMethodHandlers(variables:ExportedVariable[]):boolean {
+    return variables.some((variable) => EXPORT_VARIABLES_METHODS.includes(variable.name));
 }
 
 

@@ -76,7 +76,7 @@ async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:
     }
     try {
         return {
-            logs: Tooling.typeCheck(filepath, "Module Config"),
+            logs: await Tooling.typeValidation(filepath, "Module Config"),
             instance: await Tooling.getDefaultExport(filepath) as ModuleConfig<ModuleInterface<unknown>, unknown>
         }
     } catch (e) {

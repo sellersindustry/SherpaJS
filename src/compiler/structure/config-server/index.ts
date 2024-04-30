@@ -33,7 +33,7 @@ export async function getServerConfig(entry:string):Promise<{ logs:Message[], se
     if (!instance) return { logs };
 
     logs.push(...await verifyModuleConfig(entry));
-    logs.push(...Tooling.typeCheck(filepath, "Server config"));
+    logs.push(...await Tooling.typeCheck(filepath, "Server config"));
 
     return {
         server: {
@@ -73,7 +73,7 @@ async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:
     }
     try {
         return {
-            logs: Tooling.typeCheck(filepath, "Server Config"),
+            logs: await Tooling.typeValidation(filepath, "Server Config"),
             instance: await Tooling.getDefaultExport(filepath) as ServerConfig
         }
     } catch (e) {
