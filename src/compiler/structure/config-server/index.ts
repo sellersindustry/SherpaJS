@@ -33,7 +33,7 @@ export async function getServerConfig(entry:string):Promise<{ logs:Message[], se
     if (!instance) return { logs };
 
     logs.push(...await verifyModuleConfig(entry));
-    logs.push(...await Tooling.typeCheck(filepath, "Server config"));
+    logs.push(...await Tooling.typeValidation(filepath, "Server config"));
 
     return {
         server: {
