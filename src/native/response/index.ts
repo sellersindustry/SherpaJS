@@ -69,6 +69,18 @@ export class ResponseBuilder {
     }
 
 
+    static HTML(html:string, options?:Partial<Options>):IResponse {
+        let _options = ResponseBuilder.defaultOptions(BodyType.HTML, options);
+        return {
+            status: _options.status,
+            statusText: ResponseBuilder.getStatusText(_options.status),
+            headers: _options.headers,
+            body: html,
+            bodyType: BodyType.HTML
+        }
+    }
+
+
     static redirect(redirect:string, options?:Partial<Options>):IResponse {
         let _options = ResponseBuilder.defaultOptions(BodyType.None, options);
         if (!_options.headers.has("Location")) {

@@ -14,6 +14,7 @@
 export enum BodyType {
     JSON = "JSON",
     Text = "Text",
+    HTML = "HTML",
     None = "None"
 }
 
@@ -21,6 +22,7 @@ export enum BodyType {
 export const CONTENT_TYPE:Record<BodyType, string|undefined> = {
     [BodyType.JSON]: "application/json",
     [BodyType.Text]: "text/plain",
+    [BodyType.HTML]: "text/html",
     [BodyType.None]: undefined
 }
 

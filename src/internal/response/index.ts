@@ -47,10 +47,10 @@ export function ResponseVercel(request:IRequest, response:IResponse):VercelRespo
 
 function getBody(response:IResponse):string|undefined {
     switch (response.bodyType) {
-        case BodyType.Text:
-            return response.body as string;
         case BodyType.JSON:
             return JSON.stringify(response.body);
+        default:
+            return response.body as string;
     }
     return undefined;
 }
