@@ -15,10 +15,8 @@ import { ExportedVariable, Tooling } from "../../utilities/tooling/index.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 import {
     EndpointTree, ModuleConfigFile, Segment,
-    EXPORT_VARIABLES, EXPORT_VARIABLES_METHODS, Method,
-    SUPPORTED_FILE_EXTENSIONS
+    EXPORT_VARIABLES, EXPORT_VARIABLES_METHODS, Method
 } from "../../models.js";
-import { Path } from "../../utilities/path/index.js";
 
 
 export async function getEndpoint(module:ModuleConfigFile, functionsFilepath:string|undefined, viewFilepath:string|undefined, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
