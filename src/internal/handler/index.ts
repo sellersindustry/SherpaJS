@@ -11,7 +11,6 @@
  */
 
 
-import fs from "fs";
 import { Context, Method } from "../../compiler/models.js";
 import { Response, IResponse, IRequest } from "../../native/index.js";
 
