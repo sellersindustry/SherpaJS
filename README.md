@@ -368,7 +368,7 @@ resources. Endpoints are defined within route files `index.ts` and are
 associated with specific HTTP methods (GET, POST, PATCH, PUT, DELETE) to
 perform corresponding actions.
 
-### Regular Endpoint
+### Function Endpoint
 Each endpoint is defined within a route file using the corresponding
 HTTP method function. These functions provide access to the incoming request
 and the environment, allowing developers to customize the endpoint's behavior
@@ -405,6 +405,16 @@ export function DELETE(request:Request, env:Environment) {
     return Response.JSON({ message: "DELETE request received" }, { status: 204 });
 }
 ```
+
+
+### View Endpoint
+Endpoints can also render views, this include HTML _(more to come soon)_ files.
+To render a view simply place the view file (named `index.html`) in the
+endpoint directory.
+
+When rendering a view you are not allowed to also have a `GET` method in your
+function endpoint. Additionally, function endpoints are not required when a view
+is provided. View endpoints do not support module endpoints.
 
 
 ### Module Endpoint
