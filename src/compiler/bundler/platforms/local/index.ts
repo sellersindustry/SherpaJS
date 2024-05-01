@@ -24,7 +24,6 @@ export class Local extends Bundler {
 
     async build() {
         await super.build();
-        await this.buildViewDirectory();
         await Tooling.build({
             buffer:  this.getBuffer(),
             output:  Path.join(this.getFilepath(), "index.js"),
@@ -37,32 +36,16 @@ export class Local extends Bundler {
     }
 
 
-    async buildViewDirectory() {
-        if (!this.views.some(views => views !== undefined)) {
-            return;
-        }
-
-        fs.mkdirSync(Path.join(this.getFilepath(), "views"));
-        for (let i = 0; i < this.views.length; i++) {
-            if (this.views[i] == undefined) {
-                continue;
-            }
-            let compiledFilepath = Path.join(this.getFilepath(), "views", `view_${i}.html`);
-            fs.writeFileSync(compiledFilepath, this.views[i].html);
-            this.views[i].compiledFilepath = compiledFilepath;
-        }
-    }
-
-
     private getBuffer() {
+        // FIXME - load view from static
         return `
-            import fs from "fs";
             import { ServerLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/server-local/index.js")}";
             import { Handler, RequestLocal, ResponseLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/internal/index.js")}";
 
-            let portArg = process.argv[2];
-            let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
-            let server  = new ServerLocal(port);
+            const portArg = process.argv[2];
+            const port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
+            const server  = new ServerLocal(port);
+            const dirname = import.meta.dirname;
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
                     ${endpoint.filepath ?
@@ -70,17 +53,17 @@ export class Local extends Bundler {
                         `const endpoint_${index} = {};`
                     }
                     ${this.views[index] ?
-                        `const view_${index}_filepath = "${this.views[index].compiledFilepath}";` :
-                        null
+                        `const view_${index} = "${encodeURIComponent(this.views[index].html)}";` :
+                        `const view_${index} = "";`
                     }
                     import import_context_${index} from "${endpoint.module.contextFilepath}";
 
-                    let context_${index} = import_context_${index}.context;
-                    let segments_${index} = ${JSON.stringify(endpoint.segments)};
-                    let url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
+                    const context_${index} = import_context_${index}.context;
+                    const segments_${index} = ${JSON.stringify(endpoint.segments)};
+                    const url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
                     server.addRoute(url_${index}, async (nativeRequest, nativeResponse) => {
                         let req = await RequestLocal(nativeRequest, segments_${index});
-                        let res = await Handler(endpoint_${index}, ${this.views[index] ? `view_${index}_filepath` : null}, context_${index}, req);
+                        let res = await Handler(endpoint_${index}, ${`view_${index}`}, context_${index}, req);
                         ResponseLocal(req, res, nativeResponse);
                     });
 

@@ -25,7 +25,7 @@ type endpoints = {
 export async function Handler(endpoints:endpoints, view:string|undefined, context:Context, request:IRequest):Promise<IResponse> {
     if (view && request.method == Method.GET) {
         try {
-            return Response.HTML(fs.readFileSync(view, "utf8"));
+            return Response.HTML(decodeURIComponent(view));
         } catch (error) {
             return Response.text(error.message, { status: 500 });
         }
