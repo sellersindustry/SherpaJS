@@ -57,12 +57,17 @@ function getDiagnostics(structure:DirectoryStructure, filepath:string):Message[]
 
 
 function validateFileType(file:DirectoryStructureFile):Message[] {
-    let extension = Path.getExtension(file.filepath.absolute);
-    if (SUPPORTED_FILE_EXTENSIONS.includes(extension))
+    let fileExtension       = Path.getExtension(file.filepath.absolute);
+    let supportedExtensions = [
+        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.FUNCTIONS,
+        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.MODULE,
+        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.VIEW
+    ];
+    if (supportedExtensions.includes(fileExtension))
         return [];
     return [{
         level: Level.ERROR,
-        text: `Invalid File Type. Must be "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
+        text: `Invalid File Type. Must be "${supportedExtensions.join("\", \"")}".`,
         file: { filepath: file.filepath.absolute }
     }];
 }

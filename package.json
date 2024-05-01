@@ -51,6 +51,7 @@
 		"es-module-lexer": "^1.5.0",
 		"esbuild": "^0.19.10",
 		"parse-imports": "^1.1.2",
+		"stacktracey": "^2.1.8",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.3.3"
 	}

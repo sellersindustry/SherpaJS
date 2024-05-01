@@ -13,7 +13,8 @@
 
 import {
     FILENAME_CONFIG_MODULE, FILENAME_CONFIG_SERVER,
-    SUPPORTED_FILE_EXTENSIONS, ServerConfig, ServerConfigFile
+    ServerConfig, ServerConfigFile,
+    SUPPORTED_FILE_EXTENSIONS
 } from "../../models.js";
 import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
@@ -33,7 +34,7 @@ export async function getServerConfig(entry:string):Promise<{ logs:Message[], se
     if (!instance) return { logs };
 
     logs.push(...await verifyModuleConfig(entry));
-    logs.push(...await Tooling.typeCheck(filepath, "Server config"));
+    logs.push(...await Tooling.typeValidation(filepath, "Server config"));
 
     return {
         server: {
@@ -49,7 +50,7 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Path.resolveExtension(
         entry,
         FILENAME_CONFIG_SERVER,
-        SUPPORTED_FILE_EXTENSIONS
+        SUPPORTED_FILE_EXTENSIONS.CONFIG
     );
     if (filepath) {
         return { filepath, logs: [] };
@@ -59,7 +60,7 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
             level: Level.ERROR,
             text: "Server config file could not be found.",
             content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
-                + `of type "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
+                + `of type "${SUPPORTED_FILE_EXTENSIONS.CONFIG.join("\", \"")}".`,
             file: { filepath: entry }
         }]
     };
@@ -101,7 +102,7 @@ function hasModuleConfig(entry:string):boolean {
     return Path.resolveExtension(
         entry,
         FILENAME_CONFIG_MODULE,
-        SUPPORTED_FILE_EXTENSIONS
+        SUPPORTED_FILE_EXTENSIONS.CONFIG
     ) != undefined;
 }
 

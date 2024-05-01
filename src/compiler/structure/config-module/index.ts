@@ -13,8 +13,9 @@
 
 import {
     FILENAME_CONFIG_MODULE,
-    ModuleConfigFile, SUPPORTED_FILE_EXTENSIONS,
-    ModuleConfig, Context, ModuleInterface
+    ModuleConfigFile, ModuleConfig,
+    Context, ModuleInterface,
+    SUPPORTED_FILE_EXTENSIONS
 } from "../../models.js";
 import fs from "fs";
 import { Path } from "../../utilities/path/index.js";
@@ -52,7 +53,7 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Path.resolveExtension(
         entry,
         FILENAME_CONFIG_MODULE,
-        SUPPORTED_FILE_EXTENSIONS
+        SUPPORTED_FILE_EXTENSIONS.CONFIG
     );
     if (filepath) {
         return { filepath, logs: [] };
@@ -62,7 +63,7 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
             level: Level.ERROR,
             text: "Module config file could not be found.",
             content: `Must have module config, "${FILENAME_CONFIG_MODULE}" `
-                + `of type "${SUPPORTED_FILE_EXTENSIONS.join("\", \"")}".`,
+                + `of type "${SUPPORTED_FILE_EXTENSIONS.CONFIG.join("\", \"")}".`,
             file: { filepath: entry }
         }]
     };
@@ -127,7 +128,7 @@ function lintPackageJSON(entry:string):Message[] {
 
 function lintPackageExports(filepath:string, entry:string, packageJSON:Record<string, unknown>):Message[] {
     for (let exportFilepath of getAllExported(packageJSON.exports as string|string[]|Record<string, unknown>)) {
-        let expectedFilepath = Path.resolveExtension(entry, "sherpa.module", SUPPORTED_FILE_EXTENSIONS);
+        let expectedFilepath = Path.resolveExtension(entry, "sherpa.module", SUPPORTED_FILE_EXTENSIONS.CONFIG);
         if (expectedFilepath == Path.join(entry, exportFilepath)) {
             return [];
         }

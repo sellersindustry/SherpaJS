@@ -22,7 +22,8 @@ import { getRouteFiles } from "./files-route/index.js";
 import {
     Context, CreateModuleInterface, Endpoint, EndpointTree,
     ModuleConfigFile, ModuleInterface, Segment,
-    ServerConfigFile, EndpointStructure
+    ServerConfigFile, EndpointStructure,
+    SUPPORTED_FILE_EXTENSIONS
 } from "../models.js"
 import { Logger } from "../utilities/logger/index.js";
 
@@ -134,37 +135,63 @@ async function getEndpoints(module:ModuleConfigFile, dirTree:DirectoryStructureT
 
 
 async function getEndpointFile(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
-    if (await Tooling.hasExportedLoader(filepath)) {
-        return await getEndpointFileByModule(filepath, segments);
+    let functionsFilepath = getFunctionsFilepath(filepath);
+    let viewFilepath      = getViewFilepath(filepath);
+    if (functionsFilepath && await Tooling.hasExportedLoader(functionsFilepath)) {
+        return await getEndpointFileByModule(functionsFilepath, viewFilepath, segments);
     }
-    return await getEndpointFileByDeclaration(module, filepath, segments);
+    return await getEndpointFileByDeclaration(module, functionsFilepath, viewFilepath, segments);
 }
 
 
-async function getEndpointFileByModule(filepath:string, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+function getViewFilepath(filepath:string):string|undefined {
+    let directory = Path.getDirectory(filepath);
+    let filename  = Path.getName(filepath);
+    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS.ENDPOINT.VIEW);
+}
+
+
+function getFunctionsFilepath(filepath:string):string|undefined {
+    let directory = Path.getDirectory(filepath);
+    let filename  = Path.getName(filepath);
+    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS.ENDPOINT.FUNCTIONS);
+}
+
+
+async function getEndpointFileByModule(functionsFilepath:string, viewFilepath:string|undefined, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
     let logs:Message[] = [];
 
-    let { module, logs: logsModule } = await Tooling.getExportedLoader(filepath, "Module Loader", ".load");
+    if (viewFilepath != undefined) {
+        logs.push({
+            level: Level.WARN,
+            text: "Views are not supported by Module Endpoints.",
+            content: "View will be ignored.",
+            file: { filepath: viewFilepath }
+        });
+        return { logs };
+    }
+
+    let { module, logs: logsModule } = await Tooling.getExportedLoader(functionsFilepath, "Module Loader", ".load");
     logs.push(...logsModule);
     if (!module) return { logs };
 
     let moduleLoader:ModuleInterface<unknown>;
     try {
-        moduleLoader = await Tooling.getDefaultExport(filepath) as ModuleInterface<unknown>;
+        moduleLoader = await Tooling.getDefaultExport(functionsFilepath) as ModuleInterface<unknown>;
     } catch (e) {
         return {
             logs: [{
                 level: Level.ERROR,
                 text: "Module Loader failed to parse.",
                 content: e.message,
-                file: { filepath: filepath }
+                file: { filepath: functionsFilepath }
             }]
         };
     }
 
-    let entry      = Path.resolve(module.filepath, Path.getDirectory(filepath));
-    let components = await getComponents(entry, moduleLoader.context, filepath, segments, false);
-    let typeErrors = await Tooling.typeValidation(filepath, "Module Loader");
+    let entry      = Path.resolve(module.filepath, Path.getDirectory(functionsFilepath));
+    let components = await getComponents(entry, moduleLoader.context, functionsFilepath, segments, false);
+    let typeErrors = await Tooling.typeValidation(functionsFilepath, "Module Loader");
     logs.push(...components.logs, ...typeErrors);
     if (Logger.hasError(logs)) {
         return { logs };

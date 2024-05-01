@@ -12,7 +12,7 @@
 
 
 import fs from "fs";
-import { Bundler } from "../abstract.js";
+import { Bundler, View } from "../abstract.js";
 import { Endpoint, Segment } from "../../../models.js";
 import { Path } from "../../../utilities/path/index.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
@@ -31,12 +31,12 @@ export class Vercel extends Bundler {
         await super.build();
         this.makeDirectory();
         this.writeRootConfig();
-        for (let endpoint of this.endpoints.list) {
+        this.endpoints.list.forEach(async (endpoint, index) => {
             let route    = RequestUtilities.getDynamicURL(endpoint.segments);
             let filepath = this.getDirectory(route, "index.func");
             this.writeEndpointConfig(filepath);
             await Tooling.build({
-                buffer:  this.getBuffer(endpoint),
+                buffer:  this.getBuffer(endpoint, this.views[index]),
                 output:  Path.join(filepath, "index.js"),
                 resolve: Path.getDirectory(endpoint.filepath),
                 options: this.options,
@@ -44,24 +44,33 @@ export class Vercel extends Bundler {
                     platform: "node",
                 }
             });
-        }
+        });
     }
 
 
-    private getBuffer(endpoint:Endpoint) {
+    private getBuffer(endpoint:Endpoint, view:View) {
+        // FIXME - load view from static
         let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core/internal" : Path.join(Path.getRootDirectory(), "dist/src/internal/index.js");
         return `
+            import path from "path";
             import { Handler, RequestVercel, ResponseVercel } from "${sherpaCorePath}";
-            import * as endpoint from "${endpoint.filepath}";
+            ${endpoint.filepath ?
+                `import * as endpoint from "${endpoint.filepath}";` :
+                `const endpoint = {};`
+            }
+            ${view ?
+                `const view = "${encodeURIComponent(view.html)}";` :
+                `const view = "";`
+            }
             import import_context from "${endpoint.module.contextFilepath}";
 
-            let context  = import_context.context;
-            let segments = ${JSON.stringify(endpoint.segments)};
-            let url      = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
+            const context  = import_context.context;
+            const segments = ${JSON.stringify(endpoint.segments)};
+            const url      = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
 
             export default async function index(nativeRequest, event) {
                 let req = await RequestVercel(nativeRequest, segments);
-                let res = await Handler(endpoint, context, req);
+                let res = await Handler(endpoint, view, context, req);
                 return ResponseVercel(req, res);
             }
         `;

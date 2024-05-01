@@ -4,7 +4,7 @@
  *
  *   author: Evan Sellers <sellersew@gmail.com>
  *   date: Sun Feb 11 2024
- *   file: expressjs.ts
+ *   file: index.ts
  *   project: SherpaJS - Module Microservice Platform
  *   purpose: Local Bundler
  *
@@ -36,24 +36,33 @@ export class Local extends Bundler {
 
 
     private getBuffer() {
+        // FIXME - load view from static
         return `
             import { ServerLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/server-local/index.js")}";
             import { Handler, RequestLocal, ResponseLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/internal/index.js")}";
 
-            let portArg = process.argv[2];
-            let port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
-            let server  = new ServerLocal(port);
+            const portArg = process.argv[2];
+            const port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
+            const server  = new ServerLocal(port);
+            const dirname = import.meta.dirname;
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
-                    import * as endpoint_${index} from "${endpoint.filepath}";
+                    ${endpoint.filepath ?
+                        `import * as endpoint_${index} from "${endpoint.filepath}";` :
+                        `const endpoint_${index} = {};`
+                    }
+                    ${this.views[index] ?
+                        `const view_${index} = "${encodeURIComponent(this.views[index].html)}";` :
+                        `const view_${index} = "";`
+                    }
                     import import_context_${index} from "${endpoint.module.contextFilepath}";
 
-                    let context_${index} = import_context_${index}.context;
-                    let segments_${index} = ${JSON.stringify(endpoint.segments)};
-                    let url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
+                    const context_${index} = import_context_${index}.context;
+                    const segments_${index} = ${JSON.stringify(endpoint.segments)};
+                    const url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
                     server.addRoute(url_${index}, async (nativeRequest, nativeResponse) => {
                         let req = await RequestLocal(nativeRequest, segments_${index});
-                        let res = await Handler(endpoint_${index}, context_${index}, req);
+                        let res = await Handler(endpoint_${index}, ${`view_${index}`}, context_${index}, req);
                         ResponseLocal(req, res, nativeResponse);
                     });
 
