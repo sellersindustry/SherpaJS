@@ -21,12 +21,10 @@ import {
 import { Path } from "../../utilities/path/index.js";
 
 
-export async function getEndpoint(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+export async function getEndpoint(module:ModuleConfigFile, functionsFilepath:string|undefined, viewFilepath:string|undefined, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
     let logs:Message[]    = [];
     let variables         = [];
-    let functionsFilepath = getFunctionsFilepath(filepath);
     let hasFunctions      = functionsFilepath != undefined;
-    let viewFilepath      = getViewFilepath(filepath);
     let hasView           = viewFilepath != undefined;
 
     if (hasFunctions) {
@@ -53,20 +51,6 @@ export async function getEndpoint(module:ModuleConfigFile, filepath:string, segm
             }
         }
     }
-}
-
-
-function getViewFilepath(filepath:string):string|undefined {
-    let directory = Path.getDirectory(filepath);
-    let filename  = Path.getName(filepath);
-    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS.ENDPOINT.VIEW);
-}
-
-
-function getFunctionsFilepath(filepath:string):string|undefined {
-    let directory = Path.getDirectory(filepath);
-    let filename  = Path.getName(filepath);
-    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS.ENDPOINT.FUNCTIONS);
 }
 
 
