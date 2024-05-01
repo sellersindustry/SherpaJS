@@ -14,7 +14,7 @@ import fs from "fs";
 import { Path } from "../../utilities/path/index.js";
 import { DirectoryStructure, DirectoryStructureFile, DirectoryStructureTree } from "../../utilities/path/directory-structure/model.js";
 import { Level, Message } from "../../utilities/logger/model.js";
-import { SUPPORTED_FILE_EXTENSIONS_JS, SUPPORTED_FILE_EXTENSIONS_VIEW } from "../../models.js";
+import { SUPPORTED_FILE_EXTENSIONS } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 
 
@@ -58,7 +58,11 @@ function getDiagnostics(structure:DirectoryStructure, filepath:string):Message[]
 
 function validateFileType(file:DirectoryStructureFile):Message[] {
     let fileExtension       = Path.getExtension(file.filepath.absolute);
-    let supportedExtensions = [...SUPPORTED_FILE_EXTENSIONS_JS, ...SUPPORTED_FILE_EXTENSIONS_VIEW];
+    let supportedExtensions = [
+        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.FUNCTIONS,
+        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.MODULE,
+        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.VIEW
+    ];
     if (supportedExtensions.includes(fileExtension))
         return [];
     return [{

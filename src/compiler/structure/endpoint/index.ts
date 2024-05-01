@@ -16,8 +16,7 @@ import { Level, Message } from "../../utilities/logger/model.js";
 import {
     EndpointTree, ModuleConfigFile, Segment,
     EXPORT_VARIABLES, EXPORT_VARIABLES_METHODS, Method,
-    SUPPORTED_FILE_EXTENSIONS_VIEW,
-    SUPPORTED_FILE_EXTENSIONS_JS
+    SUPPORTED_FILE_EXTENSIONS
 } from "../../models.js";
 import { Path } from "../../utilities/path/index.js";
 
@@ -60,14 +59,14 @@ export async function getEndpoint(module:ModuleConfigFile, filepath:string, segm
 function getViewFilepath(filepath:string):string|undefined {
     let directory = Path.getDirectory(filepath);
     let filename  = Path.getName(filepath);
-    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS_VIEW);
+    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS.ENDPOINT.VIEW);
 }
 
 
 function getFunctionsFilepath(filepath:string):string|undefined {
     let directory = Path.getDirectory(filepath);
     let filename  = Path.getName(filepath);
-    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS_JS);
+    return Path.resolveExtension(directory, filename, SUPPORTED_FILE_EXTENSIONS.ENDPOINT.FUNCTIONS);
 }
 
 

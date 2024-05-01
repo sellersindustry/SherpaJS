@@ -13,7 +13,8 @@
 
 import {
     FILENAME_CONFIG_MODULE, FILENAME_CONFIG_SERVER,
-    SUPPORTED_FILE_EXTENSIONS_JS, ServerConfig, ServerConfigFile
+    ServerConfig, ServerConfigFile,
+    SUPPORTED_FILE_EXTENSIONS
 } from "../../models.js";
 import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
@@ -49,7 +50,7 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Path.resolveExtension(
         entry,
         FILENAME_CONFIG_SERVER,
-        SUPPORTED_FILE_EXTENSIONS_JS
+        SUPPORTED_FILE_EXTENSIONS.CONFIG
     );
     if (filepath) {
         return { filepath, logs: [] };
@@ -59,7 +60,7 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
             level: Level.ERROR,
             text: "Server config file could not be found.",
             content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
-                + `of type "${SUPPORTED_FILE_EXTENSIONS_JS.join("\", \"")}".`,
+                + `of type "${SUPPORTED_FILE_EXTENSIONS.CONFIG.join("\", \"")}".`,
             file: { filepath: entry }
         }]
     };
@@ -101,7 +102,7 @@ function hasModuleConfig(entry:string):boolean {
     return Path.resolveExtension(
         entry,
         FILENAME_CONFIG_MODULE,
-        SUPPORTED_FILE_EXTENSIONS_JS
+        SUPPORTED_FILE_EXTENSIONS.CONFIG
     ) != undefined;
 }
 
