@@ -12,7 +12,10 @@
 
 import fs from "fs";
 import { Path } from "../../utilities/path/index.js";
-import { DirectoryStructure, DirectoryStructureFile, DirectoryStructureTree } from "../../utilities/path/directory-structure/model.js";
+import {
+    DirectoryStructure, DirectoryStructureFile,
+    DirectoryStructureTree
+} from "../../utilities/path/directory-structure/model.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 import { SUPPORTED_FILE_EXTENSIONS } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";

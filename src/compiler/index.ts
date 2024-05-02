@@ -41,6 +41,10 @@ export class Compiler {
             });
             return this.display({ logs, verbose, success: false });
         }
+        if (Logger.hasError(logs)) {
+            return this.display({ logs, verbose, success: false });
+        }
+
         
         try {
             await NewBundler(endpoints, options, logs).build();

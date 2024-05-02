@@ -12,13 +12,13 @@
 
 
 import { getEndpoint as getEndpointFileByDeclaration } from "./endpoint/index.js";
-import { DirectoryStructureTree } from "../utilities/path/directory-structure/model.js";
+import { DirectoryStructureFile, DirectoryStructureTree } from "../utilities/path/directory-structure/model.js";
 import { Path } from "../utilities/path/index.js";
 import { Level, Message } from "../utilities/logger/model.js"
 import { Tooling } from "../utilities/tooling/index.js";
 import { getModuleConfig } from "./config-module/index.js";
 import { getServerConfig } from "./config-server/index.js";
-import { getRouteFiles } from "./files-route/index.js";
+import { getRouteFiles as getEndpointFiles } from "./files-route/index.js";
 import {
     Context, CreateModuleInterface, Endpoint, EndpointTree,
     ModuleConfigFile, ModuleInterface, Segment,
@@ -29,9 +29,9 @@ import { Logger } from "../utilities/logger/index.js";
 
 
 type Structure = {
-    logs:Message[],
-    endpoints?:EndpointStructure,
-    server?:ServerConfigFile
+    logs:Message[];
+    endpoints?:EndpointStructure;
+    server?:ServerConfigFile;
 }
 
 
@@ -65,14 +65,16 @@ export async function getComponents(entry:string, context:Context, contextFilepa
     logs.push(...logsModule);
     if (!module) return { logs };
 
-    let { files, logs: logsFiles } = getRouteFiles(module.entry);
-    logs.push(...logsFiles);
-    if (!files) return { logs };
+    let { files: endpointFiles, logs: endpointFileLogs } = getEndpointFiles(module.entry);
+    logs.push(...endpointFileLogs);
+    if (!endpointFiles) return { logs };
 
-    let structure = await getEndpoints(module, files.tree, segments);
-    return { 
-        ...structure,
-        logs: [...logs, ...structure.logs]
+    let { endpoints, logs: endpointsLogs } = await getEndpoints(module, endpointFiles.tree, segments);
+    logs.push(...endpointsLogs);
+
+    return {
+        endpoints: endpoints,
+        logs: logs
     };
 }
 
@@ -97,31 +99,41 @@ async function getModule(entry:string, context:Context, contextFilepath:string, 
 }
 
 
-async function getEndpoints(module:ModuleConfigFile, dirTree:DirectoryStructureTree, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+async function getEndpoints(module:ModuleConfigFile, endpointTree:DirectoryStructureTree, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
     let endpoints:EndpointTree = {};
     let logs:Message[]         = [];
+    let isModuleLoader:boolean = false;
 
-    if (dirTree.files.length > 0) {
-        let { endpoints: _endpoints, logs: endpointLogs } = await getEndpointFile(module, dirTree.files[0].filepath.absolute, segments);
+    if (endpointTree.files.length > 0) {
+        let { isModuleLoader: _isModuleLoader, endpoints: _endpoints, logs: endpointLogs } = await getEndpointFile(module, endpointTree.files[0].filepath.absolute, segments);
+        isModuleLoader = _isModuleLoader;
         logs.push(...endpointLogs);
         if (_endpoints) {
             endpoints = { ...endpoints, ..._endpoints };
         }
     }
 
-    for (let segmentName of Object.keys(dirTree.directories)) {
+    if (isModuleLoader && Object.keys(endpointTree.directories).length > 0) {
+        let directory = Object.keys(endpointTree.directories)[0];
+        logs.push({
+            level: Level.ERROR,
+            text: `Sub-routes are not supported in module loading routes.`,
+            content: `Remove the "${directory}" route from "${segments.map(segment => segment.name).join("/")}"`,
+            file: {
+                filepath: Path.getDirectory(endpointTree.files[0].filepath.absolute)
+            }
+        });
+    }
+
+    for (let segmentName of Object.keys(endpointTree.directories)) {
         let segmentKey = `/${segmentName}`;
         if (endpoints[segmentKey]) {
-            logs.push({
-                level: Level.WARN,
-                text: `Overlapping endpoint segment: "${segments.join(".")}".`,
-                file: { filepath: dirTree.files[0].filepath.absolute }
-            });
+            throw new Error(`Overlapping endpoint segment: "${segmentKey}".`);
         }
 
         let { endpoints: _endpoints, logs: logsEndpoints } = await getEndpoints(
             module,
-            dirTree.directories[segmentName],
+            endpointTree.directories[segmentName],
             [...segments, getSegment(segmentName)]
         );
         logs.push(...logsEndpoints);
@@ -134,13 +146,19 @@ async function getEndpoints(module:ModuleConfigFile, dirTree:DirectoryStructureT
 }
 
 
-async function getEndpointFile(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+async function getEndpointFile(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], isModuleLoader:boolean, endpoints?:EndpointTree }> {
     let functionsFilepath = getFunctionsFilepath(filepath);
     let viewFilepath      = getViewFilepath(filepath);
     if (functionsFilepath && await Tooling.hasExportedLoader(functionsFilepath)) {
-        return await getEndpointFileByModule(functionsFilepath, viewFilepath, segments);
+        return {
+            ...await getEndpointFileByModule(functionsFilepath, viewFilepath, segments),
+            isModuleLoader: true
+        };
     }
-    return await getEndpointFileByDeclaration(module, functionsFilepath, viewFilepath, segments);
+    return {
+        ...await getEndpointFileByDeclaration(module, functionsFilepath, viewFilepath, segments),
+        isModuleLoader: false
+    }
 }
 
 
