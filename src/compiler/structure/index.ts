@@ -156,9 +156,6 @@ async function getEndpoints(module:ModuleConfigFile, endpointTree:DirectoryStruc
         }
     }
 
-    console.log(`======= Assets 2 - ${segments.map(segment => segment.name).join(".")} =======`);
-    console.log(assets);
-
     return { logs, endpoints, assets };
 }
 
@@ -268,7 +265,7 @@ function flattenAssets(assetTree?:AssetTree):Asset[] {
 
     let segments = Object.keys(assetTree).filter(segment => segment != ".");
     assetList.push(...segments.map(segment => flattenAssets(assetTree[segment] as AssetTree)).flat());
-    return assetList;
+    return assetList.flat();
 }
 
 

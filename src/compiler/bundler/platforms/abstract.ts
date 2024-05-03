@@ -16,6 +16,7 @@ import { AssetStructure, BuildOptions, EndpointStructure, ServerConfigFile, Stru
 import { Logger } from "../../utilities/logger/index.js";
 import { Path } from "../../utilities/path/index.js";
 import { Message } from "../../utilities/logger/model.js";
+import { RequestUtilities } from "../../../native/request/utilities.js";
 
 
 export type View = {
@@ -49,11 +50,17 @@ export abstract class Bundler {
     }
 
 
+    getFilepathAssets():string {
+        return Path.join(this.options.output, ".sherpa", "public");
+    }
+
+
     async build() {
         await this.clean();
-        this.makeBuildDirectory();
-        this.makeBuildManifest();
-        this.makeBuildViews();
+        this.createBuildDirectory();
+        this.createManifest();
+        this.createViews();
+        this.createAssets();
     }
 
 
@@ -80,12 +87,12 @@ export abstract class Bundler {
     }
 
 
-    private makeBuildDirectory() {
+    private createBuildDirectory() {
         fs.mkdirSync(this.getFilepath());
     }
 
 
-    private makeBuildManifest() {
+    private createManifest() {
         let filepath = Path.join(this.getFilepath(), "sherpa.manifest.json");
         let data = {
             created: new Date().toISOString(),
@@ -99,7 +106,7 @@ export abstract class Bundler {
     }
 
 
-    private makeBuildViews() {
+    private createViews() {
         this.views = [];
         for (let endpoint of this.endpoints.list) {
             if (endpoint.viewFilepath) {
@@ -111,7 +118,26 @@ export abstract class Bundler {
         }
     }
 
+
+    private createAssets() {
+        let destination = this.getFilepathAssets();
+        if (!fs.existsSync(destination)) {
+            fs.mkdirSync(destination, { recursive: true,  });
+        }
+
+        for (let asset of this.assets.list) {
+            let route = RequestUtilities.getDynamicURL(asset.segments);
+
+            let _destination = Path.join(destination, route);
+            if (!fs.existsSync(_destination)) {
+                fs.mkdirSync(_destination, { recursive: true,  });
+            }
+
+            fs.copyFileSync(asset.filepath, Path.join(_destination, asset.filename));
+        }
+    }
     
+
 }
 
 

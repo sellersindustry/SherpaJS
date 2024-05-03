@@ -32,12 +32,14 @@ export class Local extends Bundler {
                 platform: "node",
             }
         });
+
     }
 
 
     private getBuffer() {
         // FIXME - load view from static
         return `
+            import path from "path";
             import { ServerLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/server-local/index.js")}";
             import { Handler, RequestLocal, ResponseLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/internal/index.js")}";
 
@@ -60,12 +62,20 @@ export class Local extends Bundler {
                     const context_${index} = import_context_${index}.context;
                     const segments_${index} = ${JSON.stringify(endpoint.segments)};
                     const url_${index} = "${RequestUtilities.getDynamicURL(endpoint.segments)}";
-                    server.addRoute(url_${index}, async (nativeRequest, nativeResponse) => {
+                    server.addEndpoint(url_${index}, async (nativeRequest, nativeResponse) => {
                         let req = await RequestLocal(nativeRequest, segments_${index});
                         let res = await Handler(endpoint_${index}, ${`view_${index}`}, context_${index}, req);
                         ResponseLocal(req, res, nativeResponse);
                     });
 
+                `;
+            }).join("\n")}
+
+            ${this.assets.list.map((asset, index) => {
+                return `
+                    const asset_url_${index} = "${RequestUtilities.getDynamicURL(asset.segments)}${asset.segments.length > 0 ? "/" : ""}${asset.filename}";
+                    const asset_filepath_${index} = path.join(dirname, "public", asset_url_${index});
+                    server.addAsset(asset_url_${index}, asset_filepath_${index});
                 `;
             }).join("\n")}
 

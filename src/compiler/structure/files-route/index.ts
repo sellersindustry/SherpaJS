@@ -104,8 +104,8 @@ function validateSegmentName(segment:string, filepath?:string):Message[] {
         return [];
     return [{
         level: Level.ERROR,
-        text: `Invalid segment route "${segment}".`,
-        content: "Segment routes should only contain letters, numbers, and dashes.",
+        text: `Invalid endpoint segment route "${segment}".`,
+        content: "Endpoint segment routes should only contain letters, numbers, and dashes.",
         file: filepath ? { filepath: filepath } : undefined
     }];
 }

@@ -45,7 +45,7 @@ export function getAssetFiles(entry:string):{ logs:Message[], files:DirectoryStr
     let logs   = getDiagnostics(files, directory);
 
     if (Logger.hasError(logs)) {
-        return { logs: [], files };
+        return { logs, files };
     }
 
     return { logs, files: files };
@@ -56,9 +56,22 @@ function getDiagnostics(assets:DirectoryStructure, filepath:string):Message[] {
     let errors:Message[] = [];
     for (let file of assets.list) {
         errors.push(...validateFileSize(file));
+        errors.push(...validateFileExtension(file));
     }
     errors.push(...validateSegments(assets.tree, filepath));
     return errors;
+}
+
+
+function validateFileExtension(file:DirectoryStructureFile):Message[] {
+    if (!file.filename.includes(".")) {
+        return [{
+            level: Level.ERROR,
+            text: "File has no extension.",
+            file: { filepath: file.filepath.absolute }
+        }];
+    }
+    return [];
 }
 
 
@@ -92,8 +105,8 @@ function validateSegmentName(segment:string, filepath?:string):Message[] {
         return [];
     return [{
         level: Level.ERROR,
-        text: `Invalid segment route "${segment}".`,
-        content: "Segment routes should only contain letters, numbers, and dashes.",
+        text: `Invalid asset segment route "${segment}".`,
+        content: "Asset segment routes should only contain letters, numbers, and dashes.",
         file: filepath ? { filepath: filepath } : undefined
     }];
 }
