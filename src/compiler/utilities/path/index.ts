@@ -20,6 +20,11 @@ import { DirectoryStructure } from "./directory-structure/model.js";
 export class Path {
 
 
+    public static getFilename(filepath:string):string {
+        return path.basename(filepath);
+    }
+
+
     public static getName(filepath:string):string {
         return path.basename(filepath, path.extname(filepath));
     }

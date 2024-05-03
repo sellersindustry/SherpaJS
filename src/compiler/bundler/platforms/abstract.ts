@@ -12,7 +12,7 @@
 
 
 import fs from "fs";
-import { BuildOptions, EndpointStructure } from "../../models.js";
+import { AssetStructure, BuildOptions, EndpointStructure, ServerConfigFile, Structure } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 import { Path } from "../../utilities/path/index.js";
 import { Message } from "../../utilities/logger/model.js";
@@ -28,13 +28,17 @@ export abstract class Bundler {
 
 
     protected options:BuildOptions;
+    protected assets:AssetStructure;
     protected endpoints:EndpointStructure;
+    protected sever:ServerConfigFile;
     protected views:(View|undefined)[];
     protected errors:Message[]|undefined;
 
 
-    constructor(endpoints:EndpointStructure, options:BuildOptions, errors?:Message[]) {
-        this.endpoints = endpoints;
+    constructor(endpoints:Structure, options:BuildOptions, errors?:Message[]) {
+        this.endpoints = endpoints.endpoints;
+        this.assets    = endpoints.assets;
+        this.sever     = endpoints.server;
         this.options   = options;
         this.errors    = errors;
     }
@@ -86,7 +90,9 @@ export abstract class Bundler {
         let data = {
             created: new Date().toISOString(),
             options: this.options,
+            server: this.sever,
             endpoints: this.endpoints,
+            assets: this.assets,
             errors: this.errors
         };
         fs.writeFileSync(filepath, JSON.stringify(data, null, 4));

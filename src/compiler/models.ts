@@ -117,7 +117,26 @@ export type EndpointStructure = {
 
 export type Asset = {
     filepath:string;
-    segments:string[];
+    filename:string;
+    segments:Segment[];
+}
+
+
+export type AssetTree = {
+    [key:string]:AssetTree|Asset[];
+}
+
+
+export type AssetStructure = {
+    list:Asset[];
+    tree:AssetTree;
+}
+
+
+export type Structure = {
+    endpoints?:EndpointStructure;
+    assets?:AssetStructure;
+    server?:ServerConfigFile;
 }
 
 

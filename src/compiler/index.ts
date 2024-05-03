@@ -33,8 +33,9 @@ export class Compiler {
             return this.display({ logs: errorsOptions, verbose, success: false });
         }
 
-        let { logs, endpoints, server } = await getStructure(options.input);
-        if (!endpoints || !server) {
+        let structure = await getStructure(options.input);
+        let logs      = structure.logs;
+        if (!structure.endpoints || !structure.server || !structure.assets) {
             logs.push({
                 level: Level.ERROR,
                 text: "Failed to generate endpoints."
@@ -47,7 +48,7 @@ export class Compiler {
 
         
         try {
-            await NewBundler(endpoints, options, logs).build();
+            await NewBundler(structure, options, logs).build();
         } catch (error) {
             logs.push({
                 level: Level.ERROR,

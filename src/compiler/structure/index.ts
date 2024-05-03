@@ -12,30 +12,25 @@
 
 
 import { getEndpoint as getEndpointFileByDeclaration } from "./endpoint/index.js";
-import { DirectoryStructureFile, DirectoryStructureTree } from "../utilities/path/directory-structure/model.js";
+import { DirectoryStructureTree } from "../utilities/path/directory-structure/model.js";
 import { Path } from "../utilities/path/index.js";
 import { Level, Message } from "../utilities/logger/model.js"
 import { Tooling } from "../utilities/tooling/index.js";
 import { getModuleConfig } from "./config-module/index.js";
 import { getServerConfig } from "./config-server/index.js";
 import { getRouteFiles as getEndpointFiles } from "./files-route/index.js";
+import { EMPTY_ASSET_STRUCTURE, getAssetFiles } from "./files-assets/index.js";
+import { getAssets, mergeAssets } from "./assets/index.js";
 import {
     Context, CreateModuleInterface, Endpoint, EndpointTree,
     ModuleConfigFile, ModuleInterface, Segment,
-    ServerConfigFile, EndpointStructure,
-    SUPPORTED_FILE_EXTENSIONS
+    SUPPORTED_FILE_EXTENSIONS,
+    AssetTree, Asset, Structure
 } from "../models.js"
 import { Logger } from "../utilities/logger/index.js";
 
 
-type Structure = {
-    logs:Message[];
-    endpoints?:EndpointStructure;
-    server?:ServerConfigFile;
-}
-
-
-export async function getStructure(entry:string):Promise<Structure> {
+export async function getStructure(entry:string):Promise<Structure & { logs:Message[] }> {
     let logs:Message[] = [];
 
     let { server, logs: logsServer } = await getServerConfig(entry);
@@ -43,7 +38,7 @@ export async function getStructure(entry:string):Promise<Structure> {
     if (!server) return { logs };
 
 
-    let { endpoints, logs: logsEndpoints } = await getComponents(entry, server.instance.context, server.filepath, [], true);
+    let { assets, endpoints, logs: logsEndpoints } = await getComponents(entry, server.instance.context, server.filepath, [], true);
     logs.push(...logsEndpoints);
     if (!endpoints) return { logs };
 
@@ -53,12 +48,16 @@ export async function getStructure(entry:string):Promise<Structure> {
             tree: endpoints,
             list: flattenEndpoints(endpoints)
         },
+        assets: {
+            tree: assets,
+            list: flattenAssets(assets)
+        },
         server
     };
 }
 
 
-export async function getComponents(entry:string, context:Context, contextFilepath:string, segments:Segment[], isRoot:boolean):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+export async function getComponents(entry:string, context:Context, contextFilepath:string, segments:Segment[], isRoot:boolean):Promise<{ logs:Message[], endpoints?:EndpointTree, assets?:AssetTree }> {
     let logs:Message[] = [];
 
     let { module, logs: logsModule } = await getModule(entry, context, contextFilepath, isRoot);
@@ -69,13 +68,13 @@ export async function getComponents(entry:string, context:Context, contextFilepa
     logs.push(...endpointFileLogs);
     if (!endpointFiles) return { logs };
 
-    let { endpoints, logs: endpointsLogs } = await getEndpoints(module, endpointFiles.tree, segments);
+    let { files: assetFiles, logs: assetFileLogs } = getAssetFiles(module.entry);
+    logs.push(...assetFileLogs);
+
+    let { assets, endpoints, logs: endpointsLogs } = await getEndpoints(module, endpointFiles.tree, assetFiles.tree, segments);
     logs.push(...endpointsLogs);
 
-    return {
-        endpoints: endpoints,
-        logs: logs
-    };
+    return { endpoints, assets, logs };
 }
 
 
@@ -99,26 +98,33 @@ async function getModule(entry:string, context:Context, contextFilepath:string, 
 }
 
 
-async function getEndpoints(module:ModuleConfigFile, endpointTree:DirectoryStructureTree, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+async function getEndpoints(module:ModuleConfigFile, endpointTree:DirectoryStructureTree, assetTree:DirectoryStructureTree, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree, assets?:AssetTree }> {
     let endpoints:EndpointTree = {};
+    let assets:AssetTree       = getAssets(assetTree, segments);
     let logs:Message[]         = [];
     let isModuleLoader:boolean = false;
 
     if (endpointTree.files.length > 0) {
-        let { isModuleLoader: _isModuleLoader, endpoints: _endpoints, logs: endpointLogs } = await getEndpointFile(module, endpointTree.files[0].filepath.absolute, segments);
-        isModuleLoader = _isModuleLoader;
-        logs.push(...endpointLogs);
-        if (_endpoints) {
-            endpoints = { ...endpoints, ..._endpoints };
+        let filepath   = endpointTree.files[0].filepath.absolute;
+        let component  = await getEndpointFile(module, filepath, segments);
+        isModuleLoader = component.isModuleLoader;
+        logs.push(...component.logs);
+        if (component.endpoints) {
+            endpoints = { ...endpoints, ...component.endpoints };
+        }
+        if (component.assets) {
+            let { assets: _assets, logs: _logs } = mergeAssets(assets, component.assets, segments);
+            logs.push(..._logs);
+            assets = _assets;
         }
     }
 
     if (isModuleLoader && Object.keys(endpointTree.directories).length > 0) {
-        let directory = Object.keys(endpointTree.directories)[0];
+        let dirName = Object.keys(endpointTree.directories)[0];
         logs.push({
             level: Level.ERROR,
             text: `Sub-routes are not supported in module loading routes.`,
-            content: `Remove the "${directory}" route from "${segments.map(segment => segment.name).join("/")}"`,
+            content: `Remove the "${dirName}" route from "${segments.map(segment => segment.name).join("/")}"`,
             file: {
                 filepath: Path.getDirectory(endpointTree.files[0].filepath.absolute)
             }
@@ -131,22 +137,33 @@ async function getEndpoints(module:ModuleConfigFile, endpointTree:DirectoryStruc
             throw new Error(`Overlapping endpoint segment: "${segmentKey}".`);
         }
 
-        let { endpoints: _endpoints, logs: logsEndpoints } = await getEndpoints(
+        let _segments = [...segments, getSegment(segmentName)];
+        let component = await getEndpoints(
             module,
             endpointTree.directories[segmentName],
-            [...segments, getSegment(segmentName)]
+            EMPTY_ASSET_STRUCTURE.tree,
+            _segments
         );
-        logs.push(...logsEndpoints);
-        if (_endpoints) {
-            endpoints[segmentKey] = _endpoints;
+        logs.push(...component.logs);
+        if (component.endpoints) {
+            endpoints[segmentKey] = component.endpoints;
+        }
+        if (Object.keys(component.assets).length > 0) {
+            let subAssets = (assets[segmentKey] ? assets[segmentKey] : {}) as AssetTree;
+            let { assets: _subAssets, logs: _logs } = mergeAssets(subAssets, component.assets, _segments);
+            logs.push(..._logs);
+            assets[segmentKey] = _subAssets;
         }
     }
 
-    return { logs, endpoints };
+    console.log(`======= Assets 2 - ${segments.map(segment => segment.name).join(".")} =======`);
+    console.log(assets);
+
+    return { logs, endpoints, assets };
 }
 
 
-async function getEndpointFile(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], isModuleLoader:boolean, endpoints?:EndpointTree }> {
+async function getEndpointFile(module:ModuleConfigFile, filepath:string, segments:Segment[]):Promise<{ logs:Message[], isModuleLoader:boolean, endpoints?:EndpointTree, assets?:AssetTree }> {
     let functionsFilepath = getFunctionsFilepath(filepath);
     let viewFilepath      = getViewFilepath(filepath);
     if (functionsFilepath && await Tooling.hasExportedLoader(functionsFilepath)) {
@@ -176,7 +193,7 @@ function getFunctionsFilepath(filepath:string):string|undefined {
 }
 
 
-async function getEndpointFileByModule(functionsFilepath:string, viewFilepath:string|undefined, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
+async function getEndpointFileByModule(functionsFilepath:string, viewFilepath:string|undefined, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree, assets?:AssetTree }> {
     let logs:Message[] = [];
 
     if (viewFilepath != undefined) {
@@ -237,6 +254,21 @@ function flattenEndpoints(endpointTree?:EndpointTree):Endpoint[] {
     let segments = Object.keys(endpointTree).filter(segment => segment != ".");
     endpointList.push(...segments.map(segment => flattenEndpoints(endpointTree[segment] as EndpointTree)).flat());
     return endpointList;
+}
+
+
+function flattenAssets(assetTree?:AssetTree):Asset[] {
+    if (!assetTree) return [];
+    if (assetTree["filepath"]) return [assetTree as unknown as Asset];
+
+    let assetList = [];
+    if (assetTree["."]) {
+        assetList.push(assetTree["."]);
+    }
+
+    let segments = Object.keys(assetTree).filter(segment => segment != ".");
+    assetList.push(...segments.map(segment => flattenAssets(assetTree[segment] as AssetTree)).flat());
+    return assetList;
 }
 
 
