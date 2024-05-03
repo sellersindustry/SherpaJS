@@ -25,7 +25,7 @@ import { Logger } from "../../utilities/logger/index.js";
 const REGEX_SEGMENT = /^([a-zA-Z0-9-]+)|(\[[a-zA-Z0-9-]+\])$/;
 
 
-export function getRouteFiles(entry:string):{ logs:Message[], files?:DirectoryStructure } {
+export function getEndpointFiles(entry:string):{ logs:Message[], files?:DirectoryStructure } {
     let directory = Path.join(entry, "routes");
 
     if (!fs.existsSync(directory)) {

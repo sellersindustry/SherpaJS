@@ -11,16 +11,16 @@
  */
 
 
-import { getEndpoint as getEndpointFileByDeclaration } from "./endpoint/index.js";
 import { DirectoryStructureTree } from "../utilities/path/directory-structure/model.js";
 import { Path } from "../utilities/path/index.js";
 import { Level, Message } from "../utilities/logger/model.js"
 import { Tooling } from "../utilities/tooling/index.js";
 import { getModuleConfig } from "./config-module/index.js";
 import { getServerConfig } from "./config-server/index.js";
-import { getRouteFiles as getEndpointFiles } from "./files-route/index.js";
-import { EMPTY_ASSET_STRUCTURE, getAssetFiles } from "./files-assets/index.js";
+import { EMPTY_ASSET_STRUCTURE, getAssetFiles } from "./file-assets/index.js";
 import { getAssets, mergeAssets } from "./assets/index.js";
+import { getEndpointFiles } from "./file-endpoints/index.js";
+import { getEndpoint as getEndpointFileByDeclaration } from "./endpoint/index.js";
 import {
     Context, CreateModuleInterface, Endpoint, EndpointTree,
     ModuleConfigFile, ModuleInterface, Segment,
