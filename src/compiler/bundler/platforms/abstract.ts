@@ -51,7 +51,7 @@ export abstract class Bundler {
 
 
     getFilepathAssets():string {
-        return Path.join(this.options.output, ".sherpa", "public");
+        return Path.join(this.getFilepath(), "public");
     }
 
 

@@ -55,6 +55,7 @@ export class Compiler {
                 text: "Failed to bundle SherpaJS Server",
                 content: error.message
             });
+            console.log(error.stack);
             return this.display({ logs, verbose, success: false });
         }
         return this.display({ logs, verbose, success: true });

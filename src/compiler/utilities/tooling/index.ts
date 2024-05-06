@@ -82,7 +82,7 @@ export class Tooling {
             ...props.esbuild,
             stdin: {
                 contents: props.buffer,
-                resolveDir: path.resolve(props.resolve),
+                resolveDir: props.resolve ? path.resolve(props.resolve) : undefined,
                 loader: "ts",
             },
             outfile: path.resolve(props.output),

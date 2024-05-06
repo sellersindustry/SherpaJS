@@ -31,25 +31,26 @@ export class Vercel extends Bundler {
         await super.build();
         this.makeDirectory();
         this.writeRootConfig();
-        this.endpoints.list.forEach(async (endpoint, index) => {
+        //! FIXME - WRITE CONTENT, using function getFilepathAssets
+        await Promise.all(this.endpoints.list.map(async (endpoint, index) => {
             let route    = RequestUtilities.getDynamicURL(endpoint.segments);
             let filepath = this.getDirectory(route, "index.func");
+            let resolve  = endpoint.filepath ? Path.getDirectory(endpoint.filepath) : Path.getDirectory(endpoint.viewFilepath);
             this.writeEndpointConfig(filepath);
             await Tooling.build({
                 buffer:  this.getBuffer(endpoint, this.views[index]),
                 output:  Path.join(filepath, "index.js"),
-                resolve: Path.getDirectory(endpoint.filepath),
+                resolve: resolve,
                 options: this.options,
                 esbuild: { 
                     platform: "node",
                 }
             });
-        });
+        }));
     }
 
 
     private getBuffer(endpoint:Endpoint, view:View) {
-        // FIXME - load view from static
         let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core/internal" : Path.join(Path.getRootDirectory(), "dist/src/internal/index.js");
         return `
             import path from "path";
