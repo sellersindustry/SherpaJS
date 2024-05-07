@@ -72,7 +72,7 @@ export class Compiler {
         errors.push(...this.validateFilepath(options.input, "Input"));
         errors.push(...this.validateFilepath(options.output, "Output"));
         if (options?.developer?.environment?.files) {
-            errors.push(...options?.developer?.environment?.files.map(filepath => {
+            errors.push(...options.developer.environment.files.map(filepath => {
                 return this.validateFilepath(filepath, "Environment File");
             }).flat());
         }
