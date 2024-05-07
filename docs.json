@@ -4,22 +4,26 @@
     "sidebar": [[
         "Getting Started",
         [
-            ["Overview", "/"],
-            ["Installation", "/installation"],
-            ["Project Structure", "/structure"]
+            ["Overview - WIP", "/"],
+            ["Installation - WIP", "/installation"],
+            ["Project Structure - WIP", "/structure"]
         ]
     ], [
         "Building Your Application",
         [
-            ["Defining Routes", "/"],
-            ["Dynamic Routes", "/"],
-            ["Endpoints", "/"],
-            ["Static Assets", "/"]
+            ["Defining Routes - WIP", "/"],
+            ["Dynamic Routes - WIP", "/"],
+            ["Endpoints - WIP", "/"],
+            ["Static Assets - WIP", "/"]
         ]
     ], [
         "API Reference",
         [
-            ["Sherpa CLI", "/api/cli"]
+            ["Response - WIP", "/api/response"],
+            ["Request - WIP", "/api/request"],
+            ["Headers - WIP", "/api/headers"],
+            ["Parameters - WIP", "/api/parameters"],
+            ["SherpaJS CLI", "/api/cli"]
         ]
     ]]
 }
