@@ -94,7 +94,7 @@ CLI.command("start")
         let server = spawn("node", [filepath, options.port]);
         server.stdout.on("data", (data) => console.log(data.toString().replace("\n", "")));
         server.stderr.on("data", (data) => console.log(data.toString().replace("\n", "")));
-        server.on("close", (data) => console.log(data.toString().replace("\n", "")));
+        server.on("close", (data) => { if (data) console.log(data.toString().replace("\n", "") )});
     });
 
 

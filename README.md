@@ -33,7 +33,10 @@ SherpaJS empowers developers to effortlessly construct <ins>**modular and agnost
     - [Create a Server](#creating-a-server)
     - [Configuration](#server-configuration)
     - [Deploy a Server](#deploy-a-server)
- - [Endpoints & Routes](#routes--endpoints)
+ - Routing
+    - [Routes](#routes)
+    - [Endpoints](#endpoints)
+    - [Static Assets](#static-assets)
  - [Modules](#modules)
     - [Create a Module](#creating-a-module)
     - [Configuration](#module-configuration)
@@ -170,7 +173,7 @@ export default SherpaJS.New.server({
 ```
 
 #### Step 4
-Create an your endpoints in the `/routes` directory. See an example below or [learn about endpoints](#routes--endpoints).
+Create an your endpoints in the `/routes` directory. See an example below or [learn about endpoints](#endpoints).
 
 ```typescript
 // ./routes/index.ts
@@ -288,9 +291,6 @@ different port number with an argument `node ./.sherpa/index.js 5000`.
 
 <br>
 <br>
-
-
-## Routes & Endpoints
 
 
 ## Routes
@@ -572,6 +572,16 @@ Response.redirect("../foo", { status: 201, headers: new Headers() });
 ```
 
 
+## Static Assets
+SherpaJS can serve static assets under the `public` folder. Modules can also
+host assets in the same way, by adding a `public` directory to you module any
+assets will be hosted on the server under the same directory the module is
+loaded. Because of this you may run into issues where assets can be overridden
+if you load assets at the same directory on your server that a module with 
+assets is loaded - the SherpaJS compiler will give you warning of this 
+potential issue and will error if any assets are written over.
+
+
 <br>
 <br>
 
@@ -657,7 +667,7 @@ correspond to it's relative endpoint. Endpoint logic is implemented in
 javascript file named `index.ts` within these route directories.
 
 A simple implementation of an endpoint can be seen below. For detailed
-instructions on creating routes and endpoints, see the [endpoints](#routes--endpoints)
+instructions on creating routes and endpoints, see the [endpoints](#endpoints)
 section.
 
 ```typescript

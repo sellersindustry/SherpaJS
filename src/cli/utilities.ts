@@ -57,12 +57,12 @@ export function getKeyValuePairs(values:string[]|undefined):{ logs:Message[], va
 }
 
 
-export function getVersion():string|undefined {
+export function getVersion():string {
     try {
         let filepath = Path.join(Path.getRootDirectory(), "package.json");
         return JSON.parse(fs.readFileSync(filepath, "utf8")).version;
     } catch (error) {
-        return undefined;
+        return "n/a";
     }
 }
 
