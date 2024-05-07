@@ -20,7 +20,7 @@ import { cyan, green, bold, magenta, gray, red } from "colorette"
 import { OriginURL } from "../native/url/index.js";
 
 
-type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined|Promise<void>|void;
+type handler = (request:IncomingMessage, response:ServerResponse) => Promise<undefined>|undefined|Promise<void>|void;
 type endpoint = {
     url:RegExp;
     handler:handler;

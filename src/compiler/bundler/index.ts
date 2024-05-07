@@ -10,7 +10,7 @@
  *
  */
 
-import { BuildOptions, BundlerType, EndpointStructure, Structure } from "../models.js";
+import { BuildOptions, BundlerType, Structure } from "../models.js";
 import { Local } from "./platforms/local/index.js";
 import { Vercel } from "./platforms/vercel/index.js";
 import { Logger } from "../utilities/logger/index.js";

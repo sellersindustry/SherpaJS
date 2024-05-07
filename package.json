@@ -26,10 +26,10 @@
 		"node": ">=16"
 	},
 	"scripts": {
-		"build": "tsc --build --force tsconfig.json",
 		"prepare": "npm run build",
-		"lint": "eslint . --ext .ts",
-		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+		"build": "tsc --build --force ./toolchain/tsconfig.json",
+		"lint": "eslint . --ext .ts -c ./toolchain/.eslintrc.cjs",
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c ./toolchain/jest.config.ts",
 		"test-server": "node ./dist/tests/endpoints/index.test.js"
 	},
 	"devDependencies": {
@@ -45,7 +45,6 @@
 	},
 	"license": "ISC",
 	"dependencies": {
-		"@types/fs-extra": "^11.0.4",
 		"checksum": "^1.0.0",
 		"colorette": "^2.0.20",
 		"commander": "^11.1.0",
@@ -53,7 +52,6 @@
 		"esbuild": "^0.19.10",
 		"parse-imports": "^1.1.2",
 		"stacktracey": "^2.1.8",
-		"ts-node": "^10.9.2",
 		"typescript": "^5.3.3"
 	}
 }

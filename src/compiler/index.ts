@@ -71,9 +71,11 @@ export class Compiler {
         let errors:Message[] = [];
         errors.push(...this.validateFilepath(options.input, "Input"));
         errors.push(...this.validateFilepath(options.output, "Output"));
-        errors.push(...options.developer.environment.files.map(filepath => {
-            return this.validateFilepath(filepath, "Environment File");
-        }).flat());
+        if (options?.developer?.environment?.files) {
+            errors.push(...options?.developer?.environment?.files.map(filepath => {
+                return this.validateFilepath(filepath, "Environment File");
+            }).flat());
+        }
         return errors;
     }
 

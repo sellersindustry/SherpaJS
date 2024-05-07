@@ -5,7 +5,7 @@
         "moduleResolution": "Node16",
         "esModuleInterop": true,
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "../dist",
         "declaration": true
     },
     "exclude": [
@@ -16,13 +16,13 @@
         "./*.test.ts"
     ],
     "files": [
-        "./index.ts",
-        "./src/cli/index.ts",
-        "./src/compiler/index.ts",
-        "./src/native/index.ts",
-        "./src/internal/index.ts",
-        "./src/instantiate/index.ts",
-        "./src/server-local/index.ts",
-        "./tests/endpoints/index.test.ts"
+        "../index.ts",
+        "../src/cli/index.ts",
+        "../src/compiler/index.ts",
+        "../src/native/index.ts",
+        "../src/internal/index.ts",
+        "../src/instantiate/index.ts",
+        "../src/server-local/index.ts",
+        "../tests/endpoints/index.test.ts"
     ]
 }

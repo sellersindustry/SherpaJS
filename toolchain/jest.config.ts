@@ -2,6 +2,7 @@ import type { JestConfigWithTsJest } from "ts-jest";
 
 const config: JestConfigWithTsJest = {
 	verbose: true,
+	roots: ["../"],
 	transform: {
 		"^.+\\.ts?$": [
 			"ts-jest",
@@ -14,7 +15,7 @@ const config: JestConfigWithTsJest = {
 	moduleNameMapper: {
 		"^(\\.{1,2}/.*)\\.js$": "$1",
 	},
-	testPathIgnorePatterns : ["/node_modules/", "/tests/endpoints/"],
+	testPathIgnorePatterns : ["../node_modules/", "../tests/endpoints/"],
 };
 
 export default config;

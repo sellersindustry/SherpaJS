@@ -243,7 +243,7 @@ async function getModule(buffer:string, namespace:string, useBinding:boolean):Pr
 
 function getNamespaceByExport(buffer:string, characterIndex:number):string|undefined {
     let match = buffer.slice(characterIndex).match(/default\s+(?<exported>[a-zA-Z0-9_]+)/);
-    return match ? match.groups["exported"] : undefined;
+    return match?.groups?.["exported"];
 }
 
 
