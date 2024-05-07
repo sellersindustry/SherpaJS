@@ -27,29 +27,34 @@ export class Vercel extends Bundler {
     }
 
 
+    getFilepathAssets(): string {
+        return Path.join(this.getFilepath(), "output/static");
+    }
+
+
     async build() {
         await super.build();
         this.makeDirectory();
         this.writeRootConfig();
-        this.endpoints.list.forEach(async (endpoint, index) => {
+        await Promise.all(this.endpoints.list.map(async (endpoint, index) => {
             let route    = RequestUtilities.getDynamicURL(endpoint.segments);
             let filepath = this.getDirectory(route, "index.func");
+            let resolve  = endpoint.filepath ? Path.getDirectory(endpoint.filepath) : Path.getDirectory(endpoint.viewFilepath);
             this.writeEndpointConfig(filepath);
             await Tooling.build({
                 buffer:  this.getBuffer(endpoint, this.views[index]),
                 output:  Path.join(filepath, "index.js"),
-                resolve: Path.getDirectory(endpoint.filepath),
+                resolve: resolve,
                 options: this.options,
                 esbuild: { 
                     platform: "node",
                 }
             });
-        });
+        }));
     }
 
 
     private getBuffer(endpoint:Endpoint, view:View) {
-        // FIXME - load view from static
         let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core/internal" : Path.join(Path.getRootDirectory(), "dist/src/internal/index.js");
         return `
             import path from "path";
@@ -108,7 +113,7 @@ export class Vercel extends Bundler {
 
 
     private writeRootConfig() {
-        let buffer   = JSON.stringify(this.getRootConfig(), null, 3);
+        let buffer   = JSON.stringify(this.getRootConfig(), null, 4);
         let filepath = Path.join(this.options.output, ".vercel/output/config.json");
         fs.writeFileSync(filepath, buffer);
     }
@@ -117,20 +122,26 @@ export class Vercel extends Bundler {
     private getRootConfig():Record<string, unknown> {
         return {
             version: 3,
-            routes: this.endpoints.list.filter((endpoint) => {
-                return endpoint.segments.filter((segment) => segment.isDynamic).length > 0
-            }).map((endpoint) => {
-                let { source: src, destination: dest } = this.pathParamRedirects(endpoint.segments)
-                return { src, dest };
-            })
+            routes: [
+                ...this.endpoints.list.filter((endpoint) => {
+                    return RequestUtilities.isDynamicURL(endpoint.segments);
+                }).map((endpoint) => {
+                    return this.pathParamRedirects(endpoint.segments);
+                }),
+                ...this.assets.list.filter((asset) => {
+                    return RequestUtilities.isDynamicURL(asset.segments);
+                }).map((asset) => {
+                    return this.pathParamRedirects(asset.segments, asset.filename);
+                })
+            ]
         }
     }
 
 
-    private pathParamRedirects(segments:Segment[]):{ source:string, destination:string } {
+    private pathParamRedirects(segments:Segment[], filename?:string):{ src:string, dest:string } {
         return {
-            source: "/" + segments.map((segment) => segment.isDynamic ? "([^/]+)" : segment.name).join("/"),
-            destination: "/" + RequestUtilities.getDynamicURL(segments)
+            src: "/" + segments.map((segment) => segment.isDynamic ? "([^/]+)" : segment.name).join("/") + (filename ? `/${filename}` : ""),
+            dest: "/" + RequestUtilities.getDynamicURL(segments) + (filename ? `/${filename}` : "")
         }
     }
 

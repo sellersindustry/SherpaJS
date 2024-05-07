@@ -15,11 +15,12 @@ import {
     IncomingMessage, ServerResponse,
     Server as HTTPServer, createServer
 } from "http";
+import fs from "fs";
 import { cyan, green, bold, magenta, gray, red } from "colorette"
 import { OriginURL } from "../native/url/index.js";
 
 
-type handler = (request?:IncomingMessage, response?:ServerResponse) => Promise<undefined>|undefined;
+type handler = (request:IncomingMessage, response:ServerResponse) => Promise<undefined>|undefined|Promise<void>|void;
 type endpoint = {
     url:RegExp;
     handler:handler;
@@ -64,10 +65,26 @@ export class ServerLocal {
     }
 
 
-    public addRoute(url:string, handler:handler):void {
+    public addEndpoint(url:string, handler:handler):void {
         this.endpoints.push({
             url: this.convertDynamicSegments(url),
             handler: handler
+        });
+    }
+
+
+    public addAsset(url:string, filepath:string):void {
+        this.endpoints.push({
+            url: this.convertDynamicSegments(url),
+            handler: (req:IncomingMessage, res:ServerResponse) => {
+                fs.readFile(filepath, (error, data) => {
+                    if (error) {
+                        throw error;
+                    }
+                    res.writeHead(200);
+                    res.end(data);
+                });
+            }
         });
     }
 

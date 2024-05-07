@@ -1,5 +1,5 @@
-// FIXME - Implement Testing Suite
-//! WIP
+// FIXME - Add Headers + Footers
+
 import StackTracey from "stacktracey";
 import {
     Method, Body, BodyType,
@@ -68,11 +68,11 @@ export class Tester {
     }
 
 
-    private getRequestBody(body:Body):{ body:string, contentType:string } {
+    private getRequestBody(body:Body):{ body:string|undefined, contentType:string } {
         let contentType:string;
         let rawBody:string;
         if (!body) {
-            return { body: undefined, contentType: undefined };
+            return { body: undefined, contentType: "" };
         } else if (typeof body === "object") {
             contentType = "application/json";
             rawBody     = JSON.stringify(body);

@@ -18,14 +18,14 @@ export const FILENAME_CONFIG_MODULE         = "sherpa.module";
 export const FILENAME_CONFIG_SERVER         = "sherpa.server";
 export const EXPORT_VARIABLES_METHODS       = ["GET", "POST", "PATCH", "DELETE", "PUT"];
 export const EXPORT_VARIABLES               = [...EXPORT_VARIABLES_METHODS];
-export const SUPPORTED_FILE_EXTENSIONS = {
+export const SUPPORTED_FILE_EXTENSIONS      = {
     "CONFIG": ["JS", "TS"],
     "ENDPOINT": {
         "MODULE": ["JS", "TS"],
         "FUNCTIONS": ["JS", "TS"],
         "VIEW": ["HTML"]
     }
-}
+};
 
 
 export type Context = unknown;
@@ -112,6 +112,31 @@ export type EndpointTree = {
 export type EndpointStructure = {
     list:Endpoint[];
     tree:EndpointTree;
+}
+
+
+export type Asset = {
+    filepath:string;
+    filename:string;
+    segments:Segment[];
+}
+
+
+export type AssetTree = {
+    [key:string]:AssetTree|Asset[];
+}
+
+
+export type AssetStructure = {
+    list:Asset[];
+    tree:AssetTree;
+}
+
+
+export type Structure = {
+    endpoints?:EndpointStructure;
+    assets?:AssetStructure;
+    server?:ServerConfigFile;
 }
 
 

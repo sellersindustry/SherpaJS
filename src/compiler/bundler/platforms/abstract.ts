@@ -12,10 +12,11 @@
 
 
 import fs from "fs";
-import { BuildOptions, EndpointStructure } from "../../models.js";
+import { AssetStructure, BuildOptions, EndpointStructure, ServerConfigFile, Structure } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 import { Path } from "../../utilities/path/index.js";
 import { Message } from "../../utilities/logger/model.js";
+import { RequestUtilities } from "../../../native/request/utilities.js";
 
 
 export type View = {
@@ -28,13 +29,17 @@ export abstract class Bundler {
 
 
     protected options:BuildOptions;
+    protected assets:AssetStructure;
     protected endpoints:EndpointStructure;
+    protected sever:ServerConfigFile;
     protected views:(View|undefined)[];
     protected errors:Message[]|undefined;
 
 
-    constructor(endpoints:EndpointStructure, options:BuildOptions, errors?:Message[]) {
-        this.endpoints = endpoints;
+    constructor(endpoints:Structure, options:BuildOptions, errors?:Message[]) {
+        this.endpoints = endpoints.endpoints;
+        this.assets    = endpoints.assets;
+        this.sever     = endpoints.server;
         this.options   = options;
         this.errors    = errors;
     }
@@ -45,11 +50,17 @@ export abstract class Bundler {
     }
 
 
+    getFilepathAssets():string {
+        return Path.join(this.getFilepath(), "public");
+    }
+
+
     async build() {
         await this.clean();
-        this.makeBuildDirectory();
-        this.makeBuildManifest();
-        this.makeBuildViews();
+        this.createBuildDirectory();
+        this.createManifest();
+        this.createViews();
+        this.createAssets();
     }
 
 
@@ -76,24 +87,26 @@ export abstract class Bundler {
     }
 
 
-    private makeBuildDirectory() {
+    private createBuildDirectory() {
         fs.mkdirSync(this.getFilepath());
     }
 
 
-    private makeBuildManifest() {
+    private createManifest() {
         let filepath = Path.join(this.getFilepath(), "sherpa.manifest.json");
         let data = {
             created: new Date().toISOString(),
             options: this.options,
+            server: this.sever,
             endpoints: this.endpoints,
+            assets: this.assets,
             errors: this.errors
         };
         fs.writeFileSync(filepath, JSON.stringify(data, null, 4));
     }
 
 
-    private makeBuildViews() {
+    private createViews() {
         this.views = [];
         for (let endpoint of this.endpoints.list) {
             if (endpoint.viewFilepath) {
@@ -105,7 +118,26 @@ export abstract class Bundler {
         }
     }
 
+
+    private createAssets() {
+        let destination = this.getFilepathAssets();
+        if (!fs.existsSync(destination)) {
+            fs.mkdirSync(destination, { recursive: true,  });
+        }
+
+        for (let asset of this.assets.list) {
+            let route = RequestUtilities.getDynamicURL(asset.segments);
+
+            let _destination = Path.join(destination, route);
+            if (!fs.existsSync(_destination)) {
+                fs.mkdirSync(_destination, { recursive: true,  });
+            }
+
+            fs.copyFileSync(asset.filepath, Path.join(_destination, asset.filename));
+        }
+    }
     
+
 }
 
 

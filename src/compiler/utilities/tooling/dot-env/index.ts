@@ -15,7 +15,10 @@ import fs from "fs";
 import { BuildOptions, EnvironmentVariables } from "../../../models.js";
 
 
-export function getEnvironmentVariables(options:BuildOptions):EnvironmentVariables {
+export function getEnvironmentVariables(options:BuildOptions|undefined):EnvironmentVariables {
+    if (!options) {
+        return {};
+    }
     return parseAll({
         ...process.env as EnvironmentVariables,
         ...getFiles(options).map(filepath => parseFile(filepath)).reduce((a, b) => { return { ...a, ...b } }, {}),

@@ -10,7 +10,7 @@
  *
  */
 
-import { BuildOptions, BundlerType, EndpointStructure } from "../models.js";
+import { BuildOptions, BundlerType, Structure } from "../models.js";
 import { Local } from "./platforms/local/index.js";
 import { Vercel } from "./platforms/vercel/index.js";
 import { Logger } from "../utilities/logger/index.js";
@@ -18,11 +18,11 @@ import { Message } from "../utilities/logger/model.js";
 import { Bundler } from "./platforms/abstract.js";
 
 
-export function NewBundler(endpoints:EndpointStructure, options:BuildOptions, errors?:Message[]):Bundler {
+export function NewBundler(structure:Structure, options:BuildOptions, errors?:Message[]):Bundler {
     if (options.bundler === BundlerType.Vercel) {
-        return new Vercel(endpoints, options, errors);
+        return new Vercel(structure, options, errors);
     } else if (options.bundler === BundlerType.local) {
-        return new Local(endpoints, options, errors);
+        return new Local(structure, options, errors);
     } else {
         Logger.raise({ text: `Invalid bundler "${options.bundler}"` });
         return undefined as unknown as Bundler;
@@ -31,10 +31,10 @@ export function NewBundler(endpoints:EndpointStructure, options:BuildOptions, er
 
 
 export function clean(filepath:string) {
-    let endpoints = { list: [], tree: {} };
+    let structure = { assets: {}, endpoints: {}, server: {} } as Structure;
     let options   = { bundler: BundlerType.local, input: filepath, output: filepath };
-    new Vercel(endpoints, options).clean();
-    new Local(endpoints, options).clean();
+    new Vercel(structure, options).clean();
+    new Local(structure, options).clean();
 }
 
 

@@ -33,23 +33,29 @@ export class Compiler {
             return this.display({ logs: errorsOptions, verbose, success: false });
         }
 
-        let { logs, endpoints, server } = await getStructure(options.input);
-        if (!endpoints || !server) {
+        let structure = await getStructure(options.input);
+        let logs      = structure.logs;
+        if (!structure.endpoints || !structure.server || !structure.assets) {
             logs.push({
                 level: Level.ERROR,
                 text: "Failed to generate endpoints."
             });
             return this.display({ logs, verbose, success: false });
         }
+        if (Logger.hasError(logs)) {
+            return this.display({ logs, verbose, success: false });
+        }
+
         
         try {
-            await NewBundler(endpoints, options, logs).build();
+            await NewBundler(structure, options, logs).build();
         } catch (error) {
             logs.push({
                 level: Level.ERROR,
                 text: "Failed to bundle SherpaJS Server",
                 content: error.message
             });
+            console.log(error.stack);
             return this.display({ logs, verbose, success: false });
         }
         return this.display({ logs, verbose, success: true });
@@ -65,9 +71,11 @@ export class Compiler {
         let errors:Message[] = [];
         errors.push(...this.validateFilepath(options.input, "Input"));
         errors.push(...this.validateFilepath(options.output, "Output"));
-        errors.push(...options.developer.environment.files.map(filepath => {
-            return this.validateFilepath(filepath, "Environment File");
-        }).flat());
+        if (options?.developer?.environment?.files) {
+            errors.push(...options.developer.environment.files.map(filepath => {
+                return this.validateFilepath(filepath, "Environment File");
+            }).flat());
+        }
         return errors;
     }
 

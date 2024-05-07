@@ -1,5 +1,4 @@
-// FIXME - Implement Testing Suite
-//! WIP
+// FIXME - Add Headers + Footers
 
 import { Method, Body } from "../../../index.js";
 

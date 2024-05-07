@@ -1,5 +1,4 @@
-// FIXME - Implement Testing Suite
-//! WIP
+// FIXME - Add Headers + Footers
 
 import { Tester } from "./tester.js";
 import { Options, TestResults } from "./model.js";

@@ -15,7 +15,7 @@ import { Context, Method } from "../../compiler/models.js";
 import { Response, IResponse, IRequest } from "../../native/index.js";
 
 
-type callback  = (request?:IRequest, context?:Context) => Promise<IResponse|undefined>|IResponse|undefined;
+type callback  = (request:IRequest, context:Context) => Promise<IResponse|undefined>|IResponse|undefined;
 type endpoints = {
     [key in keyof typeof Method]: undefined|callback;
 };
@@ -30,7 +30,7 @@ export async function Handler(endpoints:endpoints, view:string|undefined, contex
         }
     } else if (endpoints[request.method]) {
         try {
-            let response = await endpoints[request.method](request, context);
+            let response = await (endpoints[request.method] as callback)(request, context);
             if (!response) {
                 return Response.new({ status: 200 });
             }
