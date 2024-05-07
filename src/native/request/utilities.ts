@@ -17,6 +17,13 @@ import { Segment } from "../../compiler/models.js";
 export class RequestUtilities {
 
 
+    static isDynamicURL(segments:Segment[]):boolean {
+        return segments.some((segment) => {
+            return segment.isDynamic;
+        });
+    }
+
+
     static getDynamicURL(segments:Segment[]):string {
         return segments.map((segment) => {
             return segment.isDynamic ? `[${segment.name}]` : segment.name;
