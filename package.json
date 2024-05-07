@@ -29,7 +29,8 @@
 		"build": "tsc --build --force tsconfig.json",
 		"prepare": "npm run build",
 		"lint": "eslint . --ext .ts",
-		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+		"test-server": "node ./dist/tests/endpoints/index.test.js"
 	},
 	"devDependencies": {
 		"@types/checksum": "^0.1.35",

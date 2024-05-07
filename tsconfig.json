@@ -23,6 +23,6 @@
         "./src/internal/index.ts",
         "./src/instantiate/index.ts",
         "./src/server-local/index.ts",
-        "./tests/endpoints/suite/index.ts"
+        "./tests/endpoints/index.test.ts"
     ]
 }

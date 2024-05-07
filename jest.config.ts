@@ -14,6 +14,7 @@ const config: JestConfigWithTsJest = {
 	moduleNameMapper: {
 		"^(\\.{1,2}/.*)\\.js$": "$1",
 	},
+	testPathIgnorePatterns : ["/node_modules/", "/tests/endpoints/"],
 };
 
 export default config;

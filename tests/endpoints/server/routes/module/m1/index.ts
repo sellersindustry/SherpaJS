@@ -1,7 +1,7 @@
-import PassPrimary1 from "../../../../../modules/pass-primary-1/sherpa.module";
+import PrimaryPass1 from "../../../../modules/pass-primary-1/sherpa.module";
 
 
-export default PassPrimary1.load({
+export default PrimaryPass1.load({
     test: "Hello World"
 })
 

@@ -1,5 +1,4 @@
-// FIXME - Implement Testing Suite
-//! WIP
+// FIXME - Add Headers + Footers
 
 export class Fail extends Error {
     constructor(message:string) {

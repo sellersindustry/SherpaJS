@@ -1,23 +1,11 @@
-// FIXME - Implement Testing Suite
-//! WIP
+// FIXME - Add Headers + Footers
 
-//! export all from here
 
-import { BodyType, Method } from "../../../index.js";
-import { equals } from "./helpers.js";
 import { Suite } from "./suite.js";
+import { Method, BodyType, Body } from "../../../index.js";
+import { equals } from "./helpers.js";
 
 
-let suite = new Suite("http://localhost:3000");
+export type { Body };
+export { Suite, equals, Method, BodyType };
 
-suite.test("Example 1", {
-    method: Method.GET,
-    path: "/"
-}).expect((response) => {
-    equals(response.bodyType, BodyType.JSON);
-});
-
-
-(async () => {
-    suite.run();
-})();

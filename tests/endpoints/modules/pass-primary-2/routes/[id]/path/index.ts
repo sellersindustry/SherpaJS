@@ -1,4 +1,4 @@
-import { Request, Response } from "../../../../../../index.js";
+import { Request, Response } from "../../../../../../../index.js";
 
 export function GET(request:Request, context:unknown) {
     return Response.JSON({

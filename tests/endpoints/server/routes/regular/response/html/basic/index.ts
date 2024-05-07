@@ -1,4 +1,4 @@
-import { Response } from "../../../../../../../index.js";
+import { Response } from "../../../../../../../../index.js";
 
 
 export function POST() {
