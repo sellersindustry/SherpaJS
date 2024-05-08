@@ -1,6 +1,7 @@
 {
     "name": "SherpaJS",
     "description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
+    "headerDepth": 5,
     "sidebar": [[
         "Getting Started",
         [
@@ -19,7 +20,7 @@
     ], [
         "API Reference",
         [
-            ["Response - WIP", "/api/response"],
+            ["Response - WIP", [["Response - WIP", "/api/response"]]],
             ["Request - WIP", "/api/request"],
             ["Headers - WIP", "/api/headers"],
             ["Parameters - WIP", "/api/parameters"],
