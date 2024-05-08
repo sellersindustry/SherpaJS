@@ -5,7 +5,7 @@
     "sidebar": [[
         "Getting Started",
         [
-            ["Overview - WIP", "/"],
+            ["Overview", "/"],
             ["Installation - WIP", "/installation"],
             ["Project Structure - WIP", "/structure"]
         ]
@@ -22,7 +22,7 @@
         [
             ["Response - WIP", [["Response - WIP", "/api/response"]]],
             ["Request - WIP", "/api/request"],
-            ["Headers - WIP", "/api/headers"],
+            ["Headers", "/api/components/headers"],
             ["Parameters - WIP", "/api/parameters"],
             ["SherpaJS CLI", "/api/cli"]
         ]
