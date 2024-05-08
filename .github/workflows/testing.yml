@@ -1,17 +1,18 @@
-name: Test
+name: Testing
 
 on:
   pull_request:
     branches: ["*"]
 
 jobs:
-  test:
+
+  unit-test:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [20.x, 22.x]
 
-    name: Test (${{ matrix.os }}, NodeJS ${{ matrix.node-version }})
+    name: Unit Tests (${{ matrix.os }}, NodeJS ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -28,3 +29,21 @@ jobs:
 
       - name: Run Tests
         run: npm test
+
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linting
+        run: npm run lint
