@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [16.x, 18.x, 20.x]
+
+    name: Test (${{ matrix.os }}, NodeJS ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test

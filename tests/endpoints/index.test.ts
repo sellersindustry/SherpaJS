@@ -1,5 +1,6 @@
 import { Suite, BodyType, Method, equals } from "./suite/index.js";
 
+//! CAN WE MOVE THIS TO JEST????
 // NOTE: Separate from Jest Tests executed by running `npm run test-server {host}`
 const suite = new Suite("http://localhost:3000");
 
