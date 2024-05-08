@@ -1,20 +1,49 @@
-name: Jest Testing
+name: Testing
 
 on:
   pull_request:
     branches: ["*"]
 
 jobs:
-  test:
-    name: Run Jest tests
-    runs-on: ubuntu-latest
+
+  unit-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20.x, 22.x]
+
+    name: Unit Tests (${{ matrix.os }}, NodeJS ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run Jest tests
+      - name: Run Tests
         run: npm test
+
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linting
+        run: npm run lint
