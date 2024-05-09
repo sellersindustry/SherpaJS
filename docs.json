@@ -6,7 +6,7 @@
         "Getting Started",
         [
             ["Overview", "/"],
-            ["Installation - WIP", "/installation"],
+            ["Installation", "/installation"],
             ["Project Structure - WIP", "/structure"]
         ]
     ], [
