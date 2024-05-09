@@ -1,28 +1,29 @@
 {
     "name": "SherpaJS",
     "description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
+    "headerDepth": 5,
     "sidebar": [[
         "Getting Started",
         [
-            ["Overview - WIP", "/"],
-            ["Installation - WIP", "/installation"],
+            ["Overview", "/"],
+            ["Installation", "/installation"],
             ["Project Structure - WIP", "/structure"]
         ]
     ], [
         "Building Your Application",
         [
-            ["Defining Routes - WIP", "/"],
-            ["Dynamic Routes - WIP", "/"],
-            ["Endpoints - WIP", "/"],
-            ["Static Assets - WIP", "/"]
+            ["Routes - WIP", "/build/routes"],
+            ["Endpoints - WIP", "/build/endpoints"],
+            ["Static Assets - WIP", "/"],
+            ["Server Config - WIP", "/build/server-config"]
         ]
     ], [
         "API Reference",
         [
-            ["Response - WIP", "/api/response"],
+            ["Response - WIP", [["Response - WIP", "/api/response"]]],
             ["Request - WIP", "/api/request"],
-            ["Headers - WIP", "/api/headers"],
-            ["Parameters - WIP", "/api/parameters"],
+            ["Headers", "/api/components/headers"],
+            ["Parameters", "/api/components/parameters"],
             ["SherpaJS CLI", "/api/cli"]
         ]
     ]]

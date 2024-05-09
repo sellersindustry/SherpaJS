@@ -1,0 +1,87 @@
+# Parameters
+The `Parameters` class represents a collection of key-value pairs used for
+representing URL parameters. It provides methods for working with URL
+parameters. Paramaters are automatically parsed to there expected types, this
+includes numbers and booleans. This class is very similar to the standard
+[URLSearchParams class](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
+used in web APIs.
+
+
+<br/>
+
+
+## Constructor
+
+### `constructor()`
+Creates a new instance of the `Parameters` class.
+
+
+<br/>
+
+
+## Methods
+
+
+### `has(key: string): boolean`
+Checks if a parameter with the specified key exists.
+ * `key` - The key of the parameter to check.
+
+
+<br/>
+
+
+### `get(key: string): parameterValue | undefined`
+Returns the first value of the parameter with the specified key.
+ * `key` (string): The key of the parameter.
+
+
+<br/>
+
+
+### `getAll(key: string): parameterValue[] | undefined`
+Returns all values of the parameter with the specified key.
+ * `key` (string): The key of the parameter.
+
+
+
+<br/>
+
+
+### `keys(): string[]`
+Returns an array of all the keys present in the parameters.
+
+
+<br/>
+
+
+### `toJSON(): Record<string, parameterValue[]>`
+Returns a JSON representation of the parameters.
+
+
+<br/>
+
+
+## Examples
+The following examples, illustrate how to construct a `Paramaters` class, append
+and retreive values from the object.
+
+```typescript
+import { Paramaters } from "sherpa-core";
+const _params = new Paramaters();
+
+_params.append("topics", "AI");
+_params.get("topics"); // returns "AI"
+_params.getAll("topics"); // returns ["AI"]
+
+_params.append("topics", "code");
+_params.get("topics"); // returns "AI"
+_params.getAll("topics"); // returns ["AI", "code"]
+
+_params.append("page", "1");
+_params.get("page"); // returns 1
+_params.getAll("page"); // returns [1]
+
+_params.append("isCool", "true");
+_params.get("isCool"); // returns true
+_params.getAll("isCool"); // returns [true]
+```

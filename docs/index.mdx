@@ -3,5 +3,67 @@ title: Overview
 description: Instant Open Source docs with zero configuration.
 ---
 
-# SherpaJS - Serverless Web Framework
-This site is under development.
+![SherpaJS Logo](/assets/logos/logo-dark.png)
+
+## What is SherpaJS?
+SherpaJS is a **modular and agnostic serverless JavaScript web framework,** that
+allows developers to easily build backend serverless web applications. Using a
+directory-based structure, inspired by NextJS, developers can define
+endpoints or import modules to execute code. Modules allow developers to easily
+reuse sets of endpoints and deploy them on their own servers - for example
+analytics, authentication, and release systems ([Community Modules](/#community-modules)).
+SherpaJS servers can then be compiled to a variety of different serverless
+platforms including Vercel Serverless and local Server
+([Supported Platforms](/#supported-platforms)).
+
+<Warning>
+    This project is in early development, so it is possible for you to run
+    into issues. If you run into any issues please just create a
+    [new issue](https://github.com/sellersindustry/SherpaJS/issues) and
+    link your code. Feel free to debug or update the code!
+</Warning>
+
+
+<br/>
+
+
+## Primary Features
+The main features of SherpaJS include:
+
+ * **Routing** - A file-based routing system that supports dynamic routes,
+    loading modules, and rendering HTML.
+ * **Modules** - Build and utilize pre-build sets of endpoints that can
+    be configured and loaded at specific routes.
+ * **Agnostic Deployment** - Build your serverless applications to numerous
+    serverless platforms including Vercel. *AWS Lambda coming soon.*
+ * **Rendering** - Render static HTML at specific routes. *Templated HTML and
+    Vue coming later.*
+ * **Static Files** - Serve static files and access static files from endpoints.
+
+We are constantly adding new features and have plenty of amazing things planned
+for the future including: documentation generation, SDK client generation, and
+admin panels.
+
+
+<br/>
+
+
+## Community Modules
+A list of some of the community modules for SherpaJS, with more coming all
+the time! If you make a module,
+[let us know](https://github.com/sellersindustry/SherpaJS/issues)!
+
+| Module | Description |
+|---|---|
+| [Static Flags](https://github.com/sellersindustry/SherpaJS-static-flags) | Create static flags of booleans, strings, or numbers |
+| [Events](https://github.com/sellersindustry/SherpaJS-events) | Create event sending endpoints for analytics platforms like PostHog using [Metadapter Events](https://github.com/sellersindustry/metadapter-event) |
+
+
+<br/>
+
+
+## Supported Platforms
+The current platforms that SherpaJS supports, with more to come in the future!
+ * Vercel Edge Functions
+ * Local
+
