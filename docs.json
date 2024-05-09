@@ -12,10 +12,10 @@
     ], [
         "Building Your Application",
         [
-            ["Defining Routes - WIP", "/"],
-            ["Dynamic Routes - WIP", "/"],
-            ["Endpoints - WIP", "/"],
-            ["Static Assets - WIP", "/"]
+            ["Routes - WIP", "/build/routes"],
+            ["Endpoints - WIP", "/build/endpoints"],
+            ["Static Assets - WIP", "/"],
+            ["Server Config - WIP", "/build/server-config"]
         ]
     ], [
         "API Reference",
@@ -23,7 +23,7 @@
             ["Response - WIP", [["Response - WIP", "/api/response"]]],
             ["Request - WIP", "/api/request"],
             ["Headers", "/api/components/headers"],
-            ["Parameters - WIP", "/api/parameters"],
+            ["Parameters", "/api/components/parameters"],
             ["SherpaJS CLI", "/api/cli"]
         ]
     ]]
