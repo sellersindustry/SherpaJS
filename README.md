@@ -573,14 +573,7 @@ Response.redirect("../foo", { status: 201, headers: new Headers() });
 
 
 ## Static Assets
-SherpaJS can serve static assets under the `public` folder. Modules can also
-host assets in the same way, by adding a `public` directory to you module any
-assets will be hosted on the server under the same directory the module is
-loaded. Because of this you may run into issues where assets can be overridden
-if you load assets at the same directory on your server that a module with 
-assets is loaded - the SherpaJS compiler will give you warning of this 
-potential issue and will error if any assets are written over.
-
+SherpaJS servers can serve static assets under the `public` folder.
 
 <br>
 <br>
