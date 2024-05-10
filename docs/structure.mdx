@@ -1,0 +1,45 @@
+---
+title: Project Structure
+description: An overview of the SherpaJS project structure 
+---
+
+# Project Structure
+An overview of the SherpaJS project structure.
+
+
+<br/>
+
+
+## Top-level Directories
+Top-level directories are used to organize endpoints and static files.
+|   |   |
+|---|---|
+| [`routes`](/build/routes) | Endpoint routes |
+| [`public`](/build/static-assets) | Static Assets |
+
+
+<br/>
+
+
+## Top-level Files
+Top-level files are used to configure SherpaJS and manage the environment.
+|   |   |
+|---|---|
+| [`sherpa.server.ts`](/build/server-config) | SherpaJS Server Config |
+| [`sherpa.module.ts`](/build/module-config) | SherpaJS Module Config |
+
+
+
+<br/>
+
+
+## Routing Conventions
+Naming conventions for routing inside the `routes` directory.
+|   |   |   |
+|---|---|---|
+| `index`         | `.ts` `.js` | Endpoint functions |
+| `module`        | `.ts` `.js` | Endpoint module |
+| `view`          | `.html`     | Endpoint view |
+| `/folder_name`  |             | Regular route segment |
+| `/[param_name]` |             | Dynamic route segment |
+

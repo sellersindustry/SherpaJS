@@ -14,14 +14,15 @@
         [
             ["Routes - WIP", "/build/routes"],
             ["Endpoints - WIP", "/build/endpoints"],
-            ["Static Assets - WIP", "/"],
-            ["Server Config - WIP", "/build/server-config"]
+            ["Static Assets - WIP", "/build/static-assets"],
+            ["Server Config - WIP", "/build/server-config"],
+            ["Module Config - WIP", "/build/module-config"]
         ]
     ], [
         "API Reference",
         [
             ["Response - WIP", [["Response - WIP", "/api/response"]]],
-            ["Request - WIP", "/api/request"],
+            ["Request", "/api/components/request"],
             ["Headers", "/api/components/headers"],
             ["Parameters", "/api/components/parameters"],
             ["SherpaJS CLI", "/api/cli"]
