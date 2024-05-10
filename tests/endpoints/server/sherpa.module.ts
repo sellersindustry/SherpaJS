@@ -1,6 +1,6 @@
 // @SherpaJS IgnoreInvalidSource
 import { CreateModuleInterface } from "../../../src/compiler/models";
-import { SherpaJS, Headers } from "../../../index";
+import { SherpaJS } from "../../../index";
 
 
 export default SherpaJS.New.module({
