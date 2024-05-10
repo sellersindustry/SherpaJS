@@ -15,7 +15,7 @@ Top-level directories are used to organize endpoints and static files.
 |   |   |
 |---|---|
 | [`routes`](/build/routes) | Endpoint routes |
-| [`public`](/build/static-assets) | Static Assets |
+| [`public`](/build/static-assets) | Static assets, *optional only if you want to server public assets* |
 
 
 <br/>
@@ -25,8 +25,8 @@ Top-level directories are used to organize endpoints and static files.
 Top-level files are used to configure SherpaJS and manage the environment.
 |   |   |
 |---|---|
-| [`sherpa.server.ts`](/build/server-config) | SherpaJS Server Config |
-| [`sherpa.module.ts`](/build/module-config) | SherpaJS Module Config |
+| [`sherpa.server.ts`](/build/server-config) | SherpaJS server config |
+| [`sherpa.module.ts`](/build/module-config) | SherpaJS module config, *optional only if creating a module* |
 
 
 
@@ -34,12 +34,15 @@ Top-level files are used to configure SherpaJS and manage the environment.
 
 
 ## Routing Conventions
-Naming conventions for routing inside the `routes` directory.
+The naming conventions for inside the `routes` directory, allows you to define
+routes usings segments and different types of endpoints. View and functions
+endpoints may persist together, but no other files should be present in your
+`routes` directory.
+
 |   |   |   |
 |---|---|---|
-| `index`         | `.ts` `.js` | Endpoint functions |
-| `module`        | `.ts` `.js` | Endpoint module |
-| `view`          | `.html`     | Endpoint view |
-| `/folder_name`  |             | Regular route segment |
-| `/[param_name]` |             | Dynamic route segment |
-
+| [`index`](/build/endpoints#functions-endpoint) | `.ts` `.js` | Functions endpoint |
+| [`module`](/build/endpoints#module-endpoint)   | `.ts` `.js` | Module endpoint |
+| [`view`](/build/endpoints#endpoint-view)       | `.html`     | View endpoint |
+| [`/folder_name`](/build/routes#regular-route)  |             | Regular route segment, *any folder_name* |
+| [`/[param_name]`](/build/routes#dynamic-route) |             | Dynamic route segment, *any param_name* |

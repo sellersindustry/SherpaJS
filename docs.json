@@ -7,7 +7,7 @@
         [
             ["Overview", "/"],
             ["Installation", "/installation"],
-            ["Project Structure - WIP", "/structure"]
+            ["Project Structure", "/structure"]
         ]
     ], [
         "Building Your Application",
