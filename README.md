@@ -2,7 +2,7 @@
 
 # SherpaJS - Serverless Web Framework 
 ![NPM Version](https://img.shields.io/npm/v/sherpa-core)
-[![Node.js Package](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/sellersindustry/SherpaJS/actions/workflows/npm-publish.yml)
+[![Testing](https://github.com/sellersindustry/SherpaJS/actions/workflows/testing.yml/badge.svg)](https://github.com/sellersindustry/SherpaJS/actions/workflows/testing.yml)
 
 > [!TIP]
 > **The documenation is a bit of a mess right now, to get an overview really quick just checkout the [server example](https://github.com/sellersindustry/SherpaJS-template-server).**
