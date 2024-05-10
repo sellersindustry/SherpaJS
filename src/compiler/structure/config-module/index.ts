@@ -12,10 +12,9 @@
 
 
 import {
-    FILENAME_CONFIG_MODULE,
     ModuleConfigFile, ModuleConfig,
     Context, ModuleInterface,
-    SUPPORTED_FILE_EXTENSIONS
+    FILENAME, FILE_EXTENSIONS
 } from "../../models.js";
 import fs from "fs";
 import { Path } from "../../utilities/path/index.js";
@@ -52,8 +51,8 @@ export async function getModuleConfig(entry:string, context:Context, contextFile
 function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Path.resolveExtension(
         entry,
-        FILENAME_CONFIG_MODULE,
-        SUPPORTED_FILE_EXTENSIONS.CONFIG
+        FILENAME.CONFIG.MODULE,
+        FILE_EXTENSIONS.CONFIG.MODULE
     );
     if (filepath) {
         return { filepath, logs: [] };
@@ -62,8 +61,8 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
         logs: [{
             level: Level.ERROR,
             text: "Module config file could not be found.",
-            content: `Must have module config, "${FILENAME_CONFIG_MODULE}" `
-                + `of type "${SUPPORTED_FILE_EXTENSIONS.CONFIG.join("\", \"")}".`,
+            content: `Must have module config, "${FILENAME.CONFIG.MODULE}" `
+                + `of type "${FILE_EXTENSIONS.CONFIG.MODULE.join("\", \"")}".`,
             file: { filepath: entry }
         }]
     };
@@ -128,7 +127,7 @@ function lintPackageJSON(entry:string):Message[] {
 
 function lintPackageExports(filepath:string, entry:string, packageJSON:Record<string, unknown>):Message[] {
     for (let exportFilepath of getAllExported(packageJSON.exports as string|string[]|Record<string, unknown>)) {
-        let expectedFilepath = Path.resolveExtension(entry, "sherpa.module", SUPPORTED_FILE_EXTENSIONS.CONFIG);
+        let expectedFilepath = Path.resolveExtension(entry, FILENAME.CONFIG.MODULE, FILE_EXTENSIONS.CONFIG.MODULE);
         if (expectedFilepath == Path.join(entry, exportFilepath)) {
             return [];
         }
@@ -136,7 +135,7 @@ function lintPackageExports(filepath:string, entry:string, packageJSON:Record<st
     return [{
         level: Level.WARN,
         text: `package.json is not configured properly.`,
-        content: `Ensure the "exports" attribute contains the "sherpa.module" file.`,
+        content: `Ensure the "exports" attribute contains the "${FILENAME.CONFIG.MODULE}" file.`,
         file: { filepath: filepath }
     }];
 }

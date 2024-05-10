@@ -11,7 +11,8 @@ used in web APIs.
 
 ## Constructor
 
-### `constructor(init?: HeadersInit)`
+### constructor(init)
+`constructor(init?: HeadersInit)`
 Creates a new instance of the `Headers` class.
  * `init` (optional): An optional parameter that can be an instance of
     `Headers`, Web API `Headers`, an array of key-value pairs, or a record of
@@ -25,7 +26,8 @@ Creates a new instance of the `Headers` class.
 ## Methods
 
 
-### `append(name: string, value: string): void`
+### append(name, value)
+`append(name: string, value: string): void` \
 Appends a new value onto an existing header's value, or adds the header if it
 does not already exist.
  * `name` - The name of the header.
@@ -35,7 +37,8 @@ does not already exist.
 <br/>
 
 
-### `has(name: string): boolean`
+### has(name)
+`has(name: string): boolean` \
 Checks if a header with a specified name exists.
  * `name` - The name of the header to check.
 
@@ -43,7 +46,8 @@ Checks if a header with a specified name exists.
 <br/>
 
 
-### `get(name: string): string | null`
+### get(name)
+`get(name: string): string | null` \
 Returns the first value of the specified header.
  * `name` - The name of the header.
 
@@ -51,7 +55,8 @@ Returns the first value of the specified header.
 <br/>
 
 
-### `set(name: string, value: string): void`
+### set(name, value)
+`set(name: string, value: string): void` \
 Sets a new value for an existing header, or adds the header if it does
 not already exist.
  * `name` - The name of the header.
@@ -61,7 +66,8 @@ not already exist.
 <br/>
 
 
-### `delete(name: string): void`
+### delete(name)
+`delete(name: string): void` \
 Removes a header and its value from the set of headers.
  * `name` - The name of the header to delete.
 
@@ -69,28 +75,32 @@ Removes a header and its value from the set of headers.
 <br/>
 
 
-### `toJSON(): Record<string, string>`
+### toJSON()
+`toJSON(): Record<string, string>` \
 Returns a JSON representation of the headers.
 
 
 <br/>
 
 
-### `toString(): string`
+### toString()
+`toString(): string` \
 Returns a string representation of the headers in JSON format.
 
 
 <br/>
 
 
-### `getSetCookie(): string[]`
+### getSetCookie()
+`getSetCookie(): string[]` \
 Returns an array of values of the 'Set-Cookie' header.
 
 
 <br/>
 
 
-### `forEach(callbackfn: (value: string, key: string, iterable: Headers) => void): void`
+### forEach(callbackFn)
+`forEach(callbackfn: (value: string, key: string, iterable: Headers) => void): void` \
 Executes a provided function once per each header present in the set of headers.
  * `callbackfn` - A function to execute for each header.
  * `thisArg` - An optional value to use as `this` when executing the callback function.
@@ -99,21 +109,24 @@ Executes a provided function once per each header present in the set of headers.
 <br/>
 
 
-### `keys(): IterableIterator<string>`
+### keys()
+`keys(): IterableIterator<string>` \
 Returns an iterator of all the header names.
 
 
 <br/>
 
 
-### `values(): IterableIterator<string>`
+### values()
+`values(): IterableIterator<string>` \
 Returns an iterator of all the header values.
 
 
 <br/>
 
 
-### `entries(): IterableIterator<[string, string]>`
+### entries()
+`entries(): IterableIterator<[string, string]>` \
 Returns an iterator of all the header names and values as key-value pairs.
 
 

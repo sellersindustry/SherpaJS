@@ -12,7 +12,9 @@ used in web APIs.
 
 ## Constructor
 
-### `constructor()`
+
+### constructor(init)
+`constructor()`
 Creates a new instance of the `Parameters` class.
 
 
@@ -22,7 +24,8 @@ Creates a new instance of the `Parameters` class.
 ## Methods
 
 
-### `has(key: string): boolean`
+### has(key)
+`has(key: string): boolean` \
 Checks if a parameter with the specified key exists.
  * `key` - The key of the parameter to check.
 
@@ -30,7 +33,8 @@ Checks if a parameter with the specified key exists.
 <br/>
 
 
-### `get(key: string): parameterValue | undefined`
+### get(key)
+`get(key: string): parameterValue | undefined` \
 Returns the first value of the parameter with the specified key.
  * `key` (string): The key of the parameter.
 
@@ -38,7 +42,8 @@ Returns the first value of the parameter with the specified key.
 <br/>
 
 
-### `getAll(key: string): parameterValue[] | undefined`
+### getAll()
+`getAll(key: string): parameterValue[] | undefined` \
 Returns all values of the parameter with the specified key.
  * `key` (string): The key of the parameter.
 
@@ -47,14 +52,16 @@ Returns all values of the parameter with the specified key.
 <br/>
 
 
-### `keys(): string[]`
+### keys()
+`keys(): string[]` \
 Returns an array of all the keys present in the parameters.
 
 
 <br/>
 
 
-### `toJSON(): Record<string, parameterValue[]>`
+### toJSON()
+`toJSON(): Record<string, parameterValue[]>` \
 Returns a JSON representation of the parameters.
 
 

@@ -1,0 +1,159 @@
+# Request
+The `Request` interface represents an HTTP request with various properties such
+as URL, parameters, method, headers, body, and body type. This object is passed
+to an endpoint when a request is made.
+
+
+<br/>
+
+
+## Properties
+
+### url
+ * Type - `string`
+ * Description - The URL of the HTTP request.
+
+
+<br/>
+
+
+### params
+ * Type - `{ path: Parameters, query: Parameters }`
+ * Description - An object containing `path` and `query` parameters represented
+    by instances of the [Parameters class](/api/components/parameters).
+
+
+<br/>
+
+
+### method
+ * Type - `keyof typeof Method`
+ * Description - The HTTP method of the request, represented as one of the keys
+    of the [Method](/api/components/request#method-1) enum.
+
+
+<br/>
+
+
+### headers
+ * Type - `Headers`
+ * Description - The headers of the request, represented by an instance
+    of the [Headers class](/api/components/headers).
+
+
+<br/>
+
+
+### body
+ * Type - `Body`
+ * Description - The body of the request, which can be `undefined`, a string,
+    or a JSON object. The body will be automatically parsed from the request.
+
+
+<br/>
+
+
+### bodyType
+ * Type - `keyof typeof BodyType`
+ * Description: The type of the request body, represented as one of the keys of
+    the [BodyType](/api/components/request#bodytypes-1) enum.
+
+
+<br/>
+
+
+## Enums
+
+### BodyType
+An enum representing the possible types of the request body:
+ * `JSON` - The body is in JSON format.
+ * `Text` - The body is in plain text format.
+ * `HTML` - The body is in HTML format.
+ * `None` - There is no body associated with the request.
+
+
+<br/>
+
+
+### Method
+An enum representing the HTTP method type.
+ * `GET` - HTTP [GET method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET) request
+ * `PUT` - HTTP [PUT method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT) request
+ * `POST` - HTTP [POST method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) request
+ * `PATCH` - HTTP [PATCH method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH) request
+ * `DELETE` - HTTP [DELETE method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/DELETE) request
+
+
+<br/>
+
+
+## Examples
+The following examples, illustrate how the `Request` object will be passed to
+an endpoint.
+
+
+### Basic GET Request
+`GET /regular` \
+`GET /regular?foo=1&foo=true,example`
+```json
+{
+    "url": "/regular",
+    "params": {
+        "path": {},
+        "query": {
+            "foo": [
+                1,
+                true,
+                "example"
+            ]
+        }
+    },
+    "method": "GET",
+    "headers": {
+        "content-type": "application/json",
+        "user-agent": "PostmanRuntime/7.37.3",
+        "accept": "*/*",
+        "postman-token": "62c2eb4b-8e06-4bbe-9c21-ed7755f08aeb",
+        "host": "localhost:3000",
+        "accept-encoding": "gzip, deflate, br",
+        "connection": "keep-alive",
+        "content-length": "18"
+    },
+    "bodyType": "None"
+}
+```
+
+
+<br/>
+
+
+### Dynamic POST Request
+`POST /user/[userID]` \
+`POST /user/bob`
+```json
+{
+    "url": "/regular",
+    "params": {
+        "path": {
+            "userID": "bob"
+        },
+        "query": {}
+    },
+    "method": "POST",
+    "headers": {
+        "content-type": "application/json",
+        "user-agent": "PostmanRuntime/7.37.3",
+        "accept": "*/*",
+        "postman-token": "62c2eb4b-8e06-4bbe-9c21-ed7755f08aeb",
+        "host": "localhost:3000",
+        "accept-encoding": "gzip, deflate, br",
+        "connection": "keep-alive",
+        "content-length": "18"
+    },
+    "bodyType": "JSON",
+    "body": {
+        "example": "hello world"
+    }
+}
+```
+
