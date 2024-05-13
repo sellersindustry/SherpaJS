@@ -12,9 +12,8 @@
 
 
 import {
-    FILENAME_CONFIG_MODULE, FILENAME_CONFIG_SERVER,
     ServerConfig, ServerConfigFile,
-    SUPPORTED_FILE_EXTENSIONS
+    FILE_EXTENSIONS, FILENAME
 } from "../../models.js";
 import { Path } from "../../utilities/path/index.js";
 import { Tooling } from "../../utilities/tooling/index.js";
@@ -49,8 +48,8 @@ export async function getServerConfig(entry:string):Promise<{ logs:Message[], se
 function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
     let filepath = Path.resolveExtension(
         entry,
-        FILENAME_CONFIG_SERVER,
-        SUPPORTED_FILE_EXTENSIONS.CONFIG
+        FILENAME.CONFIG.SERVER,
+        FILE_EXTENSIONS.CONFIG.SERVER
     );
     if (filepath) {
         return { filepath, logs: [] };
@@ -59,8 +58,8 @@ function getFilepath(entry:string):{ logs:Message[], filepath?:string } {
         logs: [{
             level: Level.ERROR,
             text: "Server config file could not be found.",
-            content: `Must have server config, "${FILENAME_CONFIG_SERVER}" `
-                + `of type "${SUPPORTED_FILE_EXTENSIONS.CONFIG.join("\", \"")}".`,
+            content: `Must have server config, "${FILENAME.CONFIG.SERVER}" `
+                + `of type "${FILE_EXTENSIONS.CONFIG.SERVER.join("\", \"")}".`,
             file: { filepath: entry }
         }]
     };
@@ -92,7 +91,7 @@ async function getInstance(filepath:string):Promise<{ logs:Message[], instance?:
 
 async function verifyModuleConfig(entry:string):Promise<Message[]> {
     if (hasModuleConfig(entry)) {
-        return (await getModuleConfig(entry, undefined, undefined)).logs;
+        return (await getModuleConfig(entry, undefined, "null")).logs;
     }
     return [];
 }
@@ -101,8 +100,8 @@ async function verifyModuleConfig(entry:string):Promise<Message[]> {
 function hasModuleConfig(entry:string):boolean {
     return Path.resolveExtension(
         entry,
-        FILENAME_CONFIG_MODULE,
-        SUPPORTED_FILE_EXTENSIONS.CONFIG
+        FILENAME.CONFIG.MODULE,
+        FILE_EXTENSIONS.CONFIG.MODULE
     ) != undefined;
 }
 

@@ -39,7 +39,7 @@ export class Vercel extends Bundler {
         await Promise.all(this.endpoints.list.map(async (endpoint, index) => {
             let route    = RequestUtilities.getDynamicURL(endpoint.segments);
             let filepath = this.getDirectory(route, "index.func");
-            let resolve  = endpoint.filepath ? Path.getDirectory(endpoint.filepath) : Path.getDirectory(endpoint.viewFilepath);
+            let resolve  = endpoint.filepath ? Path.getDirectory(endpoint.filepath) : Path.getDirectory(endpoint.viewFilepath as string);
             this.writeEndpointConfig(filepath);
             await Tooling.build({
                 buffer:  this.getBuffer(endpoint, this.views[index]),
@@ -54,7 +54,7 @@ export class Vercel extends Bundler {
     }
 
 
-    private getBuffer(endpoint:Endpoint, view:View) {
+    private getBuffer(endpoint:Endpoint, view:View|undefined) {
         let sherpaCorePath = process.env.VERCEL !== undefined ? "sherpa-core/internal" : Path.join(Path.getRootDirectory(), "dist/src/internal/index.js");
         return `
             import path from "path";

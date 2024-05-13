@@ -1,0 +1,147 @@
+# Headers
+
+The `Headers` class represents a set of HTTP headers and provides methods and
+properties for working with them. It is very similar to the standard
+[Headers class](https://developer.mozilla.org/en-US/docs/Web/API/Headers)
+used in web APIs.
+
+
+<br/>
+
+
+## Constructor
+
+### constructor(init)
+`constructor(init?: HeadersInit)`
+Creates a new instance of the `Headers` class.
+ * `init` (optional): An optional parameter that can be an instance of
+    `Headers`, Web API `Headers`, an array of key-value pairs, or a record of
+    header fields and values.
+
+
+<br/>
+
+
+
+## Methods
+
+
+### append(name, value)
+`append(name: string, value: string): void` \
+Appends a new value onto an existing header's value, or adds the header if it
+does not already exist.
+ * `name` - The name of the header.
+ * `value` - The value to append to the header.
+
+
+<br/>
+
+
+### has(name)
+`has(name: string): boolean` \
+Checks if a header with a specified name exists.
+ * `name` - The name of the header to check.
+
+
+<br/>
+
+
+### get(name)
+`get(name: string): string | null` \
+Returns the first value of the specified header.
+ * `name` - The name of the header.
+
+
+<br/>
+
+
+### set(name, value)
+`set(name: string, value: string): void` \
+Sets a new value for an existing header, or adds the header if it does
+not already exist.
+ * `name` - The name of the header.
+ * `value` - The new value to set for the header.
+
+
+<br/>
+
+
+### delete(name)
+`delete(name: string): void` \
+Removes a header and its value from the set of headers.
+ * `name` - The name of the header to delete.
+
+
+<br/>
+
+
+### toJSON()
+`toJSON(): Record<string, string>` \
+Returns a JSON representation of the headers.
+
+
+<br/>
+
+
+### toString()
+`toString(): string` \
+Returns a string representation of the headers in JSON format.
+
+
+<br/>
+
+
+### getSetCookie()
+`getSetCookie(): string[]` \
+Returns an array of values of the 'Set-Cookie' header.
+
+
+<br/>
+
+
+### forEach(callbackFn)
+`forEach(callbackfn: (value: string, key: string, iterable: Headers) => void): void` \
+Executes a provided function once per each header present in the set of headers.
+ * `callbackfn` - A function to execute for each header.
+ * `thisArg` - An optional value to use as `this` when executing the callback function.
+
+
+<br/>
+
+
+### keys()
+`keys(): IterableIterator<string>` \
+Returns an iterator of all the header names.
+
+
+<br/>
+
+
+### values()
+`values(): IterableIterator<string>` \
+Returns an iterator of all the header values.
+
+
+<br/>
+
+
+### entries()
+`entries(): IterableIterator<[string, string]>` \
+Returns an iterator of all the header names and values as key-value pairs.
+
+
+<br/>
+
+
+## Examples
+The following examples, illustrate how to construct a `Headers` class, append
+and retreive values from the object.
+
+```typescript
+import { Headers } from "sherpa-core";
+const _headers = new Headers();
+
+_headers.append("Content-Type", "application/json");
+_headers.get("Content-Type"); // returns "application/json"
+```
+

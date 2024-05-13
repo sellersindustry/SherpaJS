@@ -1,0 +1,105 @@
+---
+title: Installation
+description: Installing SherpaJS and creating a new SherpaJS Server
+---
+
+
+# Installation
+Installing SherpaJS and creating a new SherpaJS Server.
+
+
+<br/>
+
+
+## Quick Installation
+We recommend starting a new SherpaJS server by downloading the
+[SherpaJS Server Template](https://github.com/sellersindustry/SherpaJS-template-server).
+This template will have all the required structure and example
+endpoints setup for you. After download the project, install all the
+dependencies by running:
+```bash
+npm install
+```
+
+You can start the development server with `npm run dev`.
+
+Now your project is all setup, explore around the project files and get
+acquainted with the [SherpaJS Project Structure](/structure) and
+[SherpaJS CLI](/api/cli).
+
+
+<br/>
+
+
+## Manual Installation
+Creating a new server is extremely easy and can be done within a couple of
+minutes. To manually create a new server start by create a new NodeJS project
+with `npm init`. Then install the SherpaJS Core package:
+
+```bash
+npm install sherpa-core
+```
+
+<br/>
+
+
+### Updating `package.json`
+Open the `package.json` file in the root directory of your project, and update
+the following properties.
+
+```json title="package.json"
+{
+    "scripts": {
+        "build": "sherpa build -b Vercel",
+        "build-local": "sherpa build -b local",
+        "start": "sherpa start",
+        "dev": "npm run build-local && npm run start"
+    }
+}
+```
+
+
+<br/>
+
+
+### Creating Server Config
+Create a new Typescript file for your [server configuration](/build/server-config)
+in the root directory of your project named `sherpa.server.ts`.
+
+```typescript title="sherpa.server.ts"
+import { SherpaJS } from "sherpa-core";
+
+export default SherpaJS.New.server({
+    context: { // optional, provide a context that are provided to endpoints
+        example: "foo"
+    }
+});
+```
+
+
+<br/>
+
+
+### Creating Endpoints
+SherpaJS uses a directory-based structure for routing, similar to NextJS. Start
+by creating a `/routes` directory and place a new enpoint `index.ts` file in the
+directory. This will be processed at the root `/` of your application.
+
+```typescript title="index.ts"
+import { Request, Response, Context } from "sherpa-core";
+
+export function GET(request:Request, context:Context) {
+    return Response.text("Hello World!");
+}
+```
+
+Learn more about [routing](/build/rounting) and [endpoints](/build/endpoints).
+
+
+<br/>
+
+
+### Creating Public Assets (Optional)
+Create a `/public` directory in the root directory of your project to store
+static assets such as images, stylings and more.
+
