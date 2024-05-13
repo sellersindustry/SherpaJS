@@ -18,7 +18,6 @@ import { NewBundler, clean } from "./bundler/index.js";
 import { BuildOptions, BundlerType } from "./models.js";
 import { Level, Message } from "./utilities/logger/model.js";
 import { Path } from "./utilities/path/index.js";
-import chokidar from "chokidar";
 
 
 export { BundlerType };
@@ -66,7 +65,16 @@ export class Compiler {
 
 
     public static clean(filepath:string) {
-        clean(filepath);
+        [
+            ".sherpa",
+            ".sherpa-dev",
+            ".vercel"
+        ].forEach(dirName => {
+            let dirPath = Path.join(filepath, dirName);
+            if (fs.existsSync(dirPath)) {
+                fs.rmSync(dirPath, { recursive: true, force: true });
+            }
+        })
     }
 
 
