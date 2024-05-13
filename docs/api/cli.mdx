@@ -38,14 +38,15 @@ CLI for SherpaJS - Modular Microservices Framework
 sherpa [options] [command]
 ```
 
-#### Options:
+**Options:**
  - `-V`, `--version` output the version number
  - `-h`, `--help` display help for command
 
-#### Commands:
- - `build [options]` Build SherpaJS Server
- - `start [options]` Start SherpaJS Server Locally
- - `clean [options]` Remove SherpaJS Build Directories
+**Commands:**
+ - `build [options]` Creates a production build of your application
+ - `start [options]` Start a production build of your application
+ - `clean [options]` Removes all build directories of your application
+ - `dev [options]` Start a server in development mode with hot-reload
  - `help [command]` display help for command
 
 
@@ -53,12 +54,12 @@ sherpa [options] [command]
 
 
 ### Build Command
-Build SherpaJS Server.
+Creates a production build of your application.
 ```bash
 sherpa build [options]
 ```
 
-#### Options:
+**Options:**
  - `-i`, `--input <path>` path to SherpaJS server, defaults to current directory
  - `-o`, `--output <path>` path to server output, defaults to input directory
  - `-b`, `--bundler <type>` platform bundler ("**Vercel**", "*local**", *default: "local"*)
@@ -72,12 +73,13 @@ sherpa build [options]
 
 
 ### Start Command
-Start SherpaJS Server Locally. Ensure you have created a [local build](/api/cli#build-command).
+Start a production build of your application. Ensure you have created a local
+build, with [\"sherpa build\"](/api/cli#build-command) first.
 ```bash
 sherpa start [options]
 ```
 
-#### Options:
+**Options:**
  - `-i`, `--input <path>` path to SherpaJS server, defaults to current directory
  - `-p`, `--port <number>` port number (default: "3000")
  - `-h`, `--help` display help for command
@@ -87,12 +89,29 @@ sherpa start [options]
 
 
 ### Clean Command
-Remove SherpaJS Build Directories.
+Removes all build directories of your application.
 ```bash
 sherpa clean [options]
 ```
 
-#### Options:
+**Options:**
  - `-i`, `--input <path>` path to SherpaJS build directories, defaults to current directory
+ - `-h`, `--help` display help for command
+
+
+<br/>
+
+
+### Dev Command
+Start a server in development mode with hot-reload.
+```bash
+sherpa dev [options]
+```
+
+**Options:**
+ - `-i`, `--input <path>` path to SherpaJS server, defaults to current directory
+ - `-o`, `--output <path>` path to server output, defaults to input directory
+ - `-v`, `--variable [key values...]` Specify optional environment variables as key=value pairs Ex. `foo=bar test="1234 HI"`
+ - `-p`, `--port <number>` port number (default: "3000")
  - `-h`, `--help` display help for command
 
