@@ -20,6 +20,7 @@ import { getEnvironmentFiles, getAbsolutePath, getKeyValuePairs, getVersion } fr
 import { Logger } from "../compiler/utilities/logger/index.js";
 import { Path } from "../compiler/utilities/path/index.js";
 import { Level } from "../compiler/utilities/logger/model.js";
+import { ServerDevelopment } from "../server-development/index.js";
 let CLI = new Command();
 
 
@@ -96,6 +97,42 @@ CLI.command("start")
         server.stderr.on("data", (data) => console.log(data.toString().replace("\n", "")));
         server.on("close", (data) => { if (data) console.log(data.toString().replace("\n", "") )});
     });
+
+
+CLI.command("dev")
+    .description("Start SherpaJS Development Server")
+    .option("-i, --input <path>", "path to SherpaJS server, defaults to current directory")
+    .option("-o, --output <path>", "path to server output, defaults to input directory")
+    .option("-v, --variable [keyvalue...]", "Specify optional environment variables as key=value pairs")
+    .option("-p, --port <number>", "port number", (3000).toString())
+    .action((options) => {
+        let input     = getAbsolutePath(options.input, process.cwd());
+        let output    = getAbsolutePath(options.output, input);
+        let variables = getKeyValuePairs(options.variable);
+
+        if (Logger.hasError(variables.logs)) {
+            Logger.display(variables.logs);
+            Logger.exit();
+        }
+
+        new ServerDevelopment({
+            input: input,
+            output: output,
+            bundler: BundlerType.local,
+            developer: {
+                bundler: {
+                    esbuild: {
+                        minify: options.dev ? false : true
+                    }
+                },
+                environment: {
+                    files: getEnvironmentFiles(input),
+                    variables: variables.values
+                }
+            }
+        }, parseInt(options.port));
+    });
+
 
 
 CLI.parse();
