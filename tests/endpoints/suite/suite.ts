@@ -1,28 +1,24 @@
 // FIXME - Add Headers + Footers
 
 import { Tester } from "./tester.js";
-import { Options, TestResults } from "./model.js";
+import { BenchOptions, TestOptions, TestResults } from "./model.js";
 import { bold, green, red, gray } from "colorette";
+import { Bench } from "./bench.js";
 
 
 export class Suite {
 
 
-    private host:string;
     private tests:Tester[] = [];
-    private results:TestResults[] = [];
+    private benches:Bench[] = [];
+    private results:{ [name:string]:TestResults[] } = {};
 
 
-    constructor(host:string) {
-        this.host = host;
-    }
-
-
-    test(name:string, options:Options):Tester {
+    test(name:string, options:TestOptions):Tester {
         let test = new Tester(
             name,
             options.method,
-            new URL(options.path, this.host).toString(),
+            options.path,
             options.body
         );
         this.tests.push(test);
@@ -30,37 +26,82 @@ export class Suite {
     }
 
 
+    bench(name:string, options:BenchOptions):Bench {
+        let bench = new Bench(
+            name,
+            options.host,
+            options.start,
+            options.setup || [],
+            options.teardown || []
+        );
+        this.benches.push(bench);
+        return bench;
+    }
+
+
     async run() {
-        for (let test of this.tests) {
-            this.results.push(await test.invoke());
-        }
+
+        await Promise.all(this.benches.map(async (bench) => {
+            if (this.results[bench.getName()]) {
+                throw new Error(`Test bench name duplicate: "${bench.getName()}"`);
+            }
+            this.results[bench.getName()] = [];
+
+            await bench.setup();
+            await bench.start();
+            await Promise.all(this.tests.map(async (test) => {
+                this.results[bench.getName()].push(await test.invoke(bench.getHost()));
+            }));
+            await bench.teardown();
+        }));
+
         this.display();
     }
 
 
     private display() {
-        let passed = this.results.filter((result) => result.success).length;
-        let failed = this.results.filter((result) => !result.success).length;
-        let total  = this.results.length;
+        for (let bench of this.benches) {
+            let _passed = this.results[bench.getName()].filter((result) => result.success).length;
+            let _failed = this.results[bench.getName()].filter((result) => !result.success).length;
+            let _total  = this.results[bench.getName()].length;
 
-        for (let test of this.results) {
-            if (test.success) {
-                console.log(`${green("√")} ${gray(test.name)}`);
-            } else {
-                console.log(`${red("×")} ${gray(test.name)}`);
-                if (test.message) {
-                    console.log(`    ${red(test.message)}\n`);
-                }
-                if (test.stack) {
-                    for (let line of test.stack.split("\n")) {
-                        console.log(`    ${gray(line)}`);
+            console.log("\n============ " + bold(bench.getName()) + " =============");
+    
+            for (let test of this.results[bench.getName()]) {
+                if (test.success) {
+                    console.log(`${green("√")} ${gray(test.name)}`);
+                } else {
+                    console.log(`${red("×")} ${gray(test.name)}`);
+                    if (test.message) {
+                        console.log(`    ${red(test.message)}\n`);
                     }
+                    if (test.stack) {
+                        for (let line of test.stack.split("\n")) {
+                            console.log(`    ${gray(line)}`);
+                        }
+                    }
+                    console.log("");
                 }
-                console.log("");
             }
+    
+            console.log(`${bold("Tests:")} ${green(`${_passed} passed,`)} ${red(`${_failed} failed,`)} total ${_total}`);
         }
 
-        console.log(`${bold("Tests:")} ${green(`${passed} passed,`)} ${red(`${failed} failed,`)} total ${total}`);
+        let passed = 0;
+        let failed = 0;
+        let total  = 0;
+
+        console.log("\n============ " + bold("Overview") + " =============");
+        for (let bench of this.benches) {
+            let _passed = this.results[bench.getName()].filter((result) => result.success).length;
+            let _failed = this.results[bench.getName()].filter((result) => !result.success).length;
+            let _total  = this.results[bench.getName()].length;
+            passed += _passed;
+            failed += _failed;
+            total  += _total;
+            console.log(`${bold(`${bench.getName()}:`)} ${green(`${_passed} passed,`)} ${red(`${_failed} failed,`)} total ${_total}`);
+        }
+        console.log(`${bold("All Tests:")} ${green(`${passed} passed,`)} ${red(`${failed} failed,`)} total ${total}`);
     }
 
 

@@ -3,9 +3,9 @@
 
 import { Suite } from "./suite.js";
 import { Method, BodyType, Body } from "../../../index.js";
-import { equals } from "./helpers.js";
+import { equals, includes } from "./helpers.js";
 
 
 export type { Body };
-export { Suite, equals, Method, BodyType };
+export { Suite, equals, includes, Method, BodyType };
 

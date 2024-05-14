@@ -32,9 +32,9 @@ export class Tester {
     }
 
 
-    async invoke():Promise<TestResults> {
+    async invoke(host:string):Promise<TestResults> {
         try {
-            this.handler!(await this.getResponse());
+            this.handler!(await this.getResponse(host));
             return { name: this.name, success: true };
         } catch (error) {
             let stack = new StackTracey(error.stack).items.map((e) => e.beforeParse).join("\n");
@@ -56,9 +56,9 @@ export class Tester {
     }
 
 
-    private async getResponse():Promise<IResponse> {
+    private async getResponse(host:string):Promise<IResponse> {
         let { body, contentType } = this.getRequestBody(this.body);
-        return await this.cast(await fetch(this.url, {
+        return await this.cast(await fetch(new URL(this.url, host).toString(), {
             method: this.method,
             body: body,
             headers: {

@@ -3,10 +3,18 @@
 import { Method, Body } from "../../../index.js";
 
 
-export type Options = {
+export type TestOptions = {
     method:Method,
     path:string,
     body?:Body
+}
+
+
+export type BenchOptions = {
+    host:string;
+    start?:string;
+    setup?:string[];
+    teardown?:string[];
 }
 
 

@@ -14,3 +14,9 @@ export function equals(expect:unknown, actual:unknown) {
 }
 
 
+export function includes(buffer:string, searchString:string) {
+    if (!buffer.includes(searchString)) {
+        throw new Fail(`Expected "${buffer.slice(0, 10)}..." to include "${searchString}"`);
+    }
+}
+

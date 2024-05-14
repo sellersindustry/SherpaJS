@@ -9,6 +9,8 @@ export function POST() {
         "object": {
             "numbers": [3, -4]
         }
+    }, {
+        status: 201
     });
 }
 
