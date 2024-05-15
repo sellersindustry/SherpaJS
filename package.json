@@ -29,8 +29,9 @@
 		"prepare": "npm run build",
 		"build": "tsc --build --force ./toolchain/tsconfig.json",
 		"lint": "eslint . --ext .ts -c ./toolchain/.eslintrc.cjs",
-		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c ./toolchain/jest.config.ts",
-		"test-server": "node ./dist/tests/endpoints/index.test.js"
+		"test": "npm run test-unit && npm run test-endpoints",
+		"test-unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c ./toolchain/jest.config.ts",
+		"test-endpoints": "npm run build && node ./dist/tests/endpoints/index.test.js"
 	},
 	"devDependencies": {
 		"@types/checksum": "^0.1.35",

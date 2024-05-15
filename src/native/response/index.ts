@@ -23,12 +23,6 @@ export interface Options {
 }
 
 
-const DEFAULT_OPTIONS:Options = {
-    headers:new Headers(),
-    status:200,
-}
-
-
 export class ResponseBuilder {
 
 
@@ -81,8 +75,8 @@ export class ResponseBuilder {
     }
 
 
-    static redirect(redirect:string, options?:Partial<Options>):IResponse {
-        let _options = ResponseBuilder.defaultOptions(BodyType.None, options);
+    static redirect(redirect:string):IResponse {
+        let _options = ResponseBuilder.defaultOptions(BodyType.None, {});
         if (!_options.headers.has("Location")) {
             _options.headers.set("Location", redirect);
         }
@@ -98,7 +92,8 @@ export class ResponseBuilder {
 
     private static defaultOptions(bodyType:BodyType, options?:Partial<Options>):Options {
         let _options:Options = {
-            ...DEFAULT_OPTIONS,
+            status: 200,
+            headers: new Headers(),
             ...options
         };
         if (!_options.headers.has("Content-Type")) {

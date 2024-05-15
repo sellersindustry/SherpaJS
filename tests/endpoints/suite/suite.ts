@@ -40,8 +40,7 @@ export class Suite {
 
 
     async run() {
-
-        await Promise.all(this.benches.map(async (bench) => {
+        for await (const bench of this.benches) {
             if (this.results[bench.getName()]) {
                 throw new Error(`Test bench name duplicate: "${bench.getName()}"`);
             }
@@ -49,11 +48,11 @@ export class Suite {
 
             await bench.setup();
             await bench.start();
-            await Promise.all(this.tests.map(async (test) => {
+            for await (const test of this.tests) {
                 this.results[bench.getName()].push(await test.invoke(bench.getHost()));
-            }));
+            }
             await bench.teardown();
-        }));
+        }
 
         this.display();
     }

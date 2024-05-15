@@ -107,17 +107,17 @@ export class Tester {
                 body: undefined,
                 bodyType: BodyType.None
             };
-        } else if (contentType == "application/json") {
+        } else if (contentType.startsWith("application/json")) {
             return {
                 body: JSON.parse(body as string),
                 bodyType: BodyType.JSON
             };
-        } else if (contentType == "text/html") {
+        } else if (contentType.startsWith("text/html")) {
             return {
                 body: body,
                 bodyType: BodyType.HTML
             };
-        } else if (contentType == "text/plain") {
+        } else if (contentType.startsWith("text/plain")) {
             return {
                 body: body,
                 bodyType: BodyType.Text
