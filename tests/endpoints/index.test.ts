@@ -23,7 +23,7 @@ suite.test("Basic Get - GET /regular", {
     path: "/regular"
 }).expect((response) => {
     equals(BodyType.JSON, response.bodyType);
-    equals("/regular/foo", response?.body?.["request"]["url"]); //! FIXME
+    equals("/regular", response?.body?.["request"]["url"]);
     equals(Method.GET, response?.body?.["request"]["method"]);
 });
 
