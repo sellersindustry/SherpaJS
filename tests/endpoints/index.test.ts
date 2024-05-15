@@ -283,6 +283,66 @@ suite.test("JSON Response - DELETE /regular/response/json/basic", {
 });
 
 
+suite.test("JSON Response - Custom Status + Headers - GET /regular/response/json/custom", {
+    method: Method.GET,
+    path: "/regular/response/json/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.JSON, response.bodyType);
+    equals("bar", response?.body?.["foo"]);
+});
+
+
+suite.test("JSON Response - Custom Status + Headers - POST /regular/response/json/custom", {
+    method: Method.POST,
+    path: "/regular/response/json/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.JSON, response.bodyType);
+    equals("bar", response?.body?.["foo"]);
+});
+
+
+suite.test("JSON Response - Custom Status + Headers - PUT /regular/response/json/custom", {
+    method: Method.PUT,
+    path: "/regular/response/json/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.JSON, response.bodyType);
+    equals("bar", response?.body?.["foo"]);
+});
+
+
+suite.test("JSON Response - Custom Status + Headers - PATCH /regular/response/json/custom", {
+    method: Method.PATCH,
+    path: "/regular/response/json/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.JSON, response.bodyType);
+    equals("bar", response?.body?.["foo"]);
+});
+
+
+suite.test("JSON Response - Custom Status + Headers - DELETE /regular/response/json/custom", {
+    method: Method.DELETE,
+    path: "/regular/response/json/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.JSON, response.bodyType);
+    equals("bar", response?.body?.["foo"]);
+});
+
+
 suite.test("None Response - GET /regular/response/none/basic", {
     method: Method.GET,
     path: "/regular/response/none/basic"
@@ -333,6 +393,66 @@ suite.test("None Response - DELETE /regular/response/none/basic", {
 }).expect((response) => {
     equals(200, response.status);
     equals("OK", response.statusText);
+    equals(BodyType.None, response.bodyType);
+    equals(undefined, response?.body);
+});
+
+
+suite.test("None Response - Custom Status + Headers - GET /regular/response/none/custom", {
+    method: Method.GET,
+    path: "/regular/response/none/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.None, response.bodyType);
+    equals(undefined, response?.body);
+});
+
+
+suite.test("None Response - Custom Status + Headers - POST /regular/response/none/custom", {
+    method: Method.POST,
+    path: "/regular/response/none/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.None, response.bodyType);
+    equals(undefined, response?.body);
+});
+
+
+suite.test("None Response - Custom Status + Headers - PUT /regular/response/none/custom", {
+    method: Method.PUT,
+    path: "/regular/response/none/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.None, response.bodyType);
+    equals(undefined, response?.body);
+});
+
+
+suite.test("None Response - Custom Status + Headers - PATCH /regular/response/none/custom", {
+    method: Method.PATCH,
+    path: "/regular/response/none/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.None, response.bodyType);
+    equals(undefined, response?.body);
+});
+
+
+suite.test("None Response - Custom Status + Headers - DELETE /regular/response/none/custom", {
+    method: Method.DELETE,
+    path: "/regular/response/none/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
     equals(BodyType.None, response.bodyType);
     equals(undefined, response?.body);
 });
@@ -390,6 +510,66 @@ suite.test("Text Response - DELETE /regular/response/text/basic", {
     equals("OK", response.statusText);
     equals(BodyType.Text, response.bodyType);
     equals("Hello World", response?.body);
+});
+
+
+suite.test("Text Response - Custom Status + Headers - GET /regular/response/text/custom", {
+    method: Method.GET,
+    path: "/regular/response/text/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.Text, response.bodyType);
+    equals("foo-bar", response?.body);
+});
+
+
+suite.test("Text Response - Custom Status + Headers - POST /regular/response/text/custom", {
+    method: Method.POST,
+    path: "/regular/response/text/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.Text, response.bodyType);
+    equals("foo-bar", response?.body);
+});
+
+
+suite.test("Text Response - Custom Status + Headers - PUT /regular/response/text/custom", {
+    method: Method.PUT,
+    path: "/regular/response/text/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.Text, response.bodyType);
+    equals("foo-bar", response?.body);
+});
+
+
+suite.test("Text Response - Custom Status + Headers - PATCH /regular/response/text/custom", {
+    method: Method.PATCH,
+    path: "/regular/response/text/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.Text, response.bodyType);
+    equals("foo-bar", response?.body);
+});
+
+
+suite.test("Text Response - Custom Status + Headers - DELETE /regular/response/text/custom", {
+    method: Method.DELETE,
+    path: "/regular/response/text/custom"
+}).expect((response) => {
+    equals(401, response.status);
+    equals("Unauthorized", response.statusText);
+    equals("bar", response.headers.get("X-Foo"));
+    equals(BodyType.Text, response.bodyType);
+    equals("foo-bar", response?.body);
 });
 
 
@@ -453,15 +633,17 @@ suite.test("Redirect Response - DELETE /regular/response/redirect/basic", {
 });
 
 
-// - Response types - with custom headers and status code - defining headers different ways
+
 // - status codes - every single one - make endpoint that uses dynamic paths
-// - test body
+// - status code that doesn't exists
+// - query parameters
+// - dynamic path
+// - static files
 // - error page
 // - ENVIRONMENT VARIABLES
 // - SHERPA_PLATFORM
 // - CONTEXT
 // - context modules
-// - query parameters
 
 
 (async () => {

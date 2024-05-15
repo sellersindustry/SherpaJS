@@ -11,14 +11,14 @@
  */
 
 
-import { Headers } from "../headers/index.js";
+import { Headers, HeadersInit } from "../headers/index.js";
 import { BodyType, CONTENT_TYPE } from "../model.js";
 import { IResponse } from "./interface.js";
 import { STATUS_TEXT } from "./status-text.js";
 
 
 export interface Options {
-    headers:Headers;
+    headers:HeadersInit;
     status:number;
 }
 
@@ -90,11 +90,10 @@ export class ResponseBuilder {
     }
 
 
-    private static defaultOptions(bodyType:BodyType, options?:Partial<Options>):Options {
-        let _options:Options = {
-            status: 200,
-            headers: new Headers(),
-            ...options
+    private static defaultOptions(bodyType:BodyType, options?:Partial<Options>):{ status:number, headers:Headers } {
+        let _options = {
+            status: options?.status || 200,
+            headers: new Headers(options?.headers || {})
         };
         if (!_options.headers.has("Content-Type")) {
             _options.headers.set("Content-Type", CONTENT_TYPE[bodyType] as string);
