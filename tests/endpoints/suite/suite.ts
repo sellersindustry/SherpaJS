@@ -101,6 +101,9 @@ export class Suite {
             console.log(`${bold(`${bench.getName()}:`)} ${green(`${_passed} passed,`)} ${red(`${_failed} failed,`)} total ${_total}`);
         }
         console.log(`${bold("All Tests:")} ${green(`${passed} passed,`)} ${red(`${failed} failed,`)} total ${total}`);
+        if (failed > 0) {
+            process.exit(1);
+        }
     }
 
 
