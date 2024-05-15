@@ -86,7 +86,7 @@ export class Bench {
 
 
     private getArguments(command:string):string[] {
-        return command.replace(/^\%sherpa-cli\%/, "node ../../../dist/src/cli/index.js").split(" ");
+        return command.replace(/^%sherpa-cli%/, "node ../../../dist/src/cli/index.js").split(" ");
     }
 
 

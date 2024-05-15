@@ -42,7 +42,7 @@ export class ServerDevelopment {
         this.refresh();
         chokidar.watch(this.options.input, {
             persistent: true,
-            ignored: /(^|[\/\\])\../, // note: . files are ignored
+            ignored: /(^|[/\\])\../, // note: . files are ignored
         }).on("change", (path, stats) => {
             if (path && stats) {
                 this.refresh();

@@ -10,11 +10,12 @@
  *
  */
 
+
 import fs from "fs";
 import { green, red } from "colorette";
 import { getStructure } from "./structure/index.js";
 import { Logger } from "./utilities/logger/index.js";
-import { NewBundler, clean } from "./bundler/index.js";
+import { NewBundler } from "./bundler/index.js";
 import { BuildOptions, BundlerType } from "./models.js";
 import { Level, Message } from "./utilities/logger/model.js";
 import { Path } from "./utilities/path/index.js";
