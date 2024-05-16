@@ -4,7 +4,7 @@
  *
  *   author: Evan Sellers <sellersew@gmail.com>
  *   date: Tue Mar 19 2024
- *   file: interface.ts
+ *   file: index.ts
  *   project: SherpaJS - Module Microservice Platform
  *   purpose: Request Interface
  *
@@ -17,7 +17,7 @@ import { Parameters } from "../parameters/index.js";
 import { Method } from "../../compiler/models.js";
 
 
-export interface IRequest {
+export class IRequest {
 
     readonly url:string;
     readonly params:{ path:Parameters, query:Parameters };

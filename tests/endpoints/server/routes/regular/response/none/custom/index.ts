@@ -2,7 +2,7 @@ import { Response, Headers as SherpaHeaders } from "../../../../../../../../inde
 
 
 export function GET() {
-    return Response.new({
+    return new Response({
         status: 401,
         headers: {
             "X-Foo": "bar"

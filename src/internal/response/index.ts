@@ -13,8 +13,8 @@
 
 import { OriginURL } from "../../native/url/index.js";
 import { BodyType } from "../../native/model.js";
-import { IRequest } from "../../native/request/interface.js";
-import { IResponse } from "../../native/response/interface.js";
+import { IRequest } from "../../native/request/index.js";
+import { IResponse } from "../../native/response/index.js";
 import { ServerResponse as LocalResponse } from "http";
 const VercelResponse = Response;
 type VercelResponseType = Response;

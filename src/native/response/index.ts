@@ -12,8 +12,7 @@
 
 
 import { Headers, HeadersInit } from "../headers/index.js";
-import { BodyType, CONTENT_TYPE } from "../model.js";
-import { IResponse } from "./interface.js";
+import { Body, BodyType, CONTENT_TYPE } from "../model.js";
 import { STATUS_TEXT } from "./status-text.js";
 
 
@@ -23,26 +22,36 @@ export interface Options {
 }
 
 
-export class ResponseBuilder {
+export class IResponse {
+
+    readonly status:number;
+    readonly statusText:string;
+    readonly headers:Headers;
+
+    readonly body:Body;
+    readonly bodyType:keyof typeof BodyType;
+
+
+    constructor(options?:Partial<Options>) {
+        let _options = IResponse.defaultOptions(BodyType.None, options);
+        this.status = _options.status;
+        this.statusText = IResponse.getStatusText(_options.status);
+        this.headers = _options.headers;
+        this.body = undefined;
+        this.bodyType = BodyType.None;
+    }
 
 
     static new(options?:Partial<Options>):IResponse {
-        let _options = ResponseBuilder.defaultOptions(BodyType.None, options);
-        return {
-            status: _options.status,
-            statusText: ResponseBuilder.getStatusText(_options.status),
-            headers: _options.headers,
-            body: undefined,
-            bodyType: BodyType.None
-        }
+        return new IResponse(options);
     }
 
 
     static text<T extends { toString():string }>(text:T, options?:Partial<Options>):IResponse {
-        let _options = ResponseBuilder.defaultOptions(BodyType.Text, options);
+        let _options = IResponse.defaultOptions(BodyType.Text, options);
         return {
             status: _options.status,
-            statusText: ResponseBuilder.getStatusText(_options.status),
+            statusText: IResponse.getStatusText(_options.status),
             headers: _options.headers,
             body: text.toString(),
             bodyType: BodyType.Text
@@ -51,11 +60,11 @@ export class ResponseBuilder {
 
 
     static JSON<T extends { toJSON():Record<string, unknown> }>(JSON:T|Record<string, unknown>, options?:Partial<Options>):IResponse {
-        let _options    = ResponseBuilder.defaultOptions(BodyType.JSON, options);
+        let _options    = IResponse.defaultOptions(BodyType.JSON, options);
         let _isCallable = JSON.toJSON && typeof (JSON as Record<string, unknown>).toJSON === "function";
         return {
             status: _options.status,
-            statusText: ResponseBuilder.getStatusText(_options.status),
+            statusText: IResponse.getStatusText(_options.status),
             headers: _options.headers,
             body: _isCallable ? (JSON as { toJSON():Record<string, unknown> }).toJSON() : JSON,
             bodyType: BodyType.JSON
@@ -64,10 +73,10 @@ export class ResponseBuilder {
 
 
     static HTML(html:string, options?:Partial<Options>):IResponse {
-        let _options = ResponseBuilder.defaultOptions(BodyType.HTML, options);
+        let _options = IResponse.defaultOptions(BodyType.HTML, options);
         return {
             status: _options.status,
-            statusText: ResponseBuilder.getStatusText(_options.status),
+            statusText: IResponse.getStatusText(_options.status),
             headers: _options.headers,
             body: html,
             bodyType: BodyType.HTML
@@ -76,13 +85,13 @@ export class ResponseBuilder {
 
 
     static redirect(redirect:string):IResponse {
-        let _options = ResponseBuilder.defaultOptions(BodyType.None, {});
+        let _options = IResponse.defaultOptions(BodyType.None, {});
         if (!_options.headers.has("Location")) {
             _options.headers.set("Location", redirect);
         }
         return {
             status: 302,
-            statusText: ResponseBuilder.getStatusText(302),
+            statusText: IResponse.getStatusText(302),
             headers: _options.headers,
             body: undefined,
             bodyType: BodyType.None
@@ -109,7 +118,6 @@ export class ResponseBuilder {
         }
         return text;
     }
-
 
 }
 
