@@ -21,7 +21,7 @@
     ], [
         "API Reference",
         [
-            ["Response - WIP", [["Response - WIP", "/api/response"]]],
+            ["Response", "/api/components/response"],
             ["Request", "/api/components/request"],
             ["Headers", "/api/components/headers"],
             ["Parameters", "/api/components/parameters"],

@@ -24,12 +24,12 @@ export interface Options {
 
 export class IResponse {
 
-    status:number;
-    statusText:string;
-    headers:Headers;
+    readonly status:number;
+    readonly statusText:string;
+    readonly headers:Headers;
 
-    body:Body;
-    bodyType:keyof typeof BodyType;
+    readonly body:Body;
+    readonly bodyType:keyof typeof BodyType;
 
 
     constructor(options?:Partial<Options>) {

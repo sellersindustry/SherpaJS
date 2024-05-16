@@ -1,0 +1,232 @@
+# Response
+The `Response` class represents an HTTP response with various properties such
+as status, status text, headers, body, and body type. The object is returned
+from an endpoint when a request is made. The class also has static methods for
+creating creating HTTP response objects with various content types. 
+
+
+<br/>
+
+
+## Properties
+
+### status
+ * Type - `number` *(readonly)*
+ * Description - The status code for the response. See
+    [HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+    for more information.
+
+
+<br/>
+
+
+### statusText
+ * Type - `string` *(readonly)*
+ * Description - The status message for the corresponding status code. See
+    [HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+    for more information.
+
+
+<br/>
+
+
+### headers
+ * Type - `Headers` *(readonly)*
+ * Description - The headers of the response, represented by an instance
+    of the [Headers class](/api/components/headers).
+
+
+<br/>
+
+
+### body
+ * Type - `Body` *(readonly)*
+ * Description - The body of the response, which can be `undefined`, a string,
+    or a JSON object.
+
+
+<br/>
+
+
+### bodyType
+ * Type - `keyof typeof BodyType` *(readonly)*
+ * Description - The type of the response body, represented as one of the keys of
+    the [BodyType](/api/components/response#bodytypes-1) enum.
+
+
+<br/>
+
+
+## Static Methods
+
+
+### new
+`static new(options?: Partial<Options>): Response` \
+Creates a new response with no body.
+  * `options` (optional): Partial configuration options for the response.
+    * [`headers`](/api/components/headers): The headers to include in the response.
+    * `status`: The HTTP status code of the response.
+
+
+<br/>
+
+
+### text
+`static text<T extends { toString(): string }>(text: T, options?: Partial<Options>): Response` \
+Creates a new response with a text body.
+  * `text`: The text content for the response body. Can be an object with a `toString` method or a plain string.
+  * `options` (optional): Partial configuration options for the response.
+    * [`headers`](/api/components/headers): The headers to include in the response.
+    * `status`: The HTTP status code of the response.
+
+
+<br/>
+
+
+### JSON
+`static JSON<T extends { toJSON(): Record<string, unknown> }>(JSON: T | Record<string, unknown>, options?: Partial<Options>): Response` \
+Creates a new response with a JSON body.
+  * `JSON`: The JSON content for the response body. Can be an object with a `toJSON` method or a plain object.
+  * `options` (optional): Partial configuration options for the response.
+    * [`headers`](/api/components/headers): The headers to include in the response.
+    * `status`: The HTTP status code of the response.
+
+
+<br/>
+
+
+### HTML
+`static HTML(html: string, options?: Partial<Options>): Response` \
+Creates a new response with an HTML body.
+  * `html`: The HTML content for the response body.
+  * `options` (optional): Partial configuration options for the response.
+    * [`headers`](/api/components/headers): The headers to include in the response.
+    * `status`: The HTTP status code of the response.
+
+
+<br/>
+
+
+### redirect
+`static redirect(redirect: string): Response` \
+Creates a new redirect response with a `Location` header.
+  * `redirect`: The URL to redirect to.
+
+
+<br/>
+
+
+## Enums
+
+### BodyType
+An enum representing the possible types of the request body:
+ * `JSON` - The body is in JSON format.
+ * `Text` - The body is in plain text format.
+ * `HTML` - The body is in HTML format.
+ * `None` - There is no body associated with the request.
+
+
+<br/>
+
+
+## Examples
+
+### No Body
+```typescript
+import { Response, Headers } from "sherpa-core";
+
+export function GET() {
+    return new Response();
+}
+
+export function POST() {
+    return new Response({
+        status: 201,
+        headers: {
+            "X-Foo": "bar"
+        }
+    });
+}
+
+export function PUT() {
+    return Response.new({
+        status: 401,
+        headers: new Headers({
+            "X-Foo": "bar"
+        })
+    });
+}
+```
+
+
+<br/>
+
+
+### Text Body
+```typescript
+import { Response, Headers } from "sherpa-core";
+
+export function GET() {
+    return Response.text("Hello World!");
+}
+
+export function POST() {
+    return Response.text("Hello World!", {
+        status: 201
+    });
+}
+```
+
+
+<br/>
+
+
+### JSON Body
+```typescript
+import { Response, Headers } from "sherpa-core";
+
+export function GET() {
+    return Response.JSON({ "foo": "bar" });
+}
+
+export function POST() {
+    return Response.JSON({ "foo": "bar" }, {
+        status: 201
+    });
+}
+```
+
+
+<br/>
+
+
+### HTML Body
+```typescript
+import { Response, Headers } from "sherpa-core";
+
+export function GET() {
+    return Response.HTML("<h1>Hello World</h1>");
+}
+
+export function POST() {
+    return Response.HTML("<h1>Hello World</h1>", {
+        status: 201
+    });
+}
+```
+
+
+<br/>
+
+
+### Redirect
+Assuming this endpoint is at route `/example/foo` the user will be redirected
+to `/example/success`.
+
+```typescript
+import { Response, Headers } from "sherpa-core";
+
+export function GET() {
+    return Response.redirect("../success");
+}
+```
