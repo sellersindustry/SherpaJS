@@ -649,6 +649,7 @@ suite.test("Module Response Post - POST /module/m1", {
     method: Method.POST,
     path: "/module/m1"
 }).expect((response) => {
+    console.log(response);
     equals(200, response.status);
     equals("OK", response.statusText);
     equals(BodyType.JSON, response.bodyType);
