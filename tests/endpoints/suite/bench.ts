@@ -1,4 +1,15 @@
-// FIXME - Add Headers + Footers
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Thu May 16 2024
+ *   file: bench.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Endpoint Test Suite - Test Benches
+ *
+ */
+
 
 import { Path } from "../../../src/compiler/utilities/path/index.js";
 import { ChildProcess, spawn } from "child_process";
@@ -101,3 +112,7 @@ export class Bench {
 
 }
 
+
+// If I give all I possess to the poor and give over my body to hardship that
+// I may boast, but do not have love, I gain nothing.
+// - 1 Corinthians 13:3

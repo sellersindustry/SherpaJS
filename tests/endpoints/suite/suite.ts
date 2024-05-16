@@ -1,4 +1,15 @@
-// FIXME - Add Headers + Footers
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Thu May 16 2024
+ *   file: suite.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Endpoint Test Suite - Suite
+ *
+ */
+
 
 import { Tester } from "./tester.js";
 import { BenchOptions, TestOptions, TestResults } from "./model.js";
@@ -109,3 +120,8 @@ export class Suite {
 
 }
 
+
+// Wives, submit yourselves to your own husbands as you do to the Lord. For the
+// husband is the head of the wife as Christ is the head of the church, his
+// body, of which he is the Savior.
+// - Ephesians 5:22-23

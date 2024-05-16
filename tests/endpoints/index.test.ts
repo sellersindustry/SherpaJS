@@ -633,11 +633,94 @@ suite.test("Redirect Response - DELETE /regular/response/redirect/basic", {
 });
 
 
+suite.test("Module Response Get - GET /module/m1", {
+    method: Method.GET,
+    path: "/module/m1"
+}).expect((response) => {
+    equals(200, response.status);
+    equals("OK", response.statusText);
+    equals(BodyType.JSON, response.bodyType);
+    equals("/module/m1", response?.body?.["request"]["url"]);
+    equals(Method.GET, response?.body?.["request"]["method"]);
+});
 
+
+suite.test("Module Response Post - POST /module/m1", {
+    method: Method.POST,
+    path: "/module/m1"
+}).expect((response) => {
+    equals(200, response.status);
+    equals("OK", response.statusText);
+    equals(BodyType.JSON, response.bodyType);
+    equals("/module/m1", response?.body?.["request"]["url"]);
+    equals(Method.POST, response?.body?.["request"]["method"]);
+});
+
+
+suite.test("Module Response Put - PUT /module/m1", {
+    method: Method.PUT,
+    path: "/module/m1"
+}).expect((response) => {
+    equals(200, response.status);
+    equals("OK", response.statusText);
+    equals(BodyType.JSON, response.bodyType);
+    equals("/module/m1", response?.body?.["request"]["url"]);
+    equals(Method.PUT, response?.body?.["request"]["method"]);
+});
+
+
+suite.test("Module Response Patch - PATCH /module/m1", {
+    method: Method.PATCH,
+    path: "/module/m1"
+}).expect((response) => {
+    equals(200, response.status);
+    equals("OK", response.statusText);
+    equals(BodyType.JSON, response.bodyType);
+    equals("/module/m1", response?.body?.["request"]["url"]);
+    equals(Method.PATCH, response?.body?.["request"]["method"]);
+});
+
+
+suite.test("Module Response Delete - DELETE /module/m1", {
+    method: Method.DELETE,
+    path: "/module/m1"
+}).expect((response) => {
+    equals(200, response.status);
+    equals("OK", response.statusText);
+    equals(BodyType.JSON, response.bodyType);
+    equals("/module/m1", response?.body?.["request"]["url"]);
+    equals(Method.DELETE, response?.body?.["request"]["method"]);
+});
+
+
+suite.test("Module HTML Response - Regular - GET /module/m1/test", {
+    method: Method.GET,
+    path: "/module/m1/test"
+}).expect((response) => {
+    equals(200, response.status);
+    equals("OK", response.statusText);
+    equals(BodyType.HTML, response.bodyType);
+    includes(response?.body as string, "<h1>Hello, world!</h1>");
+});
+
+
+suite.test("Module HTML Response - Additional Methods - POST /module/m1/test", {
+    method: Method.POST,
+    path: "/module/m1/test"
+}).expect((response) => {
+    equals(201, response.status);
+    equals("Created", response.statusText);
+    equals(BodyType.Text, response.bodyType);
+    includes(response?.body as string, "Hello World");
+});
+
+
+// TODO: Tests to add
+// - modules
+// - dynamic path (modules + regular)
 // - status codes - every single one - make endpoint that uses dynamic paths
 // - status code that doesn't exists
 // - query parameters
-// - dynamic path
 // - static files
 // - error page
 // - ENVIRONMENT VARIABLES

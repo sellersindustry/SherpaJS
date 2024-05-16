@@ -1,4 +1,15 @@
-// FIXME - Add Headers + Footers
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Thu May 16 2024
+ *   file: tester.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Endpoint Test Suite - Test
+ *
+ */
+
 
 import StackTracey from "stacktracey";
 import {
@@ -130,3 +141,7 @@ export class Tester {
 
 }
 
+
+// You, God, are my God, earnestly I seek you; I thirst for you, my whole being
+// longs for you, in a dry and parched land where there is no water.
+// - Psalm 63:1
