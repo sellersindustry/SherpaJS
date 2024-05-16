@@ -31,6 +31,23 @@ export class RequestUtilities {
     }
 
 
+    static compareURL(segmentsA:Segment[], segmentsB:Segment[]):number {
+        if (segmentsA.length == 0 || segmentsB.length == 0) {
+            return segmentsA.length - segmentsB.length;
+        }
+        if (segmentsA[0].isDynamic && !segmentsB[0].isDynamic) {
+            return 1;
+        }
+        if (!segmentsA[0].isDynamic && segmentsB[0].isDynamic) {
+            return -1;
+        }
+        if (segmentsA[0]["name"] != segmentsB[0]["name"]) {
+            return segmentsA[0]["name"].localeCompare(segmentsB[0]["name"]);
+        }
+        return this.compareURL(segmentsA.slice(1), segmentsB.slice(1));
+    }
+
+
 }
 
 

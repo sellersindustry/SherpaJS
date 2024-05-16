@@ -48,6 +48,7 @@ export class Tester {
             this.handler!(await this.getResponse(host));
             return { name: this.name, success: true };
         } catch (error) {
+            console.log(error);
             let stack = new StackTracey(error.stack).items.map((e) => e.beforeParse).join("\n");
             if (error instanceof Fail) {
                 return {

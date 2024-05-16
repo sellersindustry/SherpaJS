@@ -8,8 +8,12 @@ export function GET(request:Request, context:unknown) {
     });
 }
 
+
 export function POST(request:Request, context:unknown) {
-    return Response.text("hi");
+    return Response.JSON({
+        request,
+        context
+    });
 }
 
 

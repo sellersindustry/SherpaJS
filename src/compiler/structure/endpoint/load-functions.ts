@@ -18,6 +18,7 @@ import {
     EXPORT_VARIABLES, EXPORT_VARIABLES_METHODS, Method,
     FILENAME
 } from "../../models.js";
+import { RequestUtilities } from "../../../native/request/utilities.js";
 
 
 export async function getEndpointFunctions(module:ModuleConfigFile, functionsFilepath:string|undefined, viewFilepath:string|undefined, segments:Segment[]):Promise<{ logs:Message[], endpoints?:EndpointTree }> {
@@ -45,7 +46,8 @@ export async function getEndpointFunctions(module:ModuleConfigFile, functionsFil
                 viewFilepath: viewFilepath,
                 methods: getExportedMethods(variables),
                 module: module,
-                segments: segments
+                segments: segments,
+                path: RequestUtilities.getDynamicURL(segments)
             }
         }
     }

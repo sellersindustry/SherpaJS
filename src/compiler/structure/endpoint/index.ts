@@ -11,6 +11,7 @@
  */
 
 
+import { RequestUtilities } from "../../../native/request/utilities.js";
 import { Endpoint, EndpointTree, FILENAME, FILE_EXTENSIONS, ModuleConfigFile, Segment } from "../../models.js";
 import { Level, Message } from "../../utilities/logger/model.js";
 import { DirectoryStructureTree } from "../../utilities/path/directory-structure/model.js";
@@ -45,7 +46,12 @@ export function flattenEndpoints(endpointTree?:EndpointTree):Endpoint[] {
 
     let segments = Object.keys(endpointTree).filter(segment => segment != ".");
     endpointList.push(...segments.map(segment => flattenEndpoints(endpointTree[segment] as EndpointTree)).flat());
-    return endpointList;
+    return endpointList.sort(sortEndpoints);
+}
+
+
+function sortEndpoints(endpointA:Endpoint, endpointB:Endpoint):number {
+    return RequestUtilities.compareURL(endpointA.segments, endpointB.segments);
 }
 
 

@@ -117,6 +117,7 @@ export type Endpoint = {
     methods:Method[];
     module:ModuleConfigFile;
     segments:Segment[];
+    path:string;
 }
 
 
@@ -135,6 +136,7 @@ export type Asset = {
     filepath:string;
     filename:string;
     segments:Segment[];
+    path:string;
 }
 
 
