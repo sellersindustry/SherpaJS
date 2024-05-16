@@ -6,6 +6,7 @@ on:
 
 jobs:
 
+
   unit-test:
     strategy:
       matrix:
@@ -30,9 +31,14 @@ jobs:
       - name: Run Unit Tests
         run: npm run test-unit
 
+
   endpoint-test:
-    name: Endpoint Tests
-    runs-on: ubuntu-latest
+    strategy:
+    matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    name: Endpoint Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -47,6 +53,7 @@ jobs:
 
       - name: Run Endpoint Tests
         run: npm run test-endpoints
+
 
   linting:
     name: Linting
