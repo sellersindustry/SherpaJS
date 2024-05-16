@@ -9,10 +9,7 @@ export function GET(request:Request, context:unknown) {
 }
 
 export function POST(request:Request, context:unknown) {
-    return Response.JSON({
-        request,
-        context
-    });
+    return Response.text("hi");
 }
 
 
