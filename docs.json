@@ -18,7 +18,7 @@
             ["Server Config", "/build/server-config"],
             ["Module Config", "/build/module-config"],
             ["Building a Module - WIP", "/build/building-a-module"],
-            ["Miscellaneous - WIP", "/build/miscellaneous"]
+            ["Miscellaneous", "/build/miscellaneous"]
         ]
     ], [
         "API Reference",
