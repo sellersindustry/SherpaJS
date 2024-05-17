@@ -15,8 +15,8 @@
             ["Routes - WIP", "/build/routes"],
             ["Endpoints - WIP", "/build/endpoints"],
             ["Static Assets - WIP", "/build/static-assets"],
-            ["Server Config - WIP", "/build/server-config"],
-            ["Module Config - WIP", "/build/module-config"]
+            ["Server Config", "/build/server-config"],
+            ["Module Config", "/build/module-config"]
         ]
     ], [
         "API Reference",
