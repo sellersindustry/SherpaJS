@@ -14,7 +14,7 @@
         [
             ["Routing", "/build/routing"],
             ["Endpoints", "/build/endpoints"],
-            ["Static Assets - WIP", "/build/static-assets"],
+            ["Static Assets", "/build/static-assets"],
             ["Server Config", "/build/server-config"],
             ["Module Config", "/build/module-config"],
             ["Building a Module - WIP", "/build/building-a-module"],
