@@ -12,7 +12,7 @@
     ], [
         "Building Your Application",
         [
-            ["Routes - WIP", "/build/routes"],
+            ["Routing", "/build/routing"],
             ["Endpoints - WIP", "/build/endpoints"],
             ["Static Assets - WIP", "/build/static-assets"],
             ["Server Config", "/build/server-config"],

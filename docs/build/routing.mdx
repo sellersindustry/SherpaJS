@@ -1,0 +1,162 @@
+# Routing
+SherpaJS provides a flexible and intuitive way to define endpoints and handle
+incoming requests within your microservice architecture. Drawing inspiration
+by Next.js, SherpaJS routes follow a directory-based structure located in
+the `/routes` directory of your module.
+
+
+## Terminology
+
+### Route Component Tree
+    * **Routes**: A hierarchical structure for all the segments and endpoints
+        of the server.
+    * **Subroutes**: A subsection of the route structure.
+    * **Root**: The first level of segments and endpoints in a route or subroute.
+
+
+<br/>
+
+
+### URL Anatomy
+    * **Segment**: The directory name part of the URL path delimited by slashes.
+    * **URL Path**: The part of the URL that comes after the domain, composed of segments.
+    * **Endpoint**: The final destination in the route structure where the request
+        is handled, typically defined in `index.ts` files.
+
+
+<br/>
+
+
+## Structure of Routes
+In the `/routes` directory, you can create directories to organize your
+routes. Each endpoint within a route is represented by a file typically named
+`index.ts`, [learn more about other types of endpoints](/build/endpoints).
+
+
+<br/>
+
+
+### Example Route Structure
+```plaintext
+/routes
+│
+├── /users
+│   └── index.ts     // Endpoint logic for "/users"
+│
+│
+├── /example
+│   ├── index.ts     // Endpoint logic for "/example"
+│   ├── /subroute
+│   │   └── index.ts // Endpoint logic for "/example/subroute"
+│
+├── /[id]
+│   └── index.ts     // Endpoint logic for "/[id]" access "[id]" with request.params.path.get("id")
+│
+├── /products
+│   ├── index.ts     // Endpoint logic for "/products"
+│   ├── /[productID]
+│   │   └── index.ts // Endpoint logic for "/products/[productID]" access "[productID]" with request.params.path.get("productID")
+│   └── /category
+│       └── index.ts // Endpoint logic for "/products/category"
+```
+
+
+<br/>
+
+
+## Defining Segment routes
+Routes in SherpaJS are created using a file-system based router where folders
+define segment routes, and files inside these folders define the endpoint logic.
+
+
+<br/>
+
+
+### Basic Segment Route
+In SherpaJS, the basic segment routes are straightforward. Each folder
+represents a route segment, and the `index.ts` file within the folder
+contains the endpoint logic, [or other types of endpoints](/build/endpoints).
+
+```typescript title="routes/index.ts"
+import { Request, Response } from "sherpa-core";
+
+export function GET(request:Request) {
+    return Response.text("Hello World!");
+}
+```
+
+
+<br/>
+
+
+### Nested Segment Route
+To create a nested segment route, nest folders inside each other. For example, to
+create a `/dashboard/settings` route, you would nest two folders like so:
+
+```plaintext
+/routes
+│
+├── /dashboard
+│   ├── index.ts // Endpoint logic for "/dashboard"
+│   └── /settings
+│       └── index.ts // Endpoint logic for "/dashboard/settings"
+```
+
+```typescript title="routes/dashboard/settings/index.ts"
+import { Request, Response } from "sherpa-core";
+
+export function GET(request:Request) {
+    return Response.text("Hello World!");
+}
+```
+
+
+<br/>
+
+
+### Dynamic Segment Route
+To define a dynamic segment route, name a directory using square brackets, such
+as `[id]`. Within a dynamic segment route directory, you can access the parameter
+value from the request object in your endpoint logic. For example, if you have
+a dynamic segement route named `[id]`, you can access the parameter
+using `request.params.path.get("id")`.
+
+```plaintext
+/routes
+│
+├── /products
+│   └── /[id]
+│       └── index.ts // Endpoint logic for "/products/[id]"
+```
+
+```typescript title="routes/products/[id]/index.ts"
+import { Request, Response } from "sherpa-core";
+
+export function GET(request:Request) {
+    return Response.new(request.params.path.get("id"));
+}
+```
+
+
+<br/>
+
+
+## Restrictions
+The SherpaJS routing system has some restrictions when it comes to defining
+routes, these restrictions help to keep routing simple, consistent, and ensure
+best practices. The SherpaJS compiler will prevent you from compiling if you
+violate any of these restrictions.
+    * Multiple [dynamic segement routes](/build/routing#dynamic-segment-route)
+        are not allowed in a single segement route.
+    * Additional segment routes or endpoints are not allowed as the segment where
+        a [Module Endpoint](/build/endpoints#module-endpoint) is loaded.
+
+
+<br/>
+
+
+## Next Steps
+Now that you understand the fundamentals of routing in SherpaJS, you can start
+creating endpoints for your application. \
+
+[Learn more about Endpoints](/build/endpoints)
