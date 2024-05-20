@@ -44,7 +44,8 @@ export class Local extends Bundler {
 
             const portArg = process.argv[2];
             const port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
-            const server  = new ServerLocal(port);
+            const silent  = process.argv.includes("--silent-startup");
+            const server  = new ServerLocal(port, silent);
             const dirname = import.meta.dirname;
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `

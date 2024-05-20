@@ -1,1 +1,121 @@
-# Server Config
+# Server Configuration
+Sherpa servers are configured using a `sherpa.server.ts` file, where you define
+the structure and behavior of your server. This configuration file is located 
+at the root of your project and serves as the entry point for your Sherpa server.
+
+
+<br/>
+
+
+## Config File
+The configuration file must be located at `sherpa.server.ts` and have a
+default export of the config using the `SherpaJS.New.server` function as follows:
+
+```typescript title="sherpa.server.ts"
+import SherpaJS from "sherpa-core";
+
+export default SherpaJS.New.server({
+    content: {
+        serverSecret: process.env.SERVER_SECRET,
+        allowThingy: true
+    }
+});
+```
+
+<Info>
+    When you load modules they have there own context, that is provided
+    by the module loader, and do not have access to your server context.
+</Info>
+
+
+
+<br/>
+
+
+## Config Structure
+
+### Context
+A property that allows you to define a context object. Contexts are
+provided to endpoints and can contain any additional data or settings needed
+for request processing.
+
+
+<br/>
+
+
+## Server Config Type
+The server configuration type is structured as:
+
+```typescript
+{
+    context: T;
+}
+```
+
+where `T` can be any type, allowing for flexible and customizable
+server configurations.
+
+
+<br/>
+
+
+## Examples
+
+### Basic Example
+A basic configuration where the context contains simple settings:
+
+```typescript title="sherpa.server.ts"
+import { SherpaJS } from "sherpa-core";
+
+export default SherpaJS.New.server({
+    context: {
+        serverSecret: "foo",
+        allowThingy: true
+    }
+});
+```
+
+The context object is then available within endpoints.
+```typescript title="routes/index.ts"
+import { Request, Response } from "sherpa-core";
+
+
+export function GET(request:Request, context:unknown) {
+    consoe.log(context.serverSecret); // returns "foo"
+    consoe.log(context.allowThingy); // returns true
+    return Response.new();
+}
+```
+
+
+<br/>
+
+
+### Typed Example
+A more detailed configuration using a typed context for additional type
+safety and clarity:
+
+```typescript title="sherpa.server.ts"
+import { SherpaJS } from "sherpa-core";
+
+type ConfigExample = { serverSecret: string; allowThingy: boolean };
+
+export default SherpaJS.New.server<ConfigExample>({
+    context: {
+        serverSecret: "foo",
+        allowThingy: true
+    }
+});
+```
+
+The context object is then available within endpoints.
+```typescript title="routes/index.ts"
+import { Request, Response } from "sherpa-core";
+
+
+export function GET(request:Request, context:ConfigExample) {
+    consoe.log(context.serverSecret); // returns "foo"
+    consoe.log(context.allowThingy); // returns true
+    return Response.new();
+}
+```

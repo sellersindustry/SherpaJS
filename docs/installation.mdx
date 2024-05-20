@@ -49,11 +49,12 @@ the following properties.
 
 ```json title="package.json"
 {
+    "type": "module",
     "scripts": {
         "build": "sherpa build -b Vercel",
         "build-local": "sherpa build -b local",
         "start": "sherpa start",
-        "dev": "npm run build-local && npm run start"
+        "dev": "sherpa dev"
     }
 }
 ```
@@ -85,7 +86,7 @@ SherpaJS uses a directory-based structure for routing, similar to NextJS. Start
 by creating a `/routes` directory and place a new enpoint `index.ts` file in the
 directory. This will be processed at the root `/` of your application.
 
-```typescript title="index.ts"
+```typescript title="/routes/index.ts"
 import { Request, Response, Context } from "sherpa-core";
 
 export function GET(request:Request, context:Context) {
@@ -99,7 +100,8 @@ Learn more about [routing](/build/rounting) and [endpoints](/build/endpoints).
 <br/>
 
 
-### Creating Public Assets (Optional)
+### Creating Static Assets (Optional)
 Create a `/public` directory in the root directory of your project to store
 static assets such as images, stylings and more.
 
+Learn more about [static assets](/build/static-assets).

@@ -11,7 +11,7 @@
  */
 
 
-import { IRequest } from "../../native/request/interface.js";
+import { IRequest } from "../../native/request/index.js";
 import { Body, BodyType } from "../../native/model.js";
 import { Headers } from "../../native/headers/index.js";
 import { Parameters } from "../../native/parameters/index.js";

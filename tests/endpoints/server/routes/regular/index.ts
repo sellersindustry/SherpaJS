@@ -2,7 +2,7 @@ import { Response } from "../../../../../index.js";
 
 
 export function GET(request:Request, context:unknown) {
-    return Response.JSON({ 
+    return Response.JSON({
         request: request,
         context: context,
         env: process.env

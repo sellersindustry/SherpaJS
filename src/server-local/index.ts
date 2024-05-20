@@ -29,15 +29,17 @@ type endpoint = {
 
 export class ServerLocal {
 
-    private port: number;
+    private readonly port: number;
+    private readonly silentStartup:boolean;
     private server: HTTPServer|null;
     private endpoints:endpoint[];
 
     
-    constructor(port:number) {
-        this.endpoints = [];
-        this.port      = port;
-        this.server    = null;
+    constructor(port:number, silentStartup:boolean=false) {
+        this.endpoints     = [];
+        this.port          = port;
+        this.server        = null;
+        this.silentStartup = silentStartup;
     }
 
 
@@ -48,7 +50,9 @@ export class ServerLocal {
 
         this.server = createServer(this.handleRequest.bind(this));
         this.server.listen(this.port, () => {
-            console.log(`${green("SherpaJS Server is started at")} ${cyan(`http://localhost:${bold(this.port)}`)}${green(".")}`);
+            if (!this.silentStartup) {
+                console.log(`${green("SherpaJS Server is started at")} ${cyan(`http://localhost:${bold(this.port)}`)}${green(".")}`);
+            }
         });
     }
 

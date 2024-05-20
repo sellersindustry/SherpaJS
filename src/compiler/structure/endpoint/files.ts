@@ -108,6 +108,7 @@ function validateFile(file:DirectoryStructureFile):Message[] {
 
 function validateSegments(structure:DirectoryStructureTree, filepath:string):Message[] {
     let errors:Message[] = [];
+    errors.push(...validateMultipleDynamicSegments(Object.keys(structure.directories), filepath));
     for (let segmentName of Object.keys(structure.directories)) {
         let _filepath = Path.join(filepath, segmentName);
         errors.push(...validateSegmentName(segmentName, _filepath));
@@ -126,6 +127,21 @@ function validateSegmentName(segment:string, filepath?:string):Message[] {
         content: "Endpoint segment routes should only contain letters, numbers, and dashes.",
         file: filepath ? { filepath: filepath } : undefined
     }];
+}
+
+
+function validateMultipleDynamicSegments(segments:string[], filepath:string):Message[] {
+    let hasMultipleDynamicPaths = segments.map((segment) => {
+        return segment.startsWith("[") && segment.endsWith("]");
+    }).filter((segment) => segment).length > 1;
+    if (hasMultipleDynamicPaths) {
+        return [{
+            level: Level.ERROR,
+            text: "Only one dynamic endpoint per route is allowed.",
+            file: { filepath: filepath }
+        }];
+    }
+    return [];
 }
 
 

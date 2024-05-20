@@ -16,6 +16,7 @@ import { Segment, AssetTree, Asset } from "../../models.js";
 import { DirectoryStructureTree } from "../../utilities/path/directory-structure/model.js";
 import { Message } from "../../utilities/logger/model.js";
 import { getAssetFiles } from "./files.js";
+import { RequestUtilities } from "../../../native/request/utilities.js";
 
 
 export function getAssets(entry:string):{ assets:AssetTree, logs:Message[] } {
@@ -38,7 +39,12 @@ export function flattenAssets(assetTree?:AssetTree):Asset[] {
 
     let segments = Object.keys(assetTree).filter(segment => segment != ".");
     assetList.push(...segments.map(segment => flattenAssets(assetTree[segment] as AssetTree)).flat());
-    return assetList.flat();
+    return assetList.flat().sort(sortAssets);
+}
+
+
+function sortAssets(assetA:Asset, assetB:Asset):number {
+    return RequestUtilities.compareURL(assetA.segments, assetB.segments);
 }
 
 
@@ -49,7 +55,8 @@ function getAssetTree(assetTree:DirectoryStructureTree, segments:Segment[]=[]):A
             return {
                 filepath: file.filepath.absolute,
                 filename: Path.getFilename(file.filepath.absolute),
-                segments: segments
+                segments: segments,
+                path: RequestUtilities.getDynamicURL(segments) + "/" + Path.getFilename(file.filepath.absolute)
             }
         });
     }

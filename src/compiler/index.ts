@@ -10,11 +10,12 @@
  *
  */
 
+
 import fs from "fs";
 import { green, red } from "colorette";
 import { getStructure } from "./structure/index.js";
 import { Logger } from "./utilities/logger/index.js";
-import { NewBundler, clean } from "./bundler/index.js";
+import { NewBundler } from "./bundler/index.js";
 import { BuildOptions, BundlerType } from "./models.js";
 import { Level, Message } from "./utilities/logger/model.js";
 import { Path } from "./utilities/path/index.js";
@@ -32,22 +33,24 @@ export class Compiler {
         if (errorsOptions.length) {
             return this.display({ logs: errorsOptions, verbose, success: false });
         }
-
-        let structure = await getStructure(options.input);
-        let logs      = structure.logs;
-        if (!structure.endpoints || !structure.server || !structure.assets) {
-            logs.push({
-                level: Level.ERROR,
-                text: "Failed to generate endpoints."
-            });
-            return this.display({ logs, verbose, success: false });
-        }
-        if (Logger.hasError(logs)) {
-            return this.display({ logs, verbose, success: false });
-        }
-
         
+        let logs:Message[] = [];
         try {
+            let structure = await getStructure(options.input);
+            logs.push(...structure.logs);
+
+            if (!structure.endpoints || !structure.server || !structure.assets) {
+                logs.push({
+                    level: Level.ERROR,
+                    text: "Failed to generate endpoints."
+                });
+                return this.display({ logs, verbose, success: false });
+            }
+
+            if (Logger.hasError(logs)) {
+                return this.display({ logs, verbose, success: false });
+            }
+
             await NewBundler(structure, options, logs).build();
         } catch (error) {
             logs.push({
@@ -63,7 +66,16 @@ export class Compiler {
 
 
     public static clean(filepath:string) {
-        clean(filepath);
+        [
+            ".sherpa",
+            ".sherpa-dev",
+            ".vercel"
+        ].forEach(dirName => {
+            let dirPath = Path.join(filepath, dirName);
+            if (fs.existsSync(dirPath)) {
+                fs.rmSync(dirPath, { recursive: true, force: true });
+            }
+        })
     }
 
 

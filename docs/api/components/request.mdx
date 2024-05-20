@@ -1,5 +1,5 @@
 # Request
-The `Request` interface represents an HTTP request with various properties such
+The `Request` class represents an HTTP request with various properties such
 as URL, parameters, method, headers, body, and body type. This object is passed
 to an endpoint when a request is made.
 
@@ -10,7 +10,7 @@ to an endpoint when a request is made.
 ## Properties
 
 ### url
- * Type - `string`
+ * Type - `string` *(readonly)*
  * Description - The URL of the HTTP request.
 
 
@@ -18,7 +18,7 @@ to an endpoint when a request is made.
 
 
 ### params
- * Type - `{ path: Parameters, query: Parameters }`
+ * Type - `{ path: Parameters, query: Parameters }` *(readonly)*
  * Description - An object containing `path` and `query` parameters represented
     by instances of the [Parameters class](/api/components/parameters).
 
@@ -27,7 +27,7 @@ to an endpoint when a request is made.
 
 
 ### method
- * Type - `keyof typeof Method`
+ * Type - `keyof typeof Method` *(readonly)*
  * Description - The HTTP method of the request, represented as one of the keys
     of the [Method](/api/components/request#method-1) enum.
 
@@ -36,7 +36,7 @@ to an endpoint when a request is made.
 
 
 ### headers
- * Type - `Headers`
+ * Type - `Headers` *(readonly)*
  * Description - The headers of the request, represented by an instance
     of the [Headers class](/api/components/headers).
 
@@ -45,7 +45,7 @@ to an endpoint when a request is made.
 
 
 ### body
- * Type - `Body`
+ * Type - `Body` *(readonly)*
  * Description - The body of the request, which can be `undefined`, a string,
     or a JSON object. The body will be automatically parsed from the request.
 
@@ -54,7 +54,7 @@ to an endpoint when a request is made.
 
 
 ### bodyType
- * Type - `keyof typeof BodyType`
+ * Type - `keyof typeof BodyType` *(readonly)*
  * Description: The type of the request body, represented as one of the keys of
     the [BodyType](/api/components/request#bodytypes-1) enum.
 

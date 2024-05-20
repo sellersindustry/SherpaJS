@@ -3,7 +3,7 @@ title: Overview
 description: Instant Open Source docs with zero configuration.
 ---
 
-![SherpaJS Logo](/assets/logos/logo-dark.png)
+![SherpaJS Logo](/assets/logos/logo-large-dark.png)
 
 ## What is SherpaJS?
 SherpaJS is a **modular and agnostic serverless JavaScript web framework,** that
@@ -67,3 +67,31 @@ The current platforms that SherpaJS supports, with more to come in the future!
  * Vercel Edge Functions
  * Local
 
+
+<br/>
+
+
+## Deploy a Server
+SherpaJS can compile to various different web platforms, with more to come
+later. Want to support a new framework? [Submit a Ticket](https://github.com/sellersindustry/SherpaJS/issues).
+See the [build command](/api/cli#build-command) to compile to each platform.
+
+
+<br/>
+
+
+### Vercel Edge Functions
+Building to Vercel will generate a Vercel serverless server in the `.vercel`
+directory relative to your output. When your SherpaJS server repository is
+deployed Vercel this folder will automatically be deployed. Ensure your build
+command is set to build SherpaJS with the Vercel bundler.
+
+
+<br/>
+
+
+### Local Server
+Building to local server will generate a NodeJS server, that utilizes the built
+in HTTP service. This server will be located at the `.sherpa/index.js` relative
+to your output. You can start the server using
+[`sherpa start`](/api/cli#start-command).

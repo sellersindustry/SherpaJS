@@ -1,4 +1,15 @@
-// FIXME - Add Headers + Footers
+/*
+ *   Copyright (C) 2024 Sellers Industries, Inc.
+ *   distributed under the MIT License
+ *
+ *   author: Evan Sellers <sellersew@gmail.com>
+ *   date: Thu May 16 2024
+ *   file: tester.ts
+ *   project: SherpaJS - Module Microservice Platform
+ *   purpose: Endpoint Test Suite - Test
+ *
+ */
+
 
 import StackTracey from "stacktracey";
 import {
@@ -32,11 +43,12 @@ export class Tester {
     }
 
 
-    async invoke():Promise<TestResults> {
+    async invoke(host:string):Promise<TestResults> {
         try {
-            this.handler!(await this.getResponse());
+            this.handler!(await this.getResponse(host));
             return { name: this.name, success: true };
         } catch (error) {
+            console.log(error);
             let stack = new StackTracey(error.stack).items.map((e) => e.beforeParse).join("\n");
             if (error instanceof Fail) {
                 return {
@@ -56,9 +68,9 @@ export class Tester {
     }
 
 
-    private async getResponse():Promise<IResponse> {
+    private async getResponse(host:string):Promise<IResponse> {
         let { body, contentType } = this.getRequestBody(this.body);
-        return await this.cast(await fetch(this.url, {
+        return await this.cast(await fetch(new URL(this.url, host).toString(), {
             method: this.method,
             body: body,
             headers: {
@@ -107,17 +119,17 @@ export class Tester {
                 body: undefined,
                 bodyType: BodyType.None
             };
-        } else if (contentType == "application/json") {
+        } else if (contentType.startsWith("application/json")) {
             return {
                 body: JSON.parse(body as string),
                 bodyType: BodyType.JSON
             };
-        } else if (contentType == "text/html") {
+        } else if (contentType.startsWith("text/html")) {
             return {
                 body: body,
                 bodyType: BodyType.HTML
             };
-        } else if (contentType == "text/plain") {
+        } else if (contentType.startsWith("text/plain")) {
             return {
                 body: body,
                 bodyType: BodyType.Text
@@ -130,3 +142,7 @@ export class Tester {
 
 }
 
+
+// You, God, are my God, earnestly I seek you; I thirst for you, my whole being
+// longs for you, in a dry and parched land where there is no water.
+// - Psalm 63:1
