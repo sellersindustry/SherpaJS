@@ -2,8 +2,8 @@
     "name": "SherpaJS",
     "description": "Module and Reusable Microservice Platform. Build and modularize custom API endpoints, inspired by NextJS APIs. Export to Vercel and ExpressJS.",
     "headerDepth": 5,
-    "logo": "./assets/logo-light.png",
-    "logoDark": "./assets/logo-dark.png",
+    "logo": "./assets/logos/logo-light.png",
+    "logoDark": "./assets/logos/logo-dark.png",
     "theme": "#0D95DC",
     "sidebar": [[
         "Getting Started",
