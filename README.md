@@ -1,4 +1,4 @@
-![](./docs/assets/logos/logo-dark.png)
+![](./docs/assets/logos/logo-large-dark.png)
 
 # SherpaJS - Serverless Web Framework 
 ![NPM Version](https://img.shields.io/npm/v/sherpa-core)

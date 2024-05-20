@@ -49,6 +49,7 @@ the following properties.
 
 ```json title="package.json"
 {
+    "type": "module",
     "scripts": {
         "build": "sherpa build -b Vercel",
         "build-local": "sherpa build -b local",
@@ -85,7 +86,7 @@ SherpaJS uses a directory-based structure for routing, similar to NextJS. Start
 by creating a `/routes` directory and place a new enpoint `index.ts` file in the
 directory. This will be processed at the root `/` of your application.
 
-```typescript title="index.ts"
+```typescript title="/routes/index.ts"
 import { Request, Response, Context } from "sherpa-core";
 
 export function GET(request:Request, context:Context) {
