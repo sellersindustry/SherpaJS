@@ -21,6 +21,10 @@
 ## Getting Started
 SherpaJS is a modular and agnostic serverless JavaScript web framework, that allows developers to easily build backend serverless web applications.
 
+  * Check out the [documentation](https://docs.page/sellersindustry/SherpaJS)
+  * Check out the [server template example](https://github.com/sellersindustry/SherpaJS-template-server)
+  * Check out the [module template example](https://github.com/sellersindustry/SherpaJS-template-module)
+
 
 <br>
 
