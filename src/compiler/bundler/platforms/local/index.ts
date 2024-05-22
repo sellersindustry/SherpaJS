@@ -14,7 +14,7 @@
 import { Endpoint } from "../../../models.js";
 import { Tooling } from "../../../utilities/tooling/index.js";
 import { Path } from "../../../utilities/path/index.js";
-import { Bundler } from "../abstract.js";
+import { Bundler, View } from "../abstract.js";
 import { RequestUtilities } from "../../../../native/request/utilities.js";
 
 
@@ -37,7 +37,6 @@ export class Local extends Bundler {
 
 
     private getBuffer() {
-        // FIXME - load view from static
         return `
             import path from "path";
             import { ServerLocal } from "${Path.join(Path.getRootDirectory(), "dist/src/server-local/index.js")}";
@@ -45,7 +44,8 @@ export class Local extends Bundler {
 
             const portArg = process.argv[2];
             const port    = portArg && !isNaN(parseInt(portArg)) ? parseInt(portArg) : 3000;
-            const server  = new ServerLocal(port);
+            const silent  = process.argv.includes("--silent-startup");
+            const server  = new ServerLocal(port, silent);
             const dirname = import.meta.dirname;
             ${this.endpoints.list.map((endpoint:Endpoint, index:number) => {
                 return `
@@ -54,7 +54,7 @@ export class Local extends Bundler {
                         `const endpoint_${index} = {};`
                     }
                     ${this.views[index] ?
-                        `const view_${index} = "${encodeURIComponent(this.views[index].html)}";` :
+                        `const view_${index} = "${encodeURIComponent((this.views[index] as View).html)}";` :
                         `const view_${index} = "";`
                     }
                     import import_context_${index} from "${endpoint.module.contextFilepath}";

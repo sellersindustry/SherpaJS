@@ -14,28 +14,27 @@
 import { Parameters } from "./parameters/index.js";
 import { Headers } from "./headers/index.js";
 import { Body, BodyType } from "./model.js";
-import { IResponse } from "./response/interface.js";
-import { ResponseBuilder, Options as ResponseOptions } from "./response/index.js";
-import { IRequest } from "./request/interface.js";
+import { IResponse, Options as ResponseOptions } from "./response/index.js";
+import { IRequest } from "./request/index.js";
 import { CreateModuleInterface, Method, ModuleInterface } from "../compiler/models.js";
 
 
 export {
-    ResponseBuilder as Response,
     Headers,
     Parameters,
     Method,
     BodyType,
     CreateModuleInterface,
-    ModuleInterface
+    ModuleInterface,
+    IRequest as Request,
+    IRequest,
+    IResponse as Response,
+    IResponse
 }
 
 
 export type {
     Body,
-    IRequest as Request,
-    IRequest,
-    IResponse,
     ResponseOptions
 }
 

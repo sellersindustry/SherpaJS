@@ -1,0 +1,187 @@
+# Module Configuration
+Sherpa modules are configured using a `sherpa.module.ts` file, where you define
+the structure and behavior of your module. This configuration file is located
+at the root of your project and serves as the entry point for your Sherpa module.
+
+
+## Config File
+The configuration file must be located at `sherpa.module.ts` and have a
+default export of the config using the `SherpaJS.New.module` function as
+follows. You can export a class using `CreateModuleInterface` that acts as a
+wrapper for validating the context when the module is loaded.
+
+
+<br/>
+
+
+### Basic Configuration
+This basic configuration sets up a module with a simple interface
+definition. The context schema is defined inline using the
+`CreateModuleInterface` function.
+
+```typescript title="sherpa.module.ts"
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
+
+export default SherpaJS.New.module({
+    name: "example-module",
+    interface: CreateModuleInterface<{ foo: boolean, bar: string }>()
+});
+```
+
+
+<br/>
+
+
+### Class-Based Configuration
+Alternatively, you can export any interface class with a constructor that
+takes the context as a parameter and sets `this.context` within your class.
+You can attach additional methods to interact with your module.
+
+These interfaces can be called by other functions and endpoints inside your
+codebase, see the
+[calling module interfaces example](/build/module-config#module-interface-call-example).
+
+```typescript title="sherpa.module.ts"
+import { SherpaJS, ModuleInterface } from "sherpa-core";
+
+export default SherpaJS.New.module({
+    name: "example-module",
+    interface: class Example implements ModuleInterface {
+        context: { foo: number, bar: string };
+        constructor(context: { foo: number, bar: string }) {
+            this.context = context;
+        }
+    }
+});
+```
+
+<Info>
+    You can also export any additional attributes from this file as needed. The
+    module config file, `sherpa.module.ts` should be the main script defined
+    in your `package.json`.
+</Info>
+
+
+<br/>
+
+
+## Config Structure
+
+### name
+The name of the module.
+
+
+<br/>
+
+
+### interface
+A class that has a constructor with `context:[TYPE]` parameter and a
+property `context: [TYPE]`. You can also use `CreateModuleInterface` to
+generate this class.
+
+
+<br/>
+
+
+## Module Config Type
+The module configuration type is structured as:
+
+```typescript
+{
+    name:string;
+    interface:T;
+}
+```
+
+where `T` is a class that implements implements `ModuleInterface`. Thus, it
+has a `context` and a `constructor` that takes `context` as a parameter.
+
+```typescript
+{
+    context:Schema;
+    constructor(context:Schema) { this.context = context; }
+}
+```
+
+
+<br/>
+
+
+## Example Config
+
+### Basic Example
+A basic configuration using the `CreateModuleInterface` function.
+
+```typescript title="example-module/sherpa.module.ts"
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
+
+export default SherpaJS.New.module({
+    name: "example-module",
+    interface: CreateModuleInterface<{ foo: boolean, bar: string }>()
+});
+```
+
+Loading the module from a server endpoints, [learn more](/build/endpoints).
+```typescript title="route/module.ts"
+import ExampleModule from "../example-module/sherpa.module.ts";
+
+export default ExampleModule.load({
+    foo: true,
+    bar: "hello"
+})
+```
+
+
+
+<br/>
+
+
+### Module Interface Call Example
+
+A basic configuration using the `CreateModuleInterface` function.
+
+```typescript title="example-module/sherpa.module.ts"
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
+
+export type Schema = { foo: number, bar: string };
+
+export default SherpaJS.New.module({
+    name: "example-module",
+    interface: class Example implements ModuleInterface {
+
+        context:Schema;
+
+        constructor(context:Schema) {
+            this.context = context;
+        }
+
+        getFoo():number {
+            return this.context.foo;
+        }
+
+    }
+});
+```
+
+Loading the a module from a server endpoints,
+[learn more](/build/endpoints).
+```typescript title="route/example/module.ts"
+import ExampleModule from "../../example-module/sherpa.module.ts";
+
+export default ExampleModule.load({
+    foo: 3,
+    bar: "hello"
+})
+```
+
+Calling the loaded module instance from another endpoint...
+```typescript title="route/index.ts"
+import { Request, Response } from "sherpa-core";
+import example from "./example/module.ts";
+
+export function GET() {
+    return Response.text(example.getFoo()); // returns 3
+}
+
+```
+

@@ -4,9 +4,9 @@
  *
  *   author: Evan Sellers <sellersew@gmail.com>
  *   date: Fri May 3 2024
- *   file: index.ts
+ *   file: files.ts
  *   project: SherpaJS - Module Microservice Platform
- *   purpose: Get Asset Files
+ *   purpose: Get Asset File Structure
  *
  */
 

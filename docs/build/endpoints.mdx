@@ -1,0 +1,223 @@
+# Endpoints
+Endpoints represent the individual points of access within your microservice
+architecture, allowing clients to interact with specific functionalities or
+resources. Endpoints are defined within route files (`index.ts`, `module.ts`,
+and `view.html`).
+
+
+<br/>
+
+
+## Function Endpoints
+Function endpoints are defined using a `index.ts` file. Each endpoint is
+defined within a route file using the corresponding HTTP
+method (`GET`, `POST`, `PATCH`, `PUT`, `DELETE`) function. These functions provide
+access to the incoming request and the environment, allowing developers
+to customize the endpoint's behavior based on the request data and the
+server environment.
+
+
+<br/>
+
+
+### Defining Function Endpoints
+Endpoint functions receive two parameters:
+1. [`request`](/api/components/request) - Contains the HTTP request information.
+2. `context` - Additional properties provided to configure the endpoint. The
+    context is either provided by the server configuration
+    (if it's the root route) or the module loader (if it's a module route).
+
+A response should be returned by the function, using the
+[SherpaJS Response utility](/api/components/response).
+
+
+#### Supported HTTP methods
+    * [GET](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET)
+    * [POST](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST)
+    * [PATCH](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH)
+    * [PUT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT)
+    * [DELETE](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/DELETE)
+
+
+<br/>
+
+
+### Example Function Endpoint
+```typescript title="/routes/index.ts"
+import { Request, Context, Response } from "sherpa-core";
+
+// Example GET endpoint
+export function GET(request: Request, context: Context) {
+    return Response.text("Hello World");
+}
+
+// Example POST endpoint
+export function POST(request: Request, context: Context) {
+    return Response.text("Example POST", { status: 201 });
+}
+
+// Example DELETE endpoint
+export function DELETE(request: Request, context: Context) {
+    return Response.JSON({ message: "DELETE request received" }, { status: 204 });
+}
+```
+
+
+<br/>
+
+
+## View Endpoints
+Endpoints can also render views, including HTML files. To render a view,
+simply place the view file (named `view.html`) in the endpoint directory.
+
+
+<br/>
+
+
+### Defining Function Endpoints
+Simply create a view endpoint by creating a `view.html` in an endpoint
+directory. You can use view endpoints along with function endpoints, but there
+are a couple of additional rules:
+
+1. When rendering a view, you cannot also have a GET method in your function endpoint.
+2. Function endpoints are not required when a view is provided.
+3. View endpoints do not support module endpoints.
+
+
+<br/>
+
+
+### Example View Endpoint
+```html title="/routes/about/view.html"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SherpaJS</title>
+</head>
+<body>
+    <h1>Welcome to SherpaJS</h1>
+    <p>This is an example HTML view rendered by SherpaJS.</p>
+    <p>Use this template to create your own custom views and endpoints.</p>
+    <p>&copy; 2024 SherpaJS. All rights reserved.</p>
+</body>
+</html>
+```
+
+
+<br/>
+
+
+## Module Endpoints
+SherpaJS allows endpoint modules to be loaded, which are sets of endpoints built
+by the [community](/#community-modules) or [yourself](/build/building-a-module).
+By integrating these prebuilt modules, which can range from authentication to
+analytics, you can easily extend your server's functionality without
+duplicating code. These modules are loaded with a `module.ts` endpoint file.
+
+
+<br/>
+
+
+### Defining Module Endpoints
+Modules are loaded in the same endpoint file (`module.ts`) as a regular
+endpoint. Instead of exporting HTTP methods, you export a loaded module.
+Simply import the module and use the load method, while providing the context.
+
+<Warning>
+    Additional segment routes or endpoints are not allowed where module
+    endpoints are defined.
+</Warning>
+
+
+<br/>
+
+
+### Example Module Loading
+The module entry point can either be a relative directory
+(in which case you must specify the `sherpa.module.ts` file)...
+
+```typescript title="/routes/example/module.ts"
+import ExampleModule from "../../modules/sherpa.module";
+
+export default ExampleModule.load({
+    test: "Hello World"
+});
+```
+
+or an NPM package name...
+
+```typescript title="/routes/flags/module.ts"
+// module.ts
+import StaticFlags from "sherpajs-static-flags";
+
+export default StaticFlags.load({
+    test: "Hello World"
+});
+```
+
+<Info>
+    Module interfaces or context can be access from other places within your
+    code, using [interface calling](/build/module-config#module-interface-call-example).
+</Info>
+
+
+<br/>
+
+
+## Example Routing
+
+### Basic Route Structure
+```plaintext
+/routes
+│
+├── /users
+│   └── index.ts     // Function endpoint for "/users"
+│
+├── /posts
+│   └── index.ts     // Function endpoint for "/posts"
+│
+├── /auth
+│   └── index.ts     // Function endpoint for "/auth"
+```
+
+
+<br/>
+
+
+### Nested and Dynamic Routes
+```plaintext
+/routes
+│
+├── /example
+│   ├── index.ts     // Function endpoint for "/example"
+│   ├── /subroute
+│   │   └── index.ts // Function endpoint for "/example/subroute"
+│
+├── /[id]
+│   └── index.ts     // Function endpoint for "/[id]" access "[id]" with request.params.path.get("id")
+│
+├── /products
+│   ├── index.ts     // Function endpoint for "/products"
+│   ├── /[productID]
+│   │   └── index.ts // Function endpoint for "/products/[productID]" access "[productID]" with request.params.path.get("productID")
+│   └── /category
+│       └── index.ts // Function endpoint for "/products/category"
+```
+
+
+<br/>
+
+
+### View and Module Endpoints
+```plaintext
+/routes
+│
+├── /home
+│   └── view.html    // View endpoint for "/home"
+│
+├── /dashboard
+│   └── module.ts    // Module endpoint for "/dashboard"
+```
+

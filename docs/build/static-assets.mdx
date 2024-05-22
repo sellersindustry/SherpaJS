@@ -1,0 +1,96 @@
+# Static Assets
+SherpaJS servers can serve static assets such as images, CSS, JavaScript
+files, and other resources that do not change frequently. These assets are
+placed in a dedicated folder within your project and are served directly to
+clients when requested.
+
+This static asset directory is optional. Static assets are not transferred from
+modules.  
+
+
+<br/>
+
+
+## Defining Static Assets Directory
+The default directory for static assets in a SherpaJS project is the `public`
+folder. Any files placed in this folder are accessible via a URL path that
+mirrors the directory structure within `public`.
+
+
+<br/>
+
+
+## Serving Static Assets
+To serve static assets, simply place the files within the `public`
+directory of your project. For example:
+
+```plaintext
+/your-project
+│
+├── /public
+│   ├── /images
+│   │   └── logo.png
+│   ├── /css
+│   │   └── styles.css
+│   └── /js
+│       └── script.js
+│
+├── /routes
+│   └── view.html
+└── sherpa.server.ts
+```
+
+In this structure:
+  * `logo.png` will be accessible at `/images/logo.png`
+  * `styles.css` will be accessible at `/css/styles.css`
+  * `script.js` will be accessible at `/js/script.js`
+  * `view.html` will be accessible at `/`
+
+
+<br/>
+
+
+## Examples
+
+
+### View Endpoints Example
+If you want to reference these static assets in your view endpoint or other
+files, use the appropriate URL path. For example, in an HTML file:
+
+```html title="/routes/view.html"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My SherpaJS App</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <img src="/images/logo.png" alt="Logo">
+    </header>
+    <main>
+        <h1>Welcome to My SherpaJS App</h1>
+        <p>This is a simple example of serving static assets.</p>
+        <script src="/js/script.js"></script>
+    </main>
+</body>
+</html>
+```
+
+
+<br/>
+
+
+## Security Considerations
+  * **Access Control** - Ensure that sensitive files are not placed in the
+    `public` directory as they will be publicly accessible.
+
+
+<br/>
+
+
+By organizing your static assets efficiently and using SherpaJS's built-in
+capabilities, you can serve these resources effectively to enhance the
+performance and usability of your web applications.

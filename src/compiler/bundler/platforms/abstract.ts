@@ -37,9 +37,9 @@ export abstract class Bundler {
 
 
     constructor(endpoints:Structure, options:BuildOptions, errors?:Message[]) {
-        this.endpoints = endpoints.endpoints;
-        this.assets    = endpoints.assets;
-        this.sever     = endpoints.server;
+        this.endpoints = endpoints.endpoints as EndpointStructure;
+        this.assets    = endpoints.assets as AssetStructure;
+        this.sever     = endpoints.server as ServerConfigFile;
         this.options   = options;
         this.errors    = errors;
     }

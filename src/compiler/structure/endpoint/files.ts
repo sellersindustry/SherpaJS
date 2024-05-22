@@ -4,9 +4,9 @@
  *
  *   author: Evan Sellers <sellersew@gmail.com>
  *   date: Sun Feb 11 2024
- *   file: index.ts
+ *   file: files.ts
  *   project: SherpaJS - Module Microservice Platform
- *   purpose: Get Route Files
+ *   purpose: Get Endpoint File Structure
  *
  */
 
@@ -18,7 +18,7 @@ import {
     DirectoryStructureTree
 } from "../../utilities/path/directory-structure/model.js";
 import { Level, Message } from "../../utilities/logger/model.js";
-import { SUPPORTED_FILE_EXTENSIONS } from "../../models.js";
+import { FILENAME, FILE_EXTENSIONS } from "../../models.js";
 import { Logger } from "../../utilities/logger/index.js";
 
 
@@ -52,37 +52,55 @@ export function getEndpointFiles(entry:string):{ logs:Message[], files?:Director
 function getDiagnostics(structure:DirectoryStructure, filepath:string):Message[] {
     let errors:Message[] = [];
     for (let file of structure.list) {
-        errors.push(...validateFileType(file));
-        errors.push(...validateFileName(file));
+        errors.push(...validateFile(file));
     }
     errors.push(...validateSegments(structure.tree, filepath));
     return errors;
 }
 
 
-function validateFileType(file:DirectoryStructureFile):Message[] {
-    let fileExtension       = Path.getExtension(file.filepath.absolute);
-    let supportedExtensions = [
-        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.FUNCTIONS,
-        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.MODULE,
-        ...SUPPORTED_FILE_EXTENSIONS.ENDPOINT.VIEW
-    ];
-    if (supportedExtensions.includes(fileExtension))
-        return [];
+function validateFile(file:DirectoryStructureFile):Message[] {
+    let filename = Path.getName(file.filename);
+    let extension = Path.getExtension(file.filename);
+
+    if (FILENAME.ENDPOINT.FUNCTIONS == filename) {
+        if (!FILE_EXTENSIONS.ENDPOINT.FUNCTIONS.includes(extension)) {
+            return [{
+                level: Level.ERROR,
+                text: "Invalid file extension for functions endpoint.",
+                content: `Must be "${FILE_EXTENSIONS.ENDPOINT.FUNCTIONS.join("\", \"")}".`,
+                file: { filepath: file.filepath.absolute }
+            }];
+        } else {
+            return [];
+        }
+    } else if (FILENAME.ENDPOINT.MODULE == filename) {
+        if (!FILE_EXTENSIONS.ENDPOINT.MODULE.includes(extension)) {
+            return [{
+                level: Level.ERROR,
+                text: "Invalid file extension for module endpoint.",
+                content: `Must be "${FILE_EXTENSIONS.ENDPOINT.MODULE.join("\", \"")}".`,
+                file: { filepath: file.filepath.absolute }
+            }];
+        } else {
+            return [];
+        }
+    } else if (FILENAME.ENDPOINT.VIEW == filename) {
+        if (!FILE_EXTENSIONS.ENDPOINT.VIEW.includes(extension)) {
+            return [{
+                level: Level.ERROR,
+                text: "Invalid file extension for view endpoint.",
+                content: `Must be "${FILE_EXTENSIONS.ENDPOINT.VIEW.join("\", \"")}".`,
+                file: { filepath: file.filepath.absolute }
+            }];
+        } else {
+            return [];
+        }
+    }
     return [{
         level: Level.ERROR,
-        text: `Invalid File Type. Must be "${supportedExtensions.join("\", \"")}".`,
-        file: { filepath: file.filepath.absolute }
-    }];
-}
-
-
-function validateFileName(file:DirectoryStructureFile):Message[] {
-    if (Path.getName(file.filename) == "index")
-        return [];
-    return [{
-        level: Level.ERROR,
-        text: "Invalid File Name. Files must be named \"index\".",
+        text: `Invalid file name for endpoint.`,
+        content: `Files must be named one of the following... "${Object.values(FILENAME.ENDPOINT).join("\", \"")}".`,
         file: { filepath: file.filepath.absolute }
     }];
 }
@@ -90,6 +108,7 @@ function validateFileName(file:DirectoryStructureFile):Message[] {
 
 function validateSegments(structure:DirectoryStructureTree, filepath:string):Message[] {
     let errors:Message[] = [];
+    errors.push(...validateMultipleDynamicSegments(Object.keys(structure.directories), filepath));
     for (let segmentName of Object.keys(structure.directories)) {
         let _filepath = Path.join(filepath, segmentName);
         errors.push(...validateSegmentName(segmentName, _filepath));
@@ -108,6 +127,21 @@ function validateSegmentName(segment:string, filepath?:string):Message[] {
         content: "Endpoint segment routes should only contain letters, numbers, and dashes.",
         file: filepath ? { filepath: filepath } : undefined
     }];
+}
+
+
+function validateMultipleDynamicSegments(segments:string[], filepath:string):Message[] {
+    let hasMultipleDynamicPaths = segments.map((segment) => {
+        return segment.startsWith("[") && segment.endsWith("]");
+    }).filter((segment) => segment).length > 1;
+    if (hasMultipleDynamicPaths) {
+        return [{
+            level: Level.ERROR,
+            text: "Only one dynamic endpoint per route is allowed.",
+            file: { filepath: filepath }
+        }];
+    }
+    return [];
 }
 
 

@@ -20,6 +20,7 @@ import { getEnvironmentFiles, getAbsolutePath, getKeyValuePairs, getVersion } fr
 import { Logger } from "../compiler/utilities/logger/index.js";
 import { Path } from "../compiler/utilities/path/index.js";
 import { Level } from "../compiler/utilities/logger/model.js";
+import { ServerDevelopment } from "../server-development/index.js";
 let CLI = new Command();
 
 
@@ -29,7 +30,7 @@ CLI.name("sherpa")
 
 
 CLI.command("build")
-    .description("Build SherpaJS Server")
+    .description("Creates a production build of your application.")
     .option("-i, --input <path>", "path to SherpaJS server, defaults to current directory")
     .option("-o, --output <path>", "path to server output, defaults to input directory")
     .option("--dev", "enable development mode, do not minify output")
@@ -67,7 +68,7 @@ CLI.command("build")
 
 
 CLI.command("clean")
-    .description("Remove SherpaJS Build Directories")
+    .description("Removes all build directories of your application.")
     .option("-i, --input <path>", "path to SherpaJS build directories, defaults to current directory")
     .action((options) => {
         Compiler.clean(getAbsolutePath(options.input, process.cwd()));
@@ -75,7 +76,7 @@ CLI.command("clean")
 
 
 CLI.command("start")
-    .description("Start SherpaJS Server Locally")
+    .description("Start a production build of your application. Ensure you have created a local build, with \"sherpa build\" first.")
     .option("-i, --input <path>", "path to SherpaJS build directories, defaults to current directory")
     .option("-p, --port <number>", "port number", (3000).toString())
     .action((options) => {
@@ -96,6 +97,42 @@ CLI.command("start")
         server.stderr.on("data", (data) => console.log(data.toString().replace("\n", "")));
         server.on("close", (data) => { if (data) console.log(data.toString().replace("\n", "") )});
     });
+
+
+CLI.command("dev")
+    .description("Start a server in development mode with hot-reload.")
+    .option("-i, --input <path>", "path to SherpaJS server, defaults to current directory")
+    .option("-o, --output <path>", "path to server output, defaults to input directory")
+    .option("-v, --variable [keyvalue...]", "Specify optional environment variables as key=value pairs")
+    .option("-p, --port <number>", "port number", (3000).toString())
+    .action((options) => {
+        let input     = getAbsolutePath(options.input, process.cwd());
+        let output    = getAbsolutePath(options.output, input);
+        let variables = getKeyValuePairs(options.variable);
+
+        if (Logger.hasError(variables.logs)) {
+            Logger.display(variables.logs);
+            Logger.exit();
+        }
+
+        new ServerDevelopment({
+            input: input,
+            output: output,
+            bundler: BundlerType.local,
+            developer: {
+                bundler: {
+                    esbuild: {
+                        minify: options.dev ? false : true
+                    }
+                },
+                environment: {
+                    files: getEnvironmentFiles(input),
+                    variables: variables.values
+                }
+            }
+        }, parseInt(options.port));
+    });
+
 
 
 CLI.parse();

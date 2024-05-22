@@ -1,0 +1,60 @@
+# Miscellaneous
+
+
+## Environment Variables
+Environment variables are a key part of configuring your SherpaJS application.
+They allow you to set various configuration options and secrets without
+hardcoding them into your application's codebase.
+
+
+<br/>
+
+
+### Loading Environment Variables
+SherpaJS uses the `.env` file to load environment variables. This file should
+be placed at the root of your project. When the system is compiled, the
+variables defined in this file are automatically loaded into your server's
+environment.
+
+Any environment variables provided by hosting services (such as Vercel or AWS)
+are automatically included in your build.
+
+Environment varibles can also be added during build with the
+[build command](/api/cli#build-command).
+
+
+<br/>
+
+
+### Automatic Parsing
+SherpaJS automatically parses environment variables to their appropriate types:
+- Strings remain as strings
+- Booleans are converted to `true` or `false`
+- Numbers are converted to numeric values
+
+
+<br/>
+
+
+### Example .env File
+Here is an example of a `.env` file:
+
+```shell title=".env"
+PORT=3000                                         # number
+DATABASE_URL=mongodb://localhost:27017/mydatabase # string
+JWT_SECRET=myverysecretkey                        # string
+ENABLE_FEATURE_X=true                             # boolean
+MAX_CONNECTIONS=100                               # number
+```
+
+<br/>
+
+
+### Best Practices
+- **Security**: Never commit your `.env` file to version control. Add it
+    to your `.gitignore` file.
+- **Defaults**: Provide sensible default values for environment variables
+    in your code.
+- **Validation**: Validate the presence and format of critical environment
+    variables at the start of your application to avoid runtime errors.
+

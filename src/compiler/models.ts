@@ -14,12 +14,28 @@
 import { BuildOptions as ESBuildOptions } from "esbuild";
 
 
-export const FILENAME_CONFIG_MODULE         = "sherpa.module";
-export const FILENAME_CONFIG_SERVER         = "sherpa.server";
-export const EXPORT_VARIABLES_METHODS       = ["GET", "POST", "PATCH", "DELETE", "PUT"];
-export const EXPORT_VARIABLES               = [...EXPORT_VARIABLES_METHODS];
-export const SUPPORTED_FILE_EXTENSIONS      = {
-    "CONFIG": ["JS", "TS"],
+export const EXPORT_VARIABLES_METHODS = ["GET", "POST", "PATCH", "DELETE", "PUT"];
+export const EXPORT_VARIABLES         = [...EXPORT_VARIABLES_METHODS];
+
+
+export const FILENAME = {
+    "CONFIG": {
+        "MODULE": "sherpa.module",
+        "SERVER": "sherpa.server"
+    },
+    "ENDPOINT": {
+        "MODULE": "module",
+        "FUNCTIONS": "index",
+        "VIEW": "view"
+    }
+}
+
+
+export const FILE_EXTENSIONS = {
+    "CONFIG": {
+        "MODULE": ["JS", "TS"],
+        "SERVER": ["JS", "TS"]
+    },
     "ENDPOINT": {
         "MODULE": ["JS", "TS"],
         "FUNCTIONS": ["JS", "TS"],
@@ -101,6 +117,7 @@ export type Endpoint = {
     methods:Method[];
     module:ModuleConfigFile;
     segments:Segment[];
+    path:string;
 }
 
 
@@ -119,6 +136,7 @@ export type Asset = {
     filepath:string;
     filename:string;
     segments:Segment[];
+    path:string;
 }
 
 

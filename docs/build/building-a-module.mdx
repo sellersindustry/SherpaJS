@@ -1,0 +1,146 @@
+# Building a Module
+Building a SherpaJS module is straightforward and can be accomplished in just a
+few steps. Modules allow you to encapsulate and share functionality across
+multiple SherpaJS applications. Here's how to get started:
+
+
+<br/>
+
+
+## Quick Installation
+We recommend starting with the
+[SherpaJS Module Template](https://github.com/sellersindustry/SherpaJS-template-module),
+which provides a pre-configured structure and example endpoints. After
+downloading the template, install all dependencies by running:
+
+```sh
+npm install
+```
+
+You can start the development server with `npm run dev`.
+
+Now your project is all setup, explore around the project files and get
+acquainted with the [SherpaJS Project Structure](/structure) and
+[SherpaJS CLI](/api/cli).
+
+
+<br/>
+
+
+## Manual Installation
+Creating a new module is extremely easy and can be done within a couple of
+minutes. To manually create a new module start by create a new NodeJS project
+with `npm init`. Then install the SherpaJS Core package:
+
+```sh
+npm install sherpa-core
+```
+
+
+<br/>
+
+
+
+### Updating `package.json`
+Open the `package.json` file in the root directory of your project, and
+update the following properties.
+
+```json title="package.json"
+{
+    "type": "module",
+	"exports": "./sherpa.module.ts",
+    "scripts": {
+        "build": "sherpa build -b Vercel",
+        "build-local": "sherpa build -b local",
+        "start": "sherpa start",
+        "dev": "npm run build-local && npm run start"
+    }
+}
+```
+
+
+<br/>
+
+### Creating Module Config
+Create a [module config](/build/module-config) file named `sherpa.module.ts` in
+the root directory of your module. This file will default export a module
+configuration.
+
+```typescript title="sherpa.module.ts"
+import { SherpaJS, CreateModuleInterface } from "sherpa-core";
+
+export type Schema = { foo: boolean, bar: string };
+
+export default SherpaJS.New.module({
+    name: "example-module",
+    interface: CreateModuleInterface<Schema>()
+});
+```
+
+[Learn more about module configs](/build/module-config).
+
+
+<br/>
+
+
+### Creating Server Config
+Create a new Typescript file for your [server configuration](/build/server-config)
+in the root directory of your project named `sherpa.server.ts`. *Technically a
+server config is not required to create a module, but it is to test the module*.
+
+```typescript title="sherpa.server.ts"
+import { SherpaJS } from "sherpa-core";
+import { Schema } from "../sherpa.module.ts";
+
+export default SherpaJS.New.server<Schema>({
+    context: {
+        example: "foo"
+    }
+});
+```
+
+The context you provide the server should match the context schema for your module.
+
+
+### Creating Endpoints
+SherpaJS uses a directory-based structure for routing, similar to NextJS. Start
+by creating a `/routes` directory and place a new enpoint `index.ts` file in the
+directory. This will be processed at the root `/` of your application.
+
+```typescript title="routes/index.ts"
+import { Request, Response } from "sherpa-core";
+import { Schema } from "../sherpa.module.ts"
+
+export function GET(request:Request, context:Schema) {
+    return Response.text("Hello World!");
+}
+```
+
+Learn more about [routing](/build/rounting) and [endpoints](/build/endpoints).
+
+
+<br/>
+
+
+### Details
+While the routes of your module are available on a server when the module is
+loaded, other assets like the `public` directory are not available. Keep this
+in mind when designing your module.
+
+
+<br/>
+
+
+### Share Your Module
+Share your module with the world by deploying it as an NPM package and
+submitting a
+[new issue](https://github.com/sellersindustry/SherpaJS/issues/new/choose)
+to get it listed as a SherpaJS Community module.
+
+**Important Notes**
+  * Ensure your module is deployed as an NPM package.
+  * Include documentation on how to set it up, including required properties.
+  * Link to the SherpaJS documentation for users to understand how to set it up.
+
+Thank you for supporting SherpaJS! 🎉🥳
+
