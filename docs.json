@@ -5,6 +5,11 @@
     "logo": "./assets/logos/favicon.png",
     "logoDark": "./assets/logos/favicon.png",
     "theme": "#0D95DC",
+    "docsearch": {
+        "appId": "EFDCDI47Q0",
+        "apiKey": "eca2166b2d5a712b1371a892757a8299",
+        "indexName": "page"
+    },
     "sidebar": [[
         "Getting Started",
         [
