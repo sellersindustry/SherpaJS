@@ -1,19 +1,17 @@
-function makeValidator(schema:unknown) {
-    return schema as (data:unknown) => {};
-}
-
-//! Transition to other branch
-
-import { Response } from "../../../../../index.js";
-const validateFoo = makeValidator(import("../../src/foo.schema.json"));
+import { Request, Response, AJV } from "../../../../../index.js";
+import schemaFoo from "../../src/foo.schema.json";
+const validatorFoo = AJV(schemaFoo);
 
 
-
-export function GET() {
-    const ok = validateFoo({ foo: true })
-    if (!ok) {
-        return Response.JSON(validateFoo.errors)
+export function POST(request:Request) {
+    try {
+        if (!validatorFoo(request.body)) {
+            return Response.text(JSON.stringify(validatorFoo.errors));
+        }
+        return Response.text("OK");
+    } catch (e) {
+        console.log(e);
+        return Response.text(e.toString());
     }
-    return Response.text("OK");
 }
 

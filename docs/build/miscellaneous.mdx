@@ -1,6 +1,54 @@
 # Miscellaneous
 
 
+## Ajv JSON Schema Validator
+[Ajv](https://ajv.js.org/), one of the best JSON schema validators, is
+extremely useful in the development of backend APIs for data validation. But Ajv
+is not supported by many edge environments, including Vercel, because of it's
+usage of `eval`. However, the SherpaJS compiler will pre-compile standalone Ajv
+schema, so schema validation can be done on the edge. 
+
+<br/>
+
+### Example Static Schema
+Start by creating a `schema.json` file containing the desired schema.
+```json title="src/foo.schema.json"
+{
+	"type": "object",
+	"properties": {
+		"foo": {
+			"type": "number"
+		}
+	},
+	"required": ["foo"],
+	"additionalProperties": false
+}
+```
+
+Then import your schema (in any script), and write the schema in the `AJV` 
+function, provided by Sherpa Core.
+```typescript title="routes/index.ts"
+import { Request, Response, AJV } from "sherpa-core";
+import schemaFoo from "../../src/foo.schema.json";
+const validatorFoo = AJV(schemaFoo);
+
+export function POST(request:Request) {
+    try {
+        if (!validatorFoo(request.body)) {
+            return Response.text(JSON.stringify(validatorFoo.errors));
+        }
+        return Response.text("OK");
+    } catch (e) {
+        console.log(e);
+        return Response.text(e.toString());
+    }
+}
+```
+
+
+<br/>
+
+
 ## Environment Variables
 Environment variables are a key part of configuring your SherpaJS application.
 They allow you to set various configuration options and secrets without
