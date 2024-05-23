@@ -46,6 +46,8 @@
 	},
 	"license": "ISC",
 	"dependencies": {
+		"@offen/esbuild-plugin-jsonschema": "^1.1.0",
+		"ajv": "^8.13.0",
 		"checksum": "^1.0.0",
 		"chokidar": "^3.6.0",
 		"colorette": "^2.0.20",

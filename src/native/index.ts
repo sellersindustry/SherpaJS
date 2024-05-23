@@ -11,6 +11,7 @@
  */
 
 
+import { AJV } from "./ajv/index.js";
 import { Parameters } from "./parameters/index.js";
 import { Headers } from "./headers/index.js";
 import { Body, BodyType } from "./model.js";
@@ -20,6 +21,7 @@ import { CreateModuleInterface, Method, ModuleInterface } from "../compiler/mode
 
 
 export {
+    AJV,
     Headers,
     Parameters,
     Method,

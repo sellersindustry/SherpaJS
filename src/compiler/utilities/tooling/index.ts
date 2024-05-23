@@ -20,6 +20,7 @@ import { typeValidation } from "./type-validation/index.js";
 import { getEnvironmentVariables } from "./dot-env/index.js";
 import { ExportLoaderModule, getExportedLoader } from "./exported-loader/index.js";
 import { ExportedVariable, getExportedVariables } from "./exported-variables/index.js";
+import jsonschemaPlugin from "@offen/esbuild-plugin-jsonschema";
 
 
 export type { ExportLoaderModule, ExportedVariable };
@@ -65,6 +66,7 @@ export class Tooling {
             ...DEFAULT_ESBUILD_TARGET,
             format: "cjs",
             entryPoints: [filepath],
+            plugins: [jsonschemaPlugin()],
             write: false
         });
 
@@ -80,6 +82,7 @@ export class Tooling {
             ...DEFAULT_ESBUILD_TARGET,
             ...props.options?.developer?.bundler?.esbuild,
             ...props.esbuild,
+            plugins: [jsonschemaPlugin()],
             stdin: {
                 contents: props.buffer,
                 resolveDir: props.resolve ? path.resolve(props.resolve) : undefined,
