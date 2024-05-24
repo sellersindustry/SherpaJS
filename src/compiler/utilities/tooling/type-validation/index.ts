@@ -32,9 +32,9 @@ export async function typeValidation(filepath:string, fileTypeName:string):Promi
     } catch (error) {
         return [{
             level: Level.ERROR,
-            text: `Failed to parse ${this.fileTypeName}.`,
+            text: `Failed to parse ${fileTypeName}.`,
             content: error.message,
-            file: { filepath: this.filepath }
+            file: { filepath: filepath }
         }];
     }
 }
@@ -44,7 +44,8 @@ function getDiagnostics(filepath:string):readonly ts.Diagnostic[] {
     let program = ts.createProgram({
         rootNames: [filepath],
         options: {
-            noEmit: true
+            noEmit: true,
+            lib: ["es2022"]
         },
         host: {
             ...ts.createCompilerHost({}),
@@ -57,7 +58,13 @@ function getDiagnostics(filepath:string):readonly ts.Diagnostic[] {
 
 function processDiagnostics(filepath:string, fileTypeName:string, diagnostic:readonly ts.Diagnostic[]):Message[] {
     return diagnostic.filter(diagnostic => {
-        return !diagnostic.messageText.toString().includes("--target"); // NOTE: Remove warning about targeting ES2022
+        if (!diagnostic.start) {
+            return false;
+        }
+        if (diagnostic.messageText.toString().includes("Cannot find namespace 'WebAssembly'")) {
+            return false;
+        }
+        return true;
     }).map((diagnostic):Message => {
         let position = getLineNumber(filepath, diagnostic.start as number);
         let message = diagnostic.messageText.toString();
