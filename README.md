@@ -3,7 +3,7 @@
 
 <p align="center">
     <a href="https://docs.page/sellersindustry/SherpaJS">
-        <img src="./docs/assets/logos/favicon.png" height="128px"/>
+        <img src="https://github.com/sellersindustry/SherpaJS/raw/main/docs/assets/logos/favicon.png" height="128px"/>
         <h1 align="center">SherpaJS</h1>
     </a>
 </p>
